@@ -522,8 +522,8 @@ const hasRealContent = remainingContent.length > 100 && remainingContent.replace
 
   <!-- Storia e Fondatore Section -->
   <section class="py-12 md:py-16 bg-white scroll-reveal">
-    <ImageTextSection 
-      image="/media/uploads/2023/07/Alvaro-Silvij-EUROPOL-Intelligence-Investigazioni.png"
+    <ImageTextSection
+      image={`${import.meta.env.BASE_URL}/media/uploads/2023/07/Alvaro-Silvij-EUROPOL-Intelligence-Investigazioni.png`.replace('//', '/')}
       imageAlt="Gr. Ufficiale Alvaro Silvij - Fondatore EUROPOL®"
       title="60+ Anni di Esperienza nel Settore"
       content="EUROPOL® Intelligence & Investigations è stato fondato a Roma nel 1962 dal Gr. Ufficiale Alvaro Silvij. Da oltre 60 anni forniamo servizi di Intelligence e Investigazioni Private in Italia e nel Mondo. Nel corso della nostra storia abbiamo aiutato Privati Cittadini, Imprenditori ed Istituzioni a scoprire e dimostrare legalmente la verità: i Dossier EUROPOL sono sempre validi in Sede Legale, poiché presentano Prove reperite unicamente con Metodologie a Norma di Legge. Le indagini svolte da EUROPOL® sono conformi al Sistema P.R.O.V.A.™ - la metodologia d'indagine composta da 5 fasi: Pianificazione, Raccolta informazioni, Osservazione, Verifica ed Analisi dei Risultati."
@@ -605,7 +605,7 @@ const hasRealContent = remainingContent.length > 100 && remainingContent.replace
       
       <div class="scroll-reveal-scale max-w-4xl mx-auto">
         <OptimizedImage 
-          src="/media/uploads/2023/01/lavoratocon111.png"
+          src={`${import.meta.env.BASE_URL}/media/uploads/2023/01/lavoratocon111.png`.replace("//", "/")}
           alt="Clienti EUROPOL® - Aziende e Istituzioni che si sono affidate a EUROPOL®"
           width={748}
           height={224}
