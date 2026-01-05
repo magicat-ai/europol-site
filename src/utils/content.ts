@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 let seoMetadata: Record<string, { title: string; meta_description: string }> = {};
 
 try {
-  const seoPath = path.join(__dirname, '../../../seo_metadata.json');
+  const seoPath = path.join(__dirname, '../../seo_metadata.json');
   const seoData = JSON.parse(fs.readFileSync(seoPath, 'utf-8'));
   seoData.forEach((item: any) => {
     const key = item.path || '/';
@@ -31,7 +31,7 @@ function loadMarkdownContent(urlPath: string): string | null {
     // Handle special cases
     if (filename === '') filename = 'home';
     
-    const contentPath = path.join(__dirname, `../../../extracted_content/${filename}.md`);
+    const contentPath = path.join(__dirname, `../../extracted_content/${filename}.md`);
     
     if (fs.existsSync(contentPath)) {
       return fs.readFileSync(contentPath, 'utf-8');
@@ -41,7 +41,7 @@ function loadMarkdownContent(urlPath: string): string | null {
     if (urlPath.endsWith('/') && urlPath !== '/') {
       const altPath = urlPath.slice(0, -1);
       const altFilename = altPath.replace(/\//g, '-').replace(/^-|-$/g, '');
-      const altContentPath = path.join(__dirname, `../../../extracted_content/${altFilename}.md`);
+      const altContentPath = path.join(__dirname, `../../extracted_content/${altFilename}.md`);
       if (fs.existsSync(altContentPath)) {
         return fs.readFileSync(altContentPath, 'utf-8');
       }
