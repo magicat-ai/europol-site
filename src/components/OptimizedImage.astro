@@ -21,16 +21,22 @@ const {
   fallback
 } = Astro.props;
 
+// Aggiungi BASE_URL se necessario
+const base = import.meta.env.BASE_URL || '';
+
 // Converti path WordPress a path locale
 let localSrc = src;
 if (src.includes('wp-content/uploads')) {
   const match = src.match(/wp-content\/uploads\/(.+)/);
   if (match) {
-    localSrc = `/media/uploads/${match.group(1).split('?')[0]}`;
+    localSrc = `${base}/media/uploads/${match[1].split('?')[0]}`;
   }
 } else if (src.startsWith('http')) {
   // Se è un URL esterno, lascialo così (per ora)
   localSrc = src;
+} else if (src.startsWith('/media/') || src.startsWith('media/')) {
+  // Path locale relativo - aggiungi base
+  localSrc = `${base}${src.startsWith('/') ? '' : '/'}${src}`;
 }
 
 // Genera srcset per responsive images (se width è specificato)

@@ -18,14 +18,20 @@ const {
   ctaLink = "/contatti/",
   showPhone = false
 } = Astro.props;
+
+// Aggiungi BASE_URL per background image locale
+const base = import.meta.env.BASE_URL || '';
+const bgImage = backgroundImage && !backgroundImage.startsWith('http')
+  ? `${base}${backgroundImage.startsWith('/') ? '' : '/'}${backgroundImage}`
+  : backgroundImage;
 ---
 
 <section class="hero-section relative h-[70vh] min-h-[600px] flex items-center justify-center">
   <!-- Background Image -->
-  {backgroundImage && (
+  {bgImage && (
     <div class="absolute inset-0">
-      <img 
-        src={backgroundImage}
+      <img
+        src={bgImage}
         alt=""
         class="w-full h-full object-cover"
         loading="eager"
@@ -35,8 +41,8 @@ const {
       )}
     </div>
   )}
-  
-  {!backgroundImage && (
+
+  {!bgImage && (
     <div class="absolute inset-0 hero-gradient">
       <!-- Subtle pattern overlay for depth -->
       <div class="absolute inset-0 opacity-20 hero-pattern"></div>
@@ -68,8 +74,8 @@ const {
       </p>
     )}
     <div class="flex flex-col sm:flex-row gap-5 justify-center items-center">
-      <a 
-        href={ctaLink}
+      <a
+        href={`${base}${ctaLink}`}
         class="hero-cta-primary px-10 py-5 rounded-lg font-semibold text-lg transition-all duration-300 hover:scale-105 shadow-2xl relative overflow-hidden group"
         style="background-color: var(--color-accent); color: white;"
       >
