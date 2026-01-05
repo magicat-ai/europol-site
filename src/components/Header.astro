@@ -2,13 +2,14 @@
 import { navigation } from '../utils/navigation';
 
 // Navigation items
+const base = import.meta.env.BASE_URL || '';
 const navItems = [
-  { name: 'Home', href: '/' },
-  { name: 'Chi Siamo', href: '/europol-istituto-di-investigazioni/' },
-  { name: 'Investigazioni Private', href: '/investigazioni-private/' },
-  { name: 'Investigazioni Aziendali', href: '/investigazioni-aziendali/' },
-  { name: 'Intelligence', href: '/intelligence-e-servizi-speciali/' },
-  { name: 'Risorse', href: '/blog/' },
+  { name: 'Home', href: base || '/' },
+  { name: 'Chi Siamo', href: `${base}/europol-istituto-di-investigazioni/` },
+  { name: 'Investigazioni Private', href: `${base}/investigazioni-private/` },
+  { name: 'Investigazioni Aziendali', href: `${base}/investigazioni-aziendali/` },
+  { name: 'Intelligence', href: `${base}/intelligence-e-servizi-speciali/` },
+  { name: 'Risorse', href: `${base}/blog/` },
 ];
 ---
 
@@ -42,8 +43,8 @@ const navItems = [
       </ul>
 
       <!-- Consulenza CTA -->
-      <a 
-        href="/contatti/" 
+      <a
+        href={`${base}/contatti/`}
         class="phone-cta hidden lg:flex items-center gap-2 px-4 py-2 rounded font-medium text-sm border"
         style="border-color: var(--color-black); color: var(--color-black); background-color: transparent;"
       >
@@ -78,8 +79,8 @@ const navItems = [
           </li>
         ))}
         <li class="pt-2">
-          <a 
-            href="/contatti/" 
+          <a
+            href={`${base}/contatti/`}
             class="phone-cta flex items-center gap-2 px-4 py-2 rounded font-medium text-sm border"
             style="border-color: var(--color-black); color: var(--color-black); background-color: transparent;"
           >
