@@ -306,23 +306,29 @@ const bgImage = backgroundImage && !backgroundImage.startsWith('http') && !backg
     }
 
     .badge-content {
-      flex-direction: row; /* Mantieni orizzontale su mobile */
-      gap: 0.5rem;
-      padding: 0.5rem 1rem;
+      flex-direction: row;
+      gap: 0.375rem; /* Ridotto da 0.5rem */
+      padding: 0.375rem 0.75rem; /* Ridotto padding */
+      white-space: nowrap; /* Impedisce wrap su più righe */
     }
 
     .badge-text {
-      font-size: 0.875rem; /* Riduci dimensione testo */
-      letter-spacing: 0.05em;
+      font-size: 0.75rem; /* Ridotto da 0.875rem */
+      letter-spacing: 0.03em;
     }
 
     .badge-subtext {
-      font-size: 0.75rem; /* Riduci dimensione sottotesto */
+      font-size: 0.65rem; /* Ridotto da 0.75rem */
     }
 
     .badge-line {
-      width: 1px; /* Linea verticale */
-      height: 16px;
+      width: 1px;
+      height: 12px; /* Ridotto da 16px */
+    }
+
+    /* Nascondi scroll indicator su mobile */
+    .scroll-indicator {
+      display: none;
     }
   }
 </style>
