@@ -616,7 +616,7 @@ const processSteps = {
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 md:gap-12 items-center">
         <div>
           <img 
-            src="/media/uploads/2023/07/Frame-22988@2x.png" 
+            src={`${import.meta.env.BASE_URL}/media/uploads/2023/07/Frame-22988@2x.png`.replace("//", "/")} 
             alt="Klara Murnau, Chief Detective di EUROPOL Intelligence & Investigations, specializzata in investigazioni private e corporate"
             class="w-full rounded-xl shadow-2xl"
             loading="lazy"

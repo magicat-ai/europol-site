@@ -907,7 +907,7 @@ const articleSchema = isBlogPost ? {
       {/* Image + Text Section for main service pages */}
       {isMainServicePage && urlPath === '/investigazioni-private/' && (
         <ImageTextSection 
-          image="/media/uploads/2014/04/agenzia-investigativa1-300x180.jpg"
+          image={`${import.meta.env.BASE_URL}/media/uploads/2014/04/agenzia-investigativa1-300x180.jpg`.replace("//", "/")}
           imageAlt="Investigazioni Private Professionali"
           title="Investigazioni Private: Discrezione e Professionalità"
           content="Le investigazioni private richiedono massima discrezione e competenza. Il nostro team di investigatori qualificati opera con metodi esclusivamente legali, garantendo che ogni prova raccolta sia utilizzabile in sede giudiziaria. La Garanzia Legalis™ certifica la validità legale di ogni indagine."
@@ -917,7 +917,7 @@ const articleSchema = isBlogPost ? {
 
       {isMainServicePage && urlPath === '/investigazioni-aziendali/' && (
         <ImageTextSection 
-          image="/media/uploads/2014/04/men-1979261_640-300x200.jpg"
+          image={`${import.meta.env.BASE_URL}/media/uploads/2014/04/men-1979261_640-300x200.jpg`.replace("//", "/")}
           imageAlt="Investigazioni Aziendali Professionali"
           title="Investigazioni Aziendali: Tutela del Patrimonio"
           content="Proteggiamo il patrimonio aziendale attraverso indagini strategiche e documentate. Ogni caso viene analizzato con attenzione per fornire informazioni cruciali per decisioni aziendali informate e protezione legale."
@@ -927,7 +927,7 @@ const articleSchema = isBlogPost ? {
 
       {isMainServicePage && urlPath === '/intelligence-e-servizi-speciali/' && (
         <ImageTextSection 
-          image="/media/uploads/2023/07/Alvaro-Silvij-EUROPOL-Intelligence-Investigazioni.png"
+          image={`${import.meta.env.BASE_URL}/media/uploads/2023/07/Alvaro-Silvij-EUROPOL-Intelligence-Investigazioni.png`.replace("//", "/")}
           imageAlt="EUROPOL Intelligence & Servizi Specializzati"
           title="Intelligence & Servizi Specializzati: Competenza Tecnica Avanzata"
           content="I servizi specializzati di EUROPOL® richiedono competenze tecniche avanzate e metodologie innovative. Il nostro team possiede esperienza pluriennale in analisi blockchain, digital forensics, intelligence competitiva e antispionaggio. Tutti i servizi vengono erogati con metodi esclusivamente legali, certificati dalla GARANZIA LEGALIS™."
