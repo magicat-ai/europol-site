@@ -19,9 +19,9 @@ const {
   showPhone = false
 } = Astro.props;
 
-// Aggiungi BASE_URL per background image locale
+// Aggiungi BASE_URL per background image locale (solo se non ce l'ha già)
 const base = import.meta.env.BASE_URL || '';
-const bgImage = backgroundImage && !backgroundImage.startsWith('http')
+const bgImage = backgroundImage && !backgroundImage.startsWith('http') && !backgroundImage.startsWith(base)
   ? `${base}${backgroundImage.startsWith('/') ? '' : '/'}${backgroundImage}`
   : backgroundImage;
 ---
@@ -75,7 +75,7 @@ const bgImage = backgroundImage && !backgroundImage.startsWith('http')
     )}
     <div class="flex flex-col sm:flex-row gap-5 justify-center items-center">
       <a
-        href={`${base}${ctaLink}`}
+        href={ctaLink.startsWith(base) ? ctaLink : `${base}${ctaLink}`}
         class="hero-cta-primary px-10 py-5 rounded-lg font-semibold text-lg transition-all duration-300 hover:scale-105 shadow-2xl relative overflow-hidden group"
         style="background-color: var(--color-accent); color: white;"
       >

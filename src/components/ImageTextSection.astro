@@ -17,9 +17,10 @@ const {
   imagePosition = reverse ? 'right' : 'left'
 } = Astro.props;
 
-// Aggiungi BASE_URL per path locali
+// Aggiungi BASE_URL per path locali (solo se non ce l'ha già)
 const base = import.meta.env.BASE_URL || '';
 const imageSrc = image.startsWith('http') ? image :
+                 image.startsWith(base + '/') ? image :
                  image.startsWith('/') ? `${base}${image}` :
                  `${base}/${image}`;
 ---
