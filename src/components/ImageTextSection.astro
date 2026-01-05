@@ -16,6 +16,12 @@ const {
   reverse = false,
   imagePosition = reverse ? 'right' : 'left'
 } = Astro.props;
+
+// Aggiungi BASE_URL per path locali
+const base = import.meta.env.BASE_URL || '';
+const imageSrc = image.startsWith('http') ? image :
+                 image.startsWith('/') ? `${base}${image}` :
+                 `${base}/${image}`;
 ---
 
 <section class="py-20 bg-white">
@@ -23,8 +29,8 @@ const {
     <div class={`grid grid-cols-1 md:grid-cols-2 gap-12 items-center ${imagePosition === 'right' ? 'md:flex-row-reverse' : ''}`}>
       <!-- Image side -->
       <div class={imagePosition === 'right' ? 'order-2 md:order-1' : 'order-2 md:order-1'}>
-        <img 
-          src={image}
+        <img
+          src={imageSrc}
           alt={imageAlt}
           class="w-full h-auto rounded-xl shadow-2xl transition-transform duration-300 hover:scale-[1.02]"
           loading="lazy"
