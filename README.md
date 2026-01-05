@@ -1,64 +1,156 @@
-# EUROPOL Investigazioni - Nuovo Sito
+# EUROPOL® - Sito Web Istituzionale
 
-Sito web statico per EUROPOL Investigazioni, costruito con Astro.
+Sito web ufficiale di EUROPOL® Istituto di Investigazioni - Agenzia investigativa italiana dal 1962.
 
-## 🚀 Quick Start
+## 🚀 Tech Stack
 
-### Sviluppo Locale
+- **Framework**: [Astro](https://astro.build) 5.16
+- **Styling**: [Tailwind CSS](https://tailwindcss.com) 4.1
+- **Content**: MDX + Markdown
+- **Deployment**: Netlify / Vercel
+- **Analytics**: Google Tag Manager, Google Analytics, Facebook Pixel
+
+## 📦 Setup
+
+### Prerequisiti
+
+- Node.js 20+ (vedi `.nvmrc`)
+- npm o pnpm
+
+### Installazione
+
 ```bash
+# Installa dipendenze
 npm install
+
+# Avvia dev server
 npm run dev
-```
-Il sito sarà disponibile su `http://localhost:4322`
 
-### Build Produzione
-```bash
+# Build per produzione
 npm run build
-```
-I file compilati saranno in `dist/`
 
-### Preview Build
-```bash
+# Preview build locale
 npm run preview
 ```
 
-## 📁 Struttura Progetto
+## 🗂️ Struttura Progetto
 
 ```
-site/
+/
+├── public/              # File statici
+│   ├── media/          # Immagini e media
+│   ├── scripts/        # Script client-side
+│   ├── robots.txt      # SEO robots
+│   └── _redirects      # Netlify redirects
+├── extracted_content/   # Contenuti markdown
 ├── src/
 │   ├── components/     # Componenti Astro riutilizzabili
-│   ├── layouts/        # Layout base
-│   ├── pages/          # Pagine del sito
-│   ├── scripts/        # Script JavaScript
-│   ├── styles/         # CSS globale
+│   ├── layouts/        # Layout pagine
+│   ├── pages/          # Route del sito
+│   ├── styles/         # CSS globali
 │   └── utils/          # Utility functions
-├── public/             # File statici (immagini, favicon, ecc.)
-├── extracted_content/ # Contenuti markdown (fuori da questo repo)
-└── dist/              # Build output (generato)
-
+├── seo_metadata.json   # Metadata SEO
+└── astro.config.mjs    # Configurazione Astro
 ```
 
-## 🛠️ Tecnologie
+## 🎨 Design System
 
-- **Astro** - Framework statico
-- **Tailwind CSS** - Styling
-- **MDX** - Markdown esteso
-- **Lucide Icons** - Icone
+### Colori
 
-## 📝 Deploy
+- **Accent Gold**: `#b8860b`
+- **Black**: `#0b0b0b`
+- **Text Light**: `#6b7280`
+- **Background**: `#ffffff`
 
-Vedi [DEPLOY.md](./DEPLOY.md) per istruzioni complete sul deploy.
+### Font
 
-### Deploy Rapido
-1. `npm run build`
-2. Carica il contenuto di `dist/` su GitHub Pages
+- **Serif (Headings)**: Playfair Display
+- **Sans (Body)**: Inter
 
-### Deploy Automatico
-Il workflow `.github/workflows/deploy.yml` gestisce il deploy automatico su GitHub Pages.
+## 🔧 Sviluppo
 
-## 🔗 Link Utili
+### Aggiungere una nuova pagina
 
-- [Astro Documentation](https://docs.astro.build)
-- [Tailwind CSS](https://tailwindcss.com)
-- [MDX](https://mdxjs.com)
+1. Crea file markdown in `extracted_content/`
+2. Aggiungi metadata SEO in `seo_metadata.json`
+3. La pagina sarà automaticamente generata via `[...slug].astro`
+
+### Modificare componenti
+
+I componenti principali sono in `src/components/`:
+- `Header.astro` - Navigazione
+- `Footer.astro` - Footer
+- `SEO.astro` - Meta tags
+- `LocalBusinessSchema.astro` - Schema.org markup
+
+## 📊 SEO & Performance
+
+- ✅ Sitemap automatico (`/sitemap.xml`)
+- ✅ Robots.txt configurato
+- ✅ Meta tags Open Graph e Twitter
+- ✅ Schema.org LocalBusiness
+- ✅ Preconnect per font esterni
+- ✅ Lazy loading immagini
+- ✅ Security headers (CSP, X-Frame-Options)
+
+## 🚀 Deployment
+
+### Netlify
+
+Il sito è configurato per deployment automatico su Netlify:
+
+```bash
+# Build command
+npm run build
+
+# Publish directory
+dist
+
+# Headers e redirects
+netlify.toml
+```
+
+### Variabili d'Ambiente
+
+Nessuna variabile d'ambiente necessaria per il funzionamento base.
+
+## 📝 Contenuti
+
+I contenuti sono gestiti tramite file markdown in `extracted_content/`.
+
+### Struttura Content
+
+```markdown
+# Titolo Pagina
+
+**URL:** https://europolinvestigazioni.it/path/
+**Meta Title:** ...
+**Meta Description:** ...
+**Canonical:** ...
+
+---
+
+Contenuto della pagina...
+```
+
+## 🔒 Sicurezza
+
+- CSP headers configurati
+- X-Frame-Options: DENY
+- X-Content-Type-Options: nosniff
+- Consent GDPR nel form contatti
+- Honeypot anti-spam nei form
+
+## 📞 Contatti & Support
+
+- **Email**: info@europolinvestigazioni.it
+- **Indirizzo**: Via G. Perego 58 – Roma
+- **Website**: https://europolinvestigazioni.it
+
+## 📄 Licenza
+
+© 2024 EUROPOL® Istituto di Investigazioni. Tutti i diritti riservati.
+
+---
+
+Sviluppato con ❤️ utilizzando Astro + Tailwind CSS
