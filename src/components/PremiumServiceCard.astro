@@ -1,0 +1,29 @@
+---
+interface Props {
+  href: string;
+  icon: string;
+  title: string;
+  description: string;
+}
+
+const { href, icon, title, description } = Astro.props;
+---
+
+<a href={href} class="service-card-premium group bg-white rounded-2xl p-8 border block transition-all duration-400 hover:shadow-2xl hover:-translate-y-2 relative overflow-hidden" style="border-color: rgba(11, 11, 11, 0.08);">
+  <div class="absolute top-0 right-0 w-32 h-32 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-400" style="background: linear-gradient(135deg, transparent, transparent, rgba(184, 134, 11, 0.05));"></div>
+  <div class="w-16 h-16 rounded-2xl mb-6 flex items-center justify-center transition-all duration-400 group-hover:scale-110 group-hover:rotate-3 relative z-10" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.12), rgba(184, 134, 11, 0.08)); border: 1px solid rgba(184, 134, 11, 0.15);">
+    <span class="text-3xl">{icon}</span>
+  </div>
+  <h5 class="font-bold mb-3 text-xl relative z-10" style="color: var(--color-black); font-family: 'Playfair Display', serif; letter-spacing: -0.01em;">{title}</h5>
+  <p class="text-base mb-6 relative z-10" style="color: var(--color-text-light); line-height: 1.7;">
+    {description}
+  </p>
+  <span class="inline-flex items-center gap-2 text-sm font-semibold group-hover:gap-4 transition-all relative z-10" style="color: var(--color-accent);">
+    Scopri di più
+    <svg class="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+    </svg>
+  </span>
+  <div class="absolute bottom-0 left-0 right-0 h-1 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-400" style="background: linear-gradient(to right, transparent, var(--color-accent), transparent);"></div>
+</a>
+

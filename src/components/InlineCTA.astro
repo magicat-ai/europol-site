@@ -1,0 +1,86 @@
+---
+interface Props {
+  title?: string;
+  text?: string;
+  ctaText?: string;
+  ctaLink?: string;
+}
+
+const {
+  title = "Hai bisogno di assistenza?",
+  text = "I nostri consulenti sono a tua disposizione per una consulenza gratuita e senza impegno.",
+  ctaText = "Richiedi Consulenza Gratuita",
+  ctaLink = "/contatti/"
+} = Astro.props;
+---
+
+<section class="inline-cta-premium py-20 md:py-28 relative overflow-hidden scroll-reveal">
+  <!-- Background Pattern -->
+  <div class="absolute inset-0 cta-pattern opacity-[0.04]"></div>
+  
+  <!-- Gradient Overlay -->
+  <div class="absolute inset-0 bg-gradient-to-br from-rgba(184, 134, 11, 0.03) via-transparent to-rgba(184, 134, 11, 0.02)"></div>
+  
+  <!-- Decorative Elements -->
+  <div class="absolute top-0 left-0 w-64 h-64 bg-gradient-to-br from-rgba(184, 134, 11, 0.05) to-transparent rounded-br-full blur-3xl"></div>
+  <div class="absolute bottom-0 right-0 w-64 h-64 bg-gradient-to-tl from-rgba(184, 134, 11, 0.05) to-transparent rounded-tl-full blur-3xl"></div>
+  
+  <div class="container mx-auto px-4 max-w-5xl text-center relative z-10">
+    <!-- Icon/Decoration -->
+    <div class="mb-8 flex justify-center">
+      <div class="w-16 h-16 rounded-2xl flex items-center justify-center transition-transform duration-300 hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.12), rgba(184, 134, 11, 0.08)); border: 1px solid rgba(184, 134, 11, 0.2);">
+        <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--color-accent);">
+          <path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-4l-4 4z" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+    
+    <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-8 scroll-reveal-fade" style="color: var(--color-black); font-family: 'Playfair Display', serif; letter-spacing: -0.03em; line-height: 1.2;">
+      {title}
+    </h2>
+    <p class="text-xl md:text-2xl mb-12 scroll-reveal-fade max-w-3xl mx-auto" style="color: var(--color-text-light); line-height: 1.8;">
+      {text}
+    </p>
+    <div class="scroll-reveal-scale">
+      <a 
+        href={ctaLink}
+        class="inline-block px-12 py-6 rounded-xl font-semibold text-lg md:text-xl transition-all duration-300 hover:shadow-2xl hover:scale-105 relative overflow-hidden group"
+        style="background-color: var(--color-accent); color: white;"
+      >
+        <span class="relative z-10">{ctaText}</span>
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+        <!-- Shine effect -->
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      </a>
+    </div>
+  </div>
+  
+  <!-- Top Border Accent -->
+  <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-var(--color-accent) to-transparent"></div>
+</section>
+
+<style>
+  .inline-cta-premium {
+    background: linear-gradient(to bottom, #ffffff 0%, #fafafa 100%);
+    border-top: 1px solid rgba(11, 11, 11, 0.08);
+    border-bottom: 1px solid rgba(11, 11, 11, 0.08);
+    position: relative;
+  }
+
+  .cta-pattern {
+    background-image: 
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(184, 134, 11, 0.03) 10px,
+        rgba(184, 134, 11, 0.03) 20px
+      );
+  }
+
+  @media (max-width: 768px) {
+    .inline-cta-premium {
+      padding: 3rem 0;
+    }
+  }
+</style>

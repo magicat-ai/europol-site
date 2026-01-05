@@ -1,0 +1,61 @@
+---
+interface Testimonial {
+  quote: string;
+  author: string;
+  role: string;
+  company?: string;
+  image?: string;
+}
+
+interface Props {
+  testimonials: Testimonial[];
+  title?: string;
+}
+
+const { testimonials, title = "Cosa Dicono i Nostri Clienti" } = Astro.props;
+---
+
+<section class="py-20" style="background-color: #f8fafc;">
+  <div class="container mx-auto px-4 max-w-6xl">
+    <h2 class="text-3xl md:text-4xl font-bold text-center mb-16" style="color: var(--color-black); font-family: 'Playfair Display', serif;">
+      {title}
+    </h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {testimonials.map((testimonial) => (
+        <div class="bg-white rounded-xl p-8 shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-[1.02]">
+          <div class="flex items-center mb-6">
+            {testimonial.image ? (
+              <img 
+                src={testimonial.image}
+                alt={testimonial.author}
+                class="w-16 h-16 rounded-full object-cover mr-4 border-2"
+                style="border-color: var(--color-accent);"
+              />
+            ) : (
+              <div class="w-16 h-16 rounded-full mr-4 flex items-center justify-center text-2xl font-bold" style="background-color: var(--color-accent); color: white;">
+                {testimonial.author.charAt(0)}
+              </div>
+            )}
+            <div>
+              <div class="font-semibold" style="color: var(--color-black);">
+                {testimonial.author}
+              </div>
+              <div class="text-sm" style="color: var(--color-text-light);">
+                {testimonial.role}
+                {testimonial.company && `, ${testimonial.company}`}
+              </div>
+            </div>
+          </div>
+          <p class="leading-relaxed italic mb-4" style="color: var(--color-text);">
+            "{testimonial.quote}"
+          </p>
+          <div class="flex text-yellow-400">
+            ★★★★★
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+

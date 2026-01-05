@@ -1,0 +1,70 @@
+---
+import { UserCheck, Building2, Shield, FileSearch, Briefcase, Users } from 'lucide-astro';
+
+interface Props {
+  title: string;
+  description: string;
+  href: string;
+  icon?: 'UserCheck' | 'Building2' | 'Shield' | 'FileSearch' | 'Briefcase' | 'Users';
+  image?: string;
+  imageAlt?: string;
+  featured?: boolean;
+}
+
+const { title, description, href, icon = 'UserCheck', image, imageAlt, featured = false } = Astro.props;
+
+const iconMap = {
+  UserCheck: UserCheck,
+  Building2: Building2,
+  Shield: Shield,
+  FileSearch: FileSearch,
+  Briefcase: Briefcase,
+  Users: Users,
+};
+
+const IconComponent = iconMap[icon] || UserCheck;
+---
+
+<a 
+  href={href}
+  class={`group block rounded-xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl ${
+    featured ? 'md:col-span-2' : ''
+  }`}
+  style="background-color: white; border: 1px solid rgba(11, 11, 11, 0.1);"
+>
+  {image && (
+    <div class="relative h-48 overflow-hidden">
+      <img 
+        src={image}
+        alt={imageAlt || title}
+        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+        loading="lazy"
+      />
+      <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+      <div class="absolute top-4 right-4 w-12 h-12 rounded-full flex items-center justify-center shadow-lg" style="background-color: var(--color-accent);">
+        <IconComponent size={24} stroke-width={2} style="color: white;" />
+      </div>
+    </div>
+  )}
+  
+  <div class="p-8">
+    {!image && (
+      <div class="mb-6 w-16 h-16 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
+        <IconComponent size={32} stroke-width={1.5} style="color: var(--color-accent);" />
+      </div>
+    )}
+    <h3 class={`text-2xl font-bold mb-4 ${image ? 'text-white' : ''}`} style={`color: ${image ? 'white' : 'var(--color-black)'}; font-family: 'Playfair Display', serif; ${image ? 'position: relative; z-index: 10;' : ''}`}>
+      {title}
+    </h3>
+    <p class="mb-6 leading-relaxed" style={`color: ${image ? 'rgba(255, 255, 255, 0.9)' : 'var(--color-text-light)'}; line-height: 1.7; ${image ? 'position: relative; z-index: 10;' : ''}`}>
+      {description}
+    </p>
+    <span class="inline-flex items-center gap-2 font-semibold group-hover:gap-3 transition-all" style={`color: ${image ? 'white' : 'var(--color-black)'}; ${image ? 'position: relative; z-index: 10;' : ''}`}>
+      Scopri di più
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+      </svg>
+    </span>
+  </div>
+</a>
+

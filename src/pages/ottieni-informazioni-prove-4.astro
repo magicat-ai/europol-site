@@ -1,0 +1,1053 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import InlineCTA from '../components/InlineCTA.astro';
+import FAQSection from '../components/FAQSection.astro';
+import TrustBadges from '../components/TrustBadges.astro';
+import ProcessSteps from '../components/ProcessSteps.astro';
+import ImageTextSection from '../components/ImageTextSection.astro';
+import StatsSection from '../components/StatsSection.astro';
+import Testimonials from '../components/Testimonials.astro';
+import BenefitsSection from '../components/BenefitsSection.astro';
+import ServiceCTA from '../components/ServiceCTA.astro';
+import { getPageContent } from '../utils/content';
+import { marked } from 'marked';
+
+const seo = {
+  title: "Ottieni le Prove di cui hai Bisogno | EUROPOL Intelligence & Investigazioni",
+  meta_description: "Consulenza Investigativa Gratuita. Scopri come ottenere le informazioni e le prove di cui hai bisogno in 7 giorni. 60+ anni di esperienza. Richiedi subito.",
+  canonical: "https://www.europolinvestigazioni.it/ottieni-informazioni-prove-4/"
+};
+
+const stats = [
+  { number: "60+", label: "Anni di Esperienza" },
+  { number: "10.000+", label: "Casi Risolti" },
+  { number: "98%", label: "Tasso di Successo" },
+  { number: "24-72h", label: "Tempo di Risposta" }
+];
+
+const testimonials = [
+  {
+    quote: "Avevo iniziato a sospettare di mio marito dopo una serie di comportamenti strani. Grazie ad EUROPOL® ho ottenuto le prove di cui avevo bisogno in soli 5 giorni. La consulenza iniziale è stata fondamentale per capire come procedere.",
+    author: "Francesca I.",
+    role: "Cliente Privato",
+    image: null
+  },
+  {
+    quote: "Dopo la separazione, la mia ex moglie è rimasta a vivere a casa MIA con nostro figlio ed il suo nuovo compagno. EUROPOL® mi ha aiutato a provare in tribunale questa sua scorrettezza. Le prove erano perfette.",
+    author: "Edoardo T. S.",
+    role: "Cliente Privato",
+    image: null
+  },
+  {
+    quote: "Grazie ad EUROPOL® siamo riusciti ad arginare il problema della fuga di informazioni. Il loro approccio professionale e la GARANZIA LEGALIS™ ci hanno dato la certezza che tutte le prove erano valide in sede giudiziaria.",
+    author: "Chris P.",
+    role: "Presidente",
+    company: "Etichetta Discografica",
+    image: null
+  }
+];
+
+const benefits = [
+  {
+    title: "Consulenza 100% Gratuita",
+    description: "Nessun costo nascosto, nessun impegno. La consulenza investigativa preliminare è completamente gratuita e ti permetterà di capire se possiamo aiutarti.",
+    icon: "🎯"
+  },
+  {
+    title: "Prove Valide Legalmente",
+    description: "I Dossier EUROPOL sono sempre validi in Sede Legale. Utilizziamo esclusivamente <strong>Metodologie a Norma di Legge</strong> certificate dalla GARANZIA LEGALIS™.",
+    icon: "⚖️"
+  },
+  {
+    title: "Risultati in 7 Giorni",
+    description: "Grazie al Sistema P.R.O.V.A.™, possiamo ottenere le prove di cui hai bisogno in tempi rapidi, mantenendo sempre la massima qualità e legalità.",
+    icon: "⚡"
+  },
+  {
+    title: "Massima Riservatezza",
+    description: "La tua privacy è garantita al 100%. Tutte le informazioni sono trattate con la massima discrezione e confidenzialità, nel rispetto della normativa vigente.",
+    icon: "🔒"
+  },
+  {
+    title: "Chief Detective Dedicato",
+    description: "Verrai contattato direttamente dalla <strong>Dott.ssa Klara Murnau</strong>, Chief Detective di EUROPOL®, entro 24-72 ore dalla tua richiesta.",
+    icon: "👤"
+  },
+  {
+    title: "60+ Anni di Esperienza",
+    description: "EUROPOL® è stata fondata nel 1962. Oltre 60 anni di esperienza nel settore delle investigazioni private e aziendali, con migliaia di casi risolti con successo.",
+    icon: "🏆"
+  }
+];
+
+// Load page content and extract FAQ section from markdown
+let faqs: Array<{ question: string; answer: string }> = [];
+try {
+  const pageData = getPageContent('/ottieni-informazioni-prove-4/');
+  const { content } = pageData;
+
+  // Extract FAQ section from markdown
+  const faqMatch = content.match(/##\s+Domande Frequenti[^\n]*\s*\n+([\s\S]*?)(?=\n##\s+[^\n#]|$)/i);
+
+  if (faqMatch) {
+    const faqText = faqMatch[1].trim();
+    const faqItems = faqText.split(/\n###\s+/).filter(item => item.trim());
+    
+    for (const item of faqItems) {
+      const lines = item.split('\n');
+      if (lines.length === 0) continue;
+      
+      // Remove any remaining ### markers from the question
+      let question = lines[0].trim().replace(/^###\s*/, '');
+      if (!question || question.length < 5) continue;
+      
+      // Get answer (everything after first line, skipping empty lines at start)
+      let answerLines: string[] = [];
+      let foundAnswer = false;
+      
+      for (let i = 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!foundAnswer && !line) {
+          // Skip leading empty lines
+          continue;
+        }
+        foundAnswer = true;
+        answerLines.push(line);
+      }
+      
+      const answerText = answerLines.join('\n').trim();
+      
+      // Skip if answer is too short or empty
+      if (answerText && answerText.length > 10) {
+        faqs.push({
+          question,
+          answer: marked.parse(answerText)
+        });
+      }
+    }
+  }
+} catch (e) {
+  // Fallback FAQs if markdown not found
+  faqs = [
+    {
+      question: "Quanto costa la Consulenza Investigativa?",
+      answer: "La Consulenza Investigativa Preliminare è <strong>completamente gratuita</strong> e senza impegno."
+    },
+    {
+      question: "Quanto tempo ci vuole per ottenere le prove?",
+      answer: "Dipende dalla complessità del caso. In media, possiamo ottenere risultati preliminari in <strong>7-10 giorni</strong>."
+    },
+    {
+      question: "Le prove sono valide in sede legale?",
+      answer: "Sì, assolutamente. I Dossier EUROPOL sono sempre validi in Sede Legale, poiché utilizziamo esclusivamente Metodologie a Norma di Legge certificate dalla <strong>GARANZIA LEGALIS™</strong>."
+    }
+  ];
+}
+
+const processSteps = {
+  title: "Come Funziona: Il Processo Investigativo",
+  steps: [
+    {
+      number: "1",
+      title: "Richiedi Consulenza Gratuita",
+      description: "Compila il modulo qui sotto con i tuoi dati. La consulenza è completamente gratuita e senza impegno."
+    },
+    {
+      number: "2",
+      title: "Contatto da Chief Detective",
+      description: "La Dott.ssa Klara Murnau ti contatterà entro 24-72 ore per analizzare il tuo caso in dettaglio."
+    },
+    {
+      number: "3",
+      title: "Strategia Personalizzata",
+      description: "Ti spiegheremo se possiamo aiutarti, quale strategia useremo e quanto tempo servirà per ottenere le prove."
+    },
+    {
+      number: "4",
+      title: "Raccolta Prove Legali",
+      description: "Se procedi, inizieremo l'indagine con metodi esclusivamente legali, garantendo prove valide in sede giudiziaria."
+    }
+  ]
+};
+---
+
+<BaseLayout title={seo.title} description={seo.meta_description} canonical={seo.canonical} robots="index, follow">
+  <!-- Live Activity Indicator -->
+  <div id="live-activity" class="live-activity-bar">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-center gap-2 text-sm">
+        <span class="live-dot"></span>
+        <span class="activity-text"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero Section con Form Prominente -->
+  <section class="landing-hero relative min-h-[90vh] sm:min-h-[90vh] flex items-center overflow-hidden" id="consulenza">
+    <div class="absolute inset-0 hero-gradient">
+      <div class="absolute inset-0 opacity-20 hero-pattern"></div>
+      <div class="absolute inset-0 hero-gradient-animated"></div>
+    </div>
+    
+    <!-- Badge "Dal 1962" come nel PageHero -->
+    <div class="hero-badge absolute top-4 sm:top-8 left-1/2 transform -translate-x-1/2 z-20">
+      <div class="badge-content">
+        <span class="badge-text">Dal 1962</span>
+        <span class="badge-line"></span>
+        <span class="badge-subtext">60+ Anni di Esperienza</span>
+      </div>
+    </div>
+    
+    <div class="container mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-20 relative z-10">
+      <div class="grid lg:grid-cols-2 gap-6 sm:gap-8 md:gap-12 items-center max-w-7xl mx-auto">
+        <!-- Left Column: Headline e Benefits -->
+        <div class="text-white">
+          <div class="mb-4 sm:mb-6">
+            <span class="inline-block px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold mb-4" style="background: rgba(184, 134, 11, 0.2); color: var(--color-accent); border: 1px solid rgba(184, 134, 11, 0.4);">
+              ⚡ Consulenza Gratuita • Senza Impegno
+            </span>
+          </div>
+          
+          <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight text-white" style="font-family: 'Playfair Display', serif; text-shadow: 0 4px 30px rgba(0, 0, 0, 0.7); color: white;">
+            Ottieni le Prove di cui hai Bisogno
+            <span class="block text-2xl sm:text-3xl md:text-4xl lg:text-5xl mt-2 sm:mt-4" style="color: var(--color-accent);">
+              in Soli 7 Giorni
+            </span>
+          </h1>
+          
+          <p class="text-base sm:text-lg md:text-xl lg:text-2xl mb-6 sm:mb-8 leading-relaxed" style="color: rgba(255, 255, 255, 0.95); text-shadow: 0 2px 20px rgba(0, 0, 0, 0.6);">
+            Scopri come <strong>10.000+ clienti</strong> hanno ottenuto le prove di cui avevano bisogno con una <strong>Consulenza Investigativa Gratuita</strong> da EUROPOL®.
+          </p>
+          
+          <!-- Key Benefits -->
+          <div class="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
+            <div class="flex items-start gap-3 sm:gap-4">
+              <div class="flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center" style="background: rgba(184, 134, 11, 0.2);">
+                <svg class="w-4 h-4 sm:w-5 sm:h-5" style="color: var(--color-accent);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+              </div>
+              <p class="text-sm sm:text-base md:text-lg" style="color: rgba(255, 255, 255, 0.95);">
+                <strong>100% Gratuita</strong> - Nessun costo nascosto, nessun impegno
+              </p>
+            </div>
+            <div class="flex items-start gap-3 sm:gap-4">
+              <div class="flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center" style="background: rgba(184, 134, 11, 0.2);">
+                <svg class="w-4 h-4 sm:w-5 sm:h-5" style="color: var(--color-accent);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+              </div>
+              <p class="text-sm sm:text-base md:text-lg" style="color: rgba(255, 255, 255, 0.95);">
+                <strong>Prove Valide in Tribunale</strong> - Dossier utilizzabili in sede giudiziaria
+              </p>
+            </div>
+            <div class="flex items-start gap-3 sm:gap-4">
+              <div class="flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center" style="background: rgba(184, 134, 11, 0.2);">
+                <svg class="w-4 h-4 sm:w-5 sm:h-5" style="color: var(--color-accent);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+              </div>
+              <p class="text-sm sm:text-base md:text-lg" style="color: rgba(255, 255, 255, 0.95);">
+                <strong>Risposta in 24-72 Ore</strong> - Contatto diretto dal Chief Detective
+              </p>
+            </div>
+          </div>
+
+          <!-- Urgency Indicator -->
+          <div class="bg-white/10 backdrop-blur-sm rounded-lg p-3 sm:p-4 border border-white/20 mb-4 sm:mb-6">
+            <div class="flex items-center gap-2 sm:gap-3">
+              <svg class="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" style="color: var(--color-accent);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <div>
+                <p class="text-xs sm:text-sm font-semibold text-white">Risposta Garantita in 24-72 Ore</p>
+                <p class="text-xs text-white/80">La Dott.ssa Klara Murnau ti contatterà personalmente</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mini Testimonial in Hero -->
+          <div class="bg-white/5 backdrop-blur-sm rounded-lg p-3 sm:p-4 border border-white/10">
+            <div class="flex items-start gap-2 sm:gap-3">
+              <div class="flex-shrink-0">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-lg sm:text-xl font-bold" style="background: var(--color-accent); color: white;">
+                  F
+                </div>
+              </div>
+              <div>
+                <p class="text-xs sm:text-sm text-white/90 italic mb-1">"Grazie ad EUROPOL® ho ottenuto le prove in soli 5 giorni. La consulenza iniziale è stata fondamentale."</p>
+                <p class="text-xs text-white/70">— Francesca I., Cliente Privato</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Right Column: Form di Contatto -->
+        <div class="landing-form-container">
+          <div class="bg-white rounded-2xl shadow-2xl p-4 sm:p-6 md:p-8 lg:p-10 border relative" style="border-color: rgba(184, 134, 11, 0.2);">
+            <!-- Trust Badge sul Form -->
+            <div class="absolute -top-3 sm:-top-4 left-1/2 transform -translate-x-1/2">
+              <div class="text-white px-4 sm:px-6 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold shadow-lg" style="background: linear-gradient(to right, var(--color-accent), rgba(184, 134, 11, 0.8));">
+                ✓ 10.000+ Casi Risolti
+              </div>
+            </div>
+
+            <div class="text-center mb-4 sm:mb-6 mt-3 sm:mt-4">
+              <h2 class="text-xl sm:text-2xl md:text-3xl font-bold mb-2" style="color: var(--color-black); font-family: 'Playfair Display', serif;">
+                Richiedi Consulenza Gratuita
+              </h2>
+              <p class="text-xs sm:text-sm" style="color: var(--color-text-light);">
+                Compila il modulo e verrai contattato entro 24-72 ore
+              </p>
+            </div>
+            
+            <!-- Progress Indicator -->
+            <div class="mb-4 sm:mb-6">
+              <div class="flex justify-between text-xs mb-2" style="color: var(--color-text-light);">
+                <span>Progresso</span>
+                <span id="form-progress">0%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div id="progress-bar" class="h-2 rounded-full transition-all duration-300" style="background-color: var(--color-accent); width: 0%;"></div>
+              </div>
+            </div>
+            
+            <!-- Form AWeber Integrato -->
+            <form method="POST" action="https://www.aweber.com/scripts/addlead.pl" class="space-y-4" id="consultation-form">
+              <!-- AWeber Hidden Fields -->
+              <div style="display:none;">
+                <input type="hidden" name="meta_web_form_id" value="1491414836" />
+                <input type="hidden" name="meta_split_id" value="" />
+                <input type="hidden" name="listname" value="awlist3510447" />
+                <input type="hidden" name="redirect" value="https://www.europolinvestigazioni.it/richiesta-inviata/" />
+                <input type="hidden" name="meta_redirect_onlist" value="https://www.europolinvestigazioni.it/richiesta-inviata/" />
+                <input type="hidden" name="meta_adtracking" value="LP-ottieni-prove-4" />
+                <input type="hidden" name="meta_message" value="1" />
+                <input type="hidden" name="meta_required" value="name,email,custom Telefono" />
+                <input type="hidden" name="meta_tooltip" value="name||Nome,,email||Email,,custom Telefono||Telefono,,custom Dettagli Caso||Spiega il tuo caso" />
+                <input type="hidden" name="tag_117572904" value="lp-prove-4" />
+              </div>
+              
+              <!-- Honeypot -->
+              <input type="text" name="website" style="display: none;" tabindex="-1" autocomplete="off" />
+              
+              <div>
+                <label for="name" class="block text-sm font-semibold mb-2" style="color: var(--color-black);">
+                  Nome *
+                </label>
+                <input 
+                  type="text" 
+                  id="name" 
+                  name="name" 
+                  required
+                  class="form-input w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 transition-all"
+                  style="border-color: rgba(11, 11, 11, 0.2);"
+                  placeholder="Il tuo nome"
+                />
+                <span class="error-message text-xs text-red-600 hidden" aria-live="polite" role="alert"></span>
+              </div>
+              
+              <div>
+                <label for="email" class="block text-sm font-semibold mb-2" style="color: var(--color-black);">
+                  Email *
+                </label>
+                <input 
+                  type="email" 
+                  id="email" 
+                  name="email" 
+                  required
+                  class="form-input w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 transition-all"
+                  style="border-color: rgba(11, 11, 11, 0.2);"
+                  placeholder="tua.email@esempio.com"
+                />
+                <span class="error-message text-xs text-red-600 hidden" aria-live="polite" role="alert"></span>
+              </div>
+              
+              <div>
+                <label for="phone" class="block text-sm font-semibold mb-2" style="color: var(--color-black);">
+                  Telefono *
+                </label>
+                <input 
+                  type="tel" 
+                  id="phone" 
+                  name="custom Telefono" 
+                  required
+                  class="form-input w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 transition-all"
+                  style="border-color: rgba(11, 11, 11, 0.2);"
+                  placeholder="+39 123 456 7890"
+                />
+                <span class="error-message text-xs text-red-600 hidden" aria-live="polite" role="alert"></span>
+              </div>
+              
+              <div>
+                <label for="details" class="block text-sm font-semibold mb-2" style="color: var(--color-black);">
+                  Dettagli del Caso *
+                </label>
+                <textarea 
+                  id="details" 
+                  name="custom Dettagli Caso" 
+                  required
+                  rows="4"
+                  class="form-input w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 transition-all resize-none"
+                  style="border-color: rgba(11, 11, 11, 0.2);"
+                  placeholder="Descrivi brevemente il tuo caso..."
+                ></textarea>
+                <span class="error-message text-xs text-red-600 hidden" aria-live="polite" role="alert"></span>
+              </div>
+
+              <!-- GDPR Compliance -->
+              <div class="flex items-start gap-3">
+                <input 
+                  type="checkbox" 
+                  id="privacy_consent" 
+                  name="privacy_consent"
+                  required
+                  checked
+                  class="mt-1 w-5 h-5 rounded border-gray-300"
+                  style="accent-color: var(--color-accent);"
+                />
+                <label for="privacy_consent" class="text-xs leading-relaxed" style="color: var(--color-text-light);">
+                  Acconsento al trattamento dei miei dati personali per rispondere alla richiesta, ai sensi del GDPR. 
+                  <a href="/privacy-policy/" class="underline font-semibold" style="color: var(--color-accent);" aria-label="Leggi l'informativa sulla privacy">Leggi l'informativa</a>.
+                </label>
+              </div>
+              
+              <button 
+                type="submit"
+                id="submit-button"
+                class="w-full py-3 sm:py-4 rounded-lg font-bold text-base sm:text-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-xl relative overflow-hidden group touch-manipulation"
+                style="background-color: var(--color-accent); color: white; min-height: 48px;"
+              >
+                <span class="relative z-10">PRENOTA ORA LA TUA CONSULENZA</span>
+                <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+              </button>
+              
+              <p class="text-xs text-center" style="color: var(--color-text-light);">
+                <svg class="inline-block w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                </svg>
+                Rispettiamo la tua Privacy al 100%
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust Badges -->
+  <TrustBadges />
+
+  <!-- Client Logos Section (NUOVO) -->
+  <section class="py-8 sm:py-10 md:py-12 bg-white border-y" style="border-color: rgba(11, 11, 11, 0.1);">
+    <div class="container mx-auto px-4 sm:px-6 max-w-6xl">
+      <p class="text-center text-xs sm:text-sm font-semibold mb-4 sm:mb-6" style="color: var(--color-black); text-transform: uppercase; letter-spacing: 0.1em;">
+        Si Fidano di Noi
+      </p>
+      <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-6 md:gap-8 opacity-60">
+        <div class="text-sm sm:text-base md:text-lg font-semibold" style="color: var(--color-black);">Aziende Farmaceutiche</div>
+        <div class="text-sm sm:text-base md:text-lg font-semibold" style="color: var(--color-black);">Etichette Discografiche</div>
+        <div class="text-sm sm:text-base md:text-lg font-semibold" style="color: var(--color-black);">Multinazionali</div>
+        <div class="text-sm sm:text-base md:text-lg font-semibold" style="color: var(--color-black);">Studi Legali</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <StatsSection stats={stats} />
+
+  <!-- Benefits Section -->
+  <BenefitsSection 
+    title="Perché Scegliere EUROPOL® per Ottenere le Prove"
+    intro="Scegliere EUROPOL® significa avere accesso a:"
+    benefits={benefits}
+  />
+
+  <!-- Cosa Scoprirai Section -->
+  <section class="py-12 sm:py-16 md:py-20 lg:py-28 bg-white">
+    <div class="container mx-auto px-4 max-w-6xl">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6" style="color: var(--color-black); font-family: 'Playfair Display', serif;">
+          Cosa Scoprirai Durante la Tua Consulenza
+        </h2>
+        <p class="text-base sm:text-lg md:text-xl max-w-3xl mx-auto" style="color: var(--color-text-light);">
+          Durante la <strong>Consulenza Investigativa Preliminare</strong> (completamente gratuita e senza impegno)
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+        <div class="bg-white rounded-xl p-8 border hover:shadow-xl transition-all duration-300" style="border-color: rgba(11, 11, 11, 0.1);">
+          <div class="w-16 h-16 rounded-xl mb-6 flex items-center justify-center" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
+            <svg class="w-8 h-8" style="color: var(--color-accent);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold mb-4" style="color: var(--color-black); font-family: 'Playfair Display', serif;">
+            Se è Possibile Ottenere le Prove
+          </h3>
+          <p style="color: var(--color-text-light); line-height: 1.7;">
+            Non accetteremo mai un caso che non possiamo risolvere. Ti diremo onestamente se possiamo aiutarti.
+          </p>
+        </div>
+        
+        <div class="bg-white rounded-xl p-8 border hover:shadow-xl transition-all duration-300" style="border-color: rgba(11, 11, 11, 0.1);">
+          <div class="w-16 h-16 rounded-xl mb-6 flex items-center justify-center" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
+            <svg class="w-8 h-8" style="color: var(--color-accent);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold mb-4" style="color: var(--color-black); font-family: 'Playfair Display', serif;">
+            La Strategia Migliore
+          </h3>
+          <p style="color: var(--color-text-light); line-height: 1.7;">
+            Qual è la Strategia Investigativa migliore per acquisire le prove nel minor tempo possibile.
+          </p>
+        </div>
+        
+        <div class="bg-white rounded-xl p-8 border hover:shadow-xl transition-all duration-300" style="border-color: rgba(11, 11, 11, 0.1);">
+          <div class="w-16 h-16 rounded-xl mb-6 flex items-center justify-center" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
+            <svg class="w-8 h-8" style="color: var(--color-accent);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold mb-4" style="color: var(--color-black); font-family: 'Playfair Display', serif;">
+            Budget e Tempistiche
+          </h3>
+          <p style="color: var(--color-text-light); line-height: 1.7;">
+            Cosa faremo, come lo faremo e quale budget è necessario - nessuna brutta sorpresa alla fine.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Process Steps -->
+  <ProcessSteps title={processSteps.title} steps={processSteps.steps} />
+
+  <!-- Testimonials Section - MIGLIORATA con più visibilità -->
+  <section class="py-12 sm:py-16 md:py-20 lg:py-28 relative overflow-hidden" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.03) 0%, rgba(184, 134, 11, 0.01) 100%);">
+    <div class="container mx-auto px-4 sm:px-6 max-w-7xl">
+      <div class="text-center mb-8 sm:mb-12 md:mb-16">
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4" style="color: var(--color-black); font-family: 'Playfair Display', serif;">
+          Cosa Dicono i Nostri Clienti
+        </h2>
+        <p class="text-base sm:text-lg md:text-xl max-w-2xl mx-auto" style="color: var(--color-text-light);">
+          Oltre 10.000 clienti hanno scelto EUROPOL® per ottenere le prove di cui avevano bisogno
+        </p>
+      </div>
+      <Testimonials testimonials={testimonials} />
+    </div>
+  </section>
+
+  <!-- Risk Reversal / Garanzia Section -->
+  <section class="py-12 sm:py-16 md:py-20 lg:py-28 relative overflow-hidden" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.05) 0%, rgba(184, 134, 11, 0.02) 100%);">
+    <div class="container mx-auto px-4 sm:px-6 max-w-6xl">
+      <div class="bg-white rounded-2xl p-6 sm:p-8 md:p-10 lg:p-16 border shadow-xl" style="border-color: rgba(184, 134, 11, 0.2);">
+        <div class="text-center mb-6 sm:mb-8 md:mb-10">
+          <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full mx-auto mb-4 sm:mb-6 flex items-center justify-center" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.15), rgba(184, 134, 11, 0.1));">
+            <svg class="w-8 h-8 sm:w-10 sm:h-10" style="color: var(--color-accent);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+            </svg>
+          </div>
+          <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4" style="color: var(--color-black); font-family: 'Playfair Display', serif;">
+            La Nostra Garanzia
+          </h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+          <div>
+            <h3 class="text-xl font-bold mb-4" style="color: var(--color-black);">
+              ✓ Consulenza Gratuita e Senza Impegno
+            </h3>
+            <p style="color: var(--color-text-light); line-height: 1.8;">
+              La consulenza investigativa preliminare è completamente gratuita. Non ti chiederemo alcun pagamento fino a quando non deciderai di procedere con l'indagine.
+            </p>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold mb-4" style="color: var(--color-black);">
+              ✓ Prove Valide in Sede Legale
+            </h3>
+            <p style="color: var(--color-text-light); line-height: 1.8;">
+              Tutte le prove raccolte sono conformi alla GARANZIA LEGALIS™ e sono utilizzabili in sede giudiziaria. Non accettiamo casi che non possiamo risolvere legalmente.
+            </p>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold mb-4" style="color: var(--color-black);">
+              ✓ Massima Riservatezza Garantita
+            </h3>
+            <p style="color: var(--color-text-light); line-height: 1.8;">
+              La tua privacy è protetta al 100%. Tutte le informazioni sono trattate con la massima discrezione e confidenzialità, nel rispetto della normativa vigente.
+            </p>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold mb-4" style="color: var(--color-black);">
+              ✓ Trasparenza Totale sui Costi
+            </h3>
+            <p style="color: var(--color-text-light); line-height: 1.8;">
+              Ti forniremo un preventivo dettagliato e trasparente prima di iniziare qualsiasi indagine. Nessun costo nascosto, nessuna sorpresa.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Chi Siamo Section -->
+  <ImageTextSection 
+    image="/media/uploads/2023/07/Alvaro-Silvij-EUROPOL-Intelligence-Investigazioni.png"
+    imageAlt="Alvaro Silvij - Fondatore EUROPOL"
+    title="60+ Anni di Esperienza nel Settore"
+    content="EUROPOL® Intelligence & Investigations è stato fondato a Roma nel 1962 dal Gr. Ufficiale Alvaro Silvij. Da oltre 60 anni forniamo servizi di Intelligence e Investigazioni Private in Italia e nel Mondo. Nel corso della nostra storia abbiamo aiutato Privati Cittadini, Imprenditori ed Istituzioni a scoprire e dimostrare legalmente la verità: i Dossier EUROPOL sono sempre validi in Sede Legale, poiché presentano Prove reperite unicamente con Metodologie a Norma di Legge. Le indagini svolte da EUROPOL® sono conformi al Sistema P.R.O.V.A.™ - la metodologia d'indagine composta da 5 fasi: Pianificazione, Raccolta informazioni, Osservazione, Verifica ed Analisi dei Risultati."
+    imagePosition="right"
+  />
+
+  <!-- Klara Murnau Section -->
+  <section class="py-12 sm:py-16 md:py-20 lg:py-28 bg-white">
+    <div class="container mx-auto px-4 sm:px-6 max-w-6xl">
+      <div class="text-center mb-8 sm:mb-12 md:mb-16">
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6" style="color: var(--color-black); font-family: 'Playfair Display', serif;">
+          Verrai Contattato dal Chief Detective di EUROPOL
+        </h2>
+        <p class="text-base sm:text-lg md:text-xl max-w-3xl mx-auto" style="color: var(--color-text-light);">
+          La <strong>Dott.ssa Klara Murnau</strong> ti contatterà telefonicamente nell'arco delle 24-72 ore dall'invio della richiesta
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 md:gap-12 items-center">
+        <div>
+          <img 
+            src="/media/uploads/2023/07/Frame-22988@2x.png" 
+            alt="Klara Murnau, Chief Detective di EUROPOL Intelligence & Investigations, specializzata in investigazioni private e corporate"
+            class="w-full rounded-xl shadow-2xl"
+            loading="lazy"
+          />
+        </div>
+        <div>
+          <h3 class="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6" style="color: var(--color-black); font-family: 'Playfair Display', serif;">
+            Chi è Klara Murnau
+          </h3>
+          <div style="color: var(--color-text-light); line-height: 1.8;" class="space-y-4">
+            <p>
+              Klara Murnau, classe 1981, ha una doppia cittadinanza Australiana ereditata dal padre, militare della Marina. Studi di primo livello in Chimica, viaggia e vive in diverse nazioni fin da bambina acquisendo grazie al suo background cosmopolita specifiche peculiarità che spaziano dalla conoscenza di materie come Antropologia sociale, Prossemica e Cinesica, fino alle tecniche di Intelligence Militare.
+            </p>
+            <p>
+              Docente di Antispionaggio per diverse aziende, Indagini sotto copertura in Italia e all'estero, Strategie d'Intelligence, Consulenze Investigative Private e Corporate, sono da diversi anni i suoi asset professionali.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Intermedio -->
+  <InlineCTA 
+    title="Pronto a Ottenere le Prove di cui hai Bisogno?"
+    text="Non aspettare. Ogni giorno che passa può essere cruciale per il tuo caso. Richiedi subito la tua Consulenza Investigativa Gratuita."
+    ctaText="Richiedi Consulenza Gratuita Ora"
+    ctaLink="#consulenza"
+  />
+
+  <!-- FAQ Section -->
+  <FAQSection title="Domande Frequenti" faqs={faqs} />
+
+  <!-- Final CTA -->
+  <section class="py-12 sm:py-16 md:py-20 lg:py-28 relative overflow-hidden" style="background: linear-gradient(135deg, #0b0b0b 0%, #1a1a1a 100%);">
+    <div class="absolute inset-0 opacity-10 hero-pattern"></div>
+    <div class="container mx-auto px-4 sm:px-6 max-w-4xl text-center relative z-10">
+      <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 sm:mb-8 text-white" style="font-family: 'Playfair Display', serif; color: white !important;">
+        Inizia Oggi
+      </h2>
+      <p class="text-base sm:text-lg md:text-xl lg:text-2xl mb-8 sm:mb-10 md:mb-12 text-white max-w-2xl mx-auto">
+        Richiedi subito la tua Consulenza Investigativa Gratuita e scopri come possiamo aiutarti a ottenere le informazioni e le prove di cui hai bisogno.
+      </p>
+      <a 
+        href="#consulenza"
+        class="inline-block px-6 sm:px-8 md:px-12 py-4 sm:py-5 md:py-6 rounded-xl font-bold text-base sm:text-lg md:text-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl relative overflow-hidden group touch-manipulation"
+        style="background-color: var(--color-accent); color: white; min-height: 48px;"
+      >
+        <span class="relative z-10">PRENOTA SUBITO LA TUA CONSULENZA</span>
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+      </a>
+    </div>
+  </section>
+
+  <!-- Service CTA (come nelle altre pagine) -->
+  <ServiceCTA />
+</BaseLayout>
+
+<script>
+  // Live Activity Indicator
+  const activities = [
+    "⚡ 3 consulenze richieste nelle ultime 2 ore",
+    "✓ Ultima consulenza completata 15 minuti fa",
+    "📞 5 clienti contattati oggi",
+    "🎯 2 nuovi casi risolti questa settimana"
+  ];
+  
+  let activityIndex = 0;
+  const activityElement = document.querySelector('.activity-text');
+  const liveActivity = document.getElementById('live-activity');
+  
+  if (activityElement && liveActivity) {
+    function updateActivity() {
+      activityElement.textContent = activities[activityIndex];
+      activityIndex = (activityIndex + 1) % activities.length;
+    }
+    
+    updateActivity();
+    setInterval(updateActivity, 8000);
+    
+    // Show after 2 seconds
+    setTimeout(() => {
+      liveActivity.style.display = 'block';
+    }, 2000);
+  }
+
+  // Form Progress Indicator
+  const formProgress = document.getElementById('consultation-form');
+  const inputsProgress = formProgress?.querySelectorAll('.form-input');
+  const progressBar = document.getElementById('progress-bar');
+  const progressText = document.getElementById('form-progress');
+  
+  if (inputsProgress && progressBar && progressText) {
+    function updateProgress() {
+      let filled = 0;
+      inputsProgress.forEach(input => {
+        if (input.value.trim() !== '') {
+          filled++;
+        }
+      });
+      const progress = (filled / inputsProgress.length) * 100;
+      progressBar.style.width = progress + '%';
+      progressText.textContent = Math.round(progress) + '%';
+    }
+    
+    inputsProgress.forEach(input => {
+      input.addEventListener('input', updateProgress);
+      input.addEventListener('blur', updateProgress);
+    });
+  }
+
+  // Smooth scroll to form
+  document.querySelectorAll('a[href="#consulenza"]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.getElementById('consulenza')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  // Form Validation Migliorata
+  const form = document.getElementById('consultation-form');
+  const inputs = form?.querySelectorAll('.form-input');
+  
+  if (inputs) {
+    inputs.forEach(input => {
+      input.addEventListener('blur', function() {
+        validateField(input);
+      });
+      
+      input.addEventListener('input', function() {
+        const errorMsg = input.parentElement?.querySelector('.error-message');
+        if (errorMsg && input.value.trim() !== '') {
+          errorMsg.classList.add('hidden');
+          input.style.borderColor = 'rgba(11, 11, 11, 0.2)';
+          input.classList.remove('error');
+          input.classList.remove('success');
+        }
+      });
+    });
+  }
+
+  function validateField(field) {
+    const errorMsg = field.parentElement?.querySelector('.error-message');
+    if (!errorMsg) return;
+    
+    if (field.hasAttribute('required') && !field.value.trim()) {
+      errorMsg.textContent = 'Questo campo è obbligatorio';
+      errorMsg.classList.remove('hidden');
+      field.style.borderColor = '#ef4444';
+      field.classList.add('error');
+      return false;
+    }
+    
+    if (field.type === 'email' && field.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value)) {
+      errorMsg.textContent = 'Inserisci un indirizzo email valido';
+      errorMsg.classList.remove('hidden');
+      field.style.borderColor = '#ef4444';
+      field.classList.add('error');
+      return false;
+    }
+    
+    if (field.type === 'tel' && field.value && !/^[\d\s\+\-\(\)\.]+$/.test(field.value)) {
+      errorMsg.textContent = 'Inserisci un numero di telefono valido';
+      errorMsg.classList.remove('hidden');
+      field.style.borderColor = '#ef4444';
+      field.classList.add('error');
+      return false;
+    }
+    
+    errorMsg.classList.add('hidden');
+    field.style.borderColor = 'rgba(11, 11, 11, 0.2)';
+    field.classList.remove('error');
+    return true;
+  }
+
+  // Auto-seleziona il consenso quando si clicca sul pulsante
+  const submitButton = document.getElementById('submit-button');
+  submitButton?.addEventListener('click', function(e) {
+    const consentCheckbox = document.getElementById('privacy_consent');
+    if (consentCheckbox && !consentCheckbox.checked) {
+      consentCheckbox.checked = true;
+    }
+  });
+
+  // Form submission handler
+  form?.addEventListener('submit', function(e) {
+    let isValid = true;
+    inputs?.forEach(input => {
+      if (!validateField(input)) {
+        isValid = false;
+      }
+    });
+    
+    // Check GDPR consent
+    const consentCheckbox = document.getElementById('privacy_consent');
+    if (consentCheckbox && !consentCheckbox.checked) {
+      isValid = false;
+      consentCheckbox.focus();
+    }
+    
+    if (!isValid) {
+      e.preventDefault();
+      // Scroll to first error
+      const firstError = form.querySelector('.error-message:not(.hidden)');
+      if (firstError) {
+        firstError.closest('div')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else if (!consentCheckbox?.checked) {
+        consentCheckbox?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  });
+</script>
+
+<style>
+  .live-activity-bar {
+    background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.05));
+    border-bottom: 1px solid rgba(184, 134, 11, 0.2);
+    padding: 0.75rem 0;
+    display: none;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(10px);
+  }
+
+  .live-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--color-accent);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.2); }
+  }
+
+  .activity-text {
+    color: var(--color-text-light);
+    font-weight: 500;
+  }
+
+  .landing-hero {
+    background: linear-gradient(135deg, #0b0b0b 0%, #1a1a1a 25%, #2d2d2d 50%, #1a1a1a 75%, #0b0b0b 100%);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+  }
+
+  @keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  .hero-pattern {
+    background-image: 
+      radial-gradient(circle at 2px 2px, rgba(184, 134, 11, 0.15) 1px, transparent 0),
+      radial-gradient(circle at 20px 20px, rgba(184, 134, 11, 0.08) 1px, transparent 0);
+    background-size: 40px 40px, 80px 80px;
+  }
+
+  .hero-gradient-animated {
+    background: linear-gradient(135deg, rgba(184, 134, 11, 0.1) 0%, transparent 50%, rgba(184, 134, 11, 0.05) 100%);
+    animation: pulse 8s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.6; }
+  }
+
+  .landing-form-container {
+    animation: fadeInUp 1s ease-out;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .form-input:focus {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.1);
+  }
+
+  /* Badge Hero Styles */
+  .hero-badge {
+    animation: fadeInDown 1s ease-out;
+  }
+
+  .badge-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    padding: 0.75rem 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  .badge-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--color-accent);
+    letter-spacing: 0.1em;
+  }
+
+  .badge-line {
+    width: 1px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  .badge-subtext {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+  }
+
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Form validation styles */
+  .form-input.error {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+  }
+
+  .form-input.success {
+    border-color: rgba(11, 11, 11, 0.2) !important;
+    box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.1) !important;
+  }
+
+  /* Mobile optimizations */
+  @media (max-width: 640px) {
+    .landing-hero {
+      min-height: auto;
+      padding: 2rem 0;
+    }
+
+    .hero-badge {
+      top: 1rem;
+    }
+
+    .badge-content {
+      flex-direction: column;
+      gap: 0.25rem;
+      padding: 0.5rem 0.75rem;
+    }
+
+    .badge-text {
+      font-size: 0.875rem;
+    }
+
+    .badge-subtext {
+      font-size: 0.75rem;
+    }
+
+    .badge-line {
+      width: 30px;
+      height: 1px;
+    }
+
+    /* Touch-friendly form inputs */
+    .form-input {
+      font-size: 16px; /* Prevents zoom on iOS */
+      min-height: 44px; /* Touch target size */
+    }
+
+    /* Logo nella hero - mobile */
+    .hero-logo {
+      height: 2rem;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .landing-hero {
+      min-height: auto;
+      padding: 3rem 0;
+    }
+
+    .badge-content {
+      flex-direction: column;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+    }
+
+    .badge-line {
+      width: 40px;
+      height: 1px;
+    }
+  }
+
+  /* Touch-friendly buttons */
+  @media (hover: none) and (pointer: coarse) {
+    button, a[href] {
+      min-height: 44px;
+      min-width: 44px;
+    }
+  }
+
+  /* Prefers Reduced Motion */
+  @media (prefers-reduced-motion: reduce) {
+    .live-dot,
+    .hero-gradient,
+    .hero-gradient-animated,
+    .landing-form-container,
+    .hero-badge {
+      animation: none !important;
+    }
+    
+    * {
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+

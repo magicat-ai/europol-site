@@ -1,0 +1,9 @@
+# Netlify-style redirects file
+# Format: source destination status_code
+
+# Typo/variant redirects
+/agenzia-investtigativa/ / 301
+/agenzia-investigativa-aziendale/ /investigazioni-aziendali/ 301
+/agenzia-investigativa-privata/ /investigazioni-private/ 301
+/istituto-europol/ /europol-istituto-di-investigazioni/ 301
+

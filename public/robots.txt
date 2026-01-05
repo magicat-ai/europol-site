@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://europolinvestigazioni.it/sitemap.xml
+

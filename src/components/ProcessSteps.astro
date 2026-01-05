@@ -1,0 +1,49 @@
+---
+interface Step {
+  number: string;
+  title: string;
+  description: string;
+  icon?: string;
+}
+
+interface Props {
+  steps: Step[];
+  title?: string;
+}
+
+const { steps, title = "Il Nostro Processo" } = Astro.props;
+---
+
+<section class="py-20 bg-white">
+  <div class="container mx-auto px-4 max-w-6xl">
+    <h2 class="text-3xl md:text-4xl font-bold text-center mb-16" style="color: var(--color-black); font-family: 'Playfair Display', serif;">
+      {title}
+    </h2>
+    
+    <div class="relative">
+      <!-- Connecting line (desktop only) -->
+      <div class="hidden md:block absolute top-12 left-0 right-0 h-0.5" style="background: linear-gradient(to right, var(--color-accent), transparent);"></div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        {steps.map((step, index) => (
+          <div class="relative">
+            <!-- Step number circle -->
+            <div class="w-24 h-24 rounded-full mx-auto mb-6 flex items-center justify-center text-3xl font-bold relative z-10 shadow-lg transition-transform duration-300 hover:scale-110" style="background-color: var(--color-accent); color: white; font-family: 'Playfair Display', serif;">
+              {step.number}
+            </div>
+            
+            <div class="text-center">
+              <h3 class="text-xl font-bold mb-3" style="color: var(--color-black); font-family: 'Playfair Display', serif;">
+                {step.title}
+              </h3>
+              <p class="text-sm leading-relaxed" style="color: var(--color-text-light);">
+                {step.description}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+

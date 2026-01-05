@@ -1,0 +1,1007 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EnhancedMarkdownContent from '../components/EnhancedMarkdownContent.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import ServiceCTA from '../components/ServiceCTA.astro';
+import InlineCTA from '../components/InlineCTA.astro';
+import RelatedContent from '../components/RelatedContent.astro';
+import PageHero from '../components/PageHero.astro';
+import ProcessSteps from '../components/ProcessSteps.astro';
+import ProcessSection from '../components/ProcessSection.astro';
+import ImageTextSection from '../components/ImageTextSection.astro';
+import FAQSection from '../components/FAQSection.astro';
+import BlogCTA from '../components/BlogCTA.astro';
+import ShareButtons from '../components/ShareButtons.astro';
+import { getPageContent, getAllPages } from '../utils/content';
+import { calculateReadingTime } from '../utils/blogUtils';
+import { marked } from 'marked';
+
+export async function getStaticPaths() {
+  const pages = getAllPages();
+  
+  return pages.map((path) => {
+    // Skip homepage and contatti (they have their own routes)
+    if (path === '/' || path === '/contatti/') {
+      return { params: { slug: undefined } };
+    }
+    
+    // Remove leading and trailing slashes, join with / for catch-all
+    const slug = path.replace(/^\/|\/$/g, '');
+    
+    return {
+      params: { slug: slug || undefined }
+    };
+  }).filter(p => p.params.slug !== undefined);
+}
+
+// Get the slug from URL - it's a string with slashes for nested paths
+const { slug } = Astro.params;
+const urlPath = slug ? `/${slug}/` : '/';
+
+// Load page content
+const pageData = getPageContent(urlPath);
+const { content, seo } = pageData;
+
+// Extract content after metadata (remove frontmatter-like headers)
+let pageContent = content;
+// Remove URL, Content Length, Flags, and SEO metadata lines
+pageContent = pageContent.replace(/^\*\*URL:\*\*.*$/gm, '');
+pageContent = pageContent.replace(/^\*\*Content Length:\*\*.*$/gm, '');
+pageContent = pageContent.replace(/^\*\*Flags:\*\*.*$/gm, '');
+pageContent = pageContent.replace(/^\*\*Meta Title:\*\*.*$/gm, '');
+pageContent = pageContent.replace(/^\*\*Meta Description:\*\*.*$/gm, '');
+pageContent = pageContent.replace(/^\*\*Canonical:\*\*.*$/gm, '');
+pageContent = pageContent.replace(/^---$/gm, '');
+
+// Extract H1 from markdown (first line starting with #)
+let h1Title = '';
+const h1Match = pageContent.match(/^#\s+(.+)$/m);
+if (h1Match) {
+  h1Title = h1Match[1].trim();
+  // Remove H1 from content (first occurrence only)
+  pageContent = pageContent.replace(/^#\s+.+$/m, '');
+}
+
+// Function to generate complete subtitle (SEO + Conversion optimized, single fluent sentence)
+function getSubtitle(urlPath, h1Title, metaDescription) {
+  // Remove "dal 1962" from meta description if present to avoid repetition
+  let cleanMeta = metaDescription || '';
+  cleanMeta = cleanMeta.replace(/\s*dal\s+1962[.,]?/gi, '').trim();
+  
+  // Extract first sentence or first 100 chars from meta description
+  const metaFirstPart = cleanMeta.split('.')[0] || cleanMeta.substring(0, 100);
+  
+  // Hub principali - congiunzione per fluidità
+  if (urlPath === '/investigazioni-private/') {
+    return `Investigazioni private in Italia: richiedi una consulenza gratuita e riservata con EUROPOL® dal 1962`;
+  }
+  
+  if (urlPath === '/investigazioni-aziendali/') {
+    return `Investigazioni aziendali e corporate intelligence: scopri come possiamo aiutarti con una consulenza gratuita di EUROPOL® dal 1962`;
+  }
+  
+  if (urlPath === '/intelligence-e-servizi-speciali/') {
+    return `Intelligence & Servizi Specializzati: servizi investigativi avanzati con una consulenza gratuita di EUROPOL® dal 1962`;
+  }
+  
+  // Location pages - Roma (due punti per direzione)
+  if (urlPath.includes('investigatore-privato-roma')) {
+    return `Investigatore privato a Roma: richiedi una consulenza gratuita e senza impegno con EUROPOL® dal 1962`;
+  }
+  
+  if (urlPath.includes('agenzia-investigativa-roma')) {
+    return `Agenzia investigativa a Roma: prenota una consulenza gratuita con EUROPOL® dal 1962`;
+  }
+  
+  if (urlPath.includes('investigazioni-private-roma')) {
+    return `Investigazioni private a Roma: scopri come possiamo aiutarti con una consulenza gratuita di EUROPOL® dal 1962`;
+  }
+  
+  // Location pages - Milano (due punti per direzione)
+  if (urlPath.includes('investigatore-privato-milano')) {
+    return `Investigatore privato a Milano: richiedi una consulenza gratuita e senza impegno con EUROPOL® dal 1962`;
+  }
+  
+  if (urlPath.includes('agenzia-investigativa-milano')) {
+    return `Agenzia investigativa a Milano: prenota una consulenza gratuita con EUROPOL® dal 1962`;
+  }
+  
+  if (urlPath.includes('investigazioni-private-milano')) {
+    return `Investigazioni private a Milano: scopri come possiamo aiutarti con una consulenza gratuita di EUROPOL® dal 1962`;
+  }
+  
+  // Service child pages - investigazioni-private (congiunzione per fluidità)
+  if (urlPath.includes('/investigazioni-private/investigazioni-infedelta-coniugale-tradimento/')) {
+    return `Servizi investigativi per infedeltà coniugale: richiedi una consulenza gratuita e senza impegno con EUROPOL® dal 1962`;
+  }
+  
+  if (urlPath.includes('/investigazioni-private/investigazioni-separazione-divorzio/')) {
+    return `Investigazioni per separazione e divorzio: prenota una consulenza gratuita con EUROPOL® dal 1962`;
+  }
+  
+  if (urlPath.includes('/investigazioni-private/investigazioni-affidamento-minori/')) {
+    return `Investigazioni per affidamento minori: scopri come possiamo aiutarti con una consulenza gratuita di EUROPOL® dal 1962`;
+  }
+  
+  if (urlPath.includes('/investigazioni-private/investigazioni-pre-matrimoniali/')) {
+    return `Investigazioni pre-matrimoniali: richiedi una consulenza gratuita e riservata con EUROPOL® dal 1962`;
+  }
+  
+  if (urlPath.includes('/investigazioni-private/investigazioni-sicurezza-personale-familiare/')) {
+    return `Investigazioni per sicurezza personale e familiare: inizia con una consulenza gratuita con EUROPOL® dal 1962`;
+  }
+  
+  // Service child pages - investigazioni-aziendali (congiunzione per fluidità)
+  if (urlPath.includes('/investigazioni-aziendali/investigazioni-pre-assunzione/')) {
+    return `Investigazioni pre-assunzione per aziende: richiedi una consulenza gratuita con EUROPOL® dal 1962`;
+  }
+  
+  if (urlPath.includes('/investigazioni-aziendali/investigazioni-licenziamento-giusta-causa/')) {
+    return `Investigazioni per licenziamento per giusta causa: scopri come possiamo aiutarti con una consulenza gratuita di EUROPOL® dal 1962`;
+  }
+  
+  if (urlPath.includes('/investigazioni-aziendali/investigazioni-concorrenza-sleale/')) {
+    return `Investigazioni per concorrenza sleale: prenota una consulenza gratuita con EUROPOL® dal 1962`;
+  }
+  
+  if (urlPath.includes('/investigazioni-aziendali/investigazioni-ammanchi-differenze-inventariali/')) {
+    return `Investigazioni per ammanchi e differenze inventariali: richiedi una consulenza gratuita e senza impegno con EUROPOL® dal 1962`;
+  }
+  
+  // Supporting pages
+  if (urlPath === '/europol-istituto-di-investigazioni/') {
+    return `Istituto di investigazioni fondato a Roma nel 1962: contatta EUROPOL® per una consulenza gratuita`;
+  }
+  
+  if (urlPath === '/sistema-prova/') {
+    return `Metodologia investigativa certificata Sistema PROVA™: scopri come possiamo aiutarti con una consulenza gratuita di EUROPOL® dal 1962`;
+  }
+  
+  if (urlPath === '/valutazioni-dei-clienti/') {
+    return `Testimonianze e valutazioni dei clienti: richiedi una consulenza gratuita con EUROPOL® dal 1962`;
+  }
+  
+  if (urlPath === '/studi-legali-e-avvocati/') {
+    return `Servizi investigativi per studi legali e avvocati: prenota una consulenza gratuita con EUROPOL® dal 1962`;
+  }
+  
+  if (urlPath === '/contatti/') {
+    return `Contatta EUROPOL® per una consulenza gratuita: agenzia investigativa dal 1962`;
+  }
+  
+  // Default: use first part of meta description + brand (if meaningful)
+  if (metaFirstPart && metaFirstPart.length > 20) {
+    return `${metaFirstPart}: richiedi una consulenza gratuita con EUROPOL® dal 1962`;
+  }
+  
+  // Fallback
+  return `Agenzia investigativa: richiedi una consulenza gratuita con EUROPOL® dal 1962`;
+}
+
+// Get complete subtitle (no repetition)
+const pageSubtitle = getSubtitle(urlPath, h1Title, seo.meta_description);
+
+// Remove "Approfondisci" section and duplicate service lists
+pageContent = pageContent.replace(/^Approfondisci\s*\n(?:-\s*.*\n)+/gm, '');
+pageContent = pageContent.replace(/^Approfondisci\s*\n/gm, '');
+
+// Remove duplicate service names at the beginning (before first real paragraph)
+// Pattern: lines with only service names (no punctuation, < 100 chars, multiple words)
+const lines = pageContent.split('\n');
+let cleanedLines = [];
+let foundRealContent = false;
+
+for (let i = 0; i < lines.length; i++) {
+  const line = lines[i];
+  
+  // Keep metadata and separators
+  if (line.trim().startsWith('#') || line.trim() === '' || line.trim().startsWith('**')) {
+    cleanedLines.push(line);
+    if (line.trim().startsWith('#')) {
+      foundRealContent = true;
+    }
+    continue;
+  }
+  
+  // If we haven't found real content yet, check if this is a real paragraph
+  if (!foundRealContent) {
+    // Real content has: punctuation, or is > 100 chars, or starts with uppercase and has punctuation
+    const hasPunctuation = /[.,:;!?]/.test(line);
+    const isLong = line.trim().length > 100;
+    const startsWithUpper = /^[A-ZÀ-ÿ]/.test(line.trim());
+    
+    if (hasPunctuation || (isLong && startsWithUpper)) {
+      foundRealContent = true;
+      cleanedLines.push(line);
+      continue;
+    }
+    
+    // Skip lines that are just service names (short, no punctuation, multiple capitalized words)
+    if (line.trim().length < 80 && !hasPunctuation && /^[A-ZÀ-ÿ][a-zà-ÿ]+(?:\s+[A-ZÀ-ÿ][a-zà-ÿ]+)+$/.test(line.trim())) {
+      continue; // Skip this line
+    }
+  }
+  
+  // Remove duplicate text in same line
+  const dedupedLine = line.replace(/([A-Za-zÀ-ÿ\s]{15,})\1+/g, '$1');
+  cleanedLines.push(dedupedLine);
+}
+
+pageContent = cleanedLines.join('\n').trim();
+
+// Remove remaining duplicate blocks
+pageContent = pageContent.replace(/(.{50,}?)\1+/g, '$1');
+
+// Extract Process section (if present) - similar to homepage
+// Match "### Il Processo Investigativo" or "## Il Processo Investigativo" or variations
+// Also match "Il Processo Investigativo in 4 Fasi" or similar
+const processMatch = pageContent.match(/(?:##|###)\s+(?:Il\s+)?Processo\s+Investigativo[^\n]*\s*\n\n([\s\S]*?)(?=\n##|$)/i);
+let processSteps: Array<{ number: string; title: string; description: string; details?: string[] }> = [];
+if (processMatch) {
+  const processText = processMatch[1];
+  
+  // Match: #### Number. Title\n\nDescription and list items (until next #### or ##)
+  const stepPattern = /####\s+(\d+)\.\s+([^\n]+)\n\n([\s\S]*?)(?=\n####\s+\d+\.|\n##|$)/g;
+  let stepMatch;
+  
+  while ((stepMatch = stepPattern.exec(processText)) !== null) {
+    const number = stepMatch[1];
+    const title = stepMatch[2].trim();
+    const content = stepMatch[3];
+    
+    // Extract description (text before list, first paragraph)
+    const descParts: string[] = [];
+    const lines = content.split('\n');
+    let foundList = false;
+    
+    for (const line of lines) {
+      if (line.trim().startsWith('-')) {
+        foundList = true;
+        break; // Stop at list
+      }
+      if (line.trim() && !line.trim().startsWith('Non c\'è') && !line.trim().startsWith('Ogni caso') && !line.trim().startsWith('Durante questa fase') && !line.trim().startsWith('Tutto il materiale')) {
+        descParts.push(line.trim());
+      }
+    }
+    
+    // If no description found, use first non-list line
+    if (descParts.length === 0) {
+      for (const line of lines) {
+        if (line.trim() && !line.trim().startsWith('-')) {
+          descParts.push(line.trim());
+          break;
+        }
+      }
+    }
+    
+    const description = descParts.join(' ').trim();
+    
+    // Extract list items as details
+    const details: string[] = [];
+    const listMatches = content.matchAll(/-\s+([^\n]+)/g);
+    for (const listMatch of listMatches) {
+      details.push(listMatch[1].trim());
+    }
+    
+    // Add final sentence if exists (like "Non c'è alcun vincolo...")
+    const finalSentences = content.match(/(?:Non c'è|Ogni caso|Durante questa fase|Tutto il materiale)[^\n]+[\s\S]*?(?=\n####|\n##|$)/);
+    if (finalSentences && !description.includes(finalSentences[0].trim())) {
+      const finalText = finalSentences[0].trim();
+      if (finalText.length < 200) { // Only add if not too long
+        descParts.push(finalText);
+      }
+    }
+    
+    processSteps.push({
+      number,
+      title,
+      description: descParts.join(' ').trim() || description || title,
+      details: details.length > 0 ? details : undefined
+    });
+  }
+  
+  // Remove process section from pageContent
+  if (processMatch[0]) {
+    pageContent = pageContent.replace(processMatch[0], '').trim();
+  }
+}
+
+// Extract FAQ section (if present) - similar to homepage
+// Match "## Domande Frequenti" with any text after it, until next ## section or end of file
+// Fixed regex to properly match FAQ sections - stops at next H2 section or end of file
+const faqMatch = pageContent.match(/##\s+Domande Frequenti[^\n]*\s*\n+([\s\S]*?)(?=\n##\s+[^\n#]|$)/i);
+let faqs: Array<{ question: string; answer: string }> = [];
+if (faqMatch) {
+  const faqText = faqMatch[1].trim();
+  
+  // Match: ### Question\n\nAnswer (until next ### or end)
+  // Improved regex to handle various formatting cases - allow single or double newlines
+  // Split by ### to get individual FAQ items
+  const faqItems = faqText.split(/\n###\s+/).filter(item => item.trim());
+  
+  for (const item of faqItems) {
+    const lines = item.split('\n');
+    if (lines.length === 0) continue;
+    
+    // Remove any remaining ### markers from the question
+    let question = lines[0].trim().replace(/^###\s*/, '');
+    if (!question || question.length < 5) continue;
+    
+    // Get answer (everything after first line, skipping empty lines at start)
+    let answerLines: string[] = [];
+    let foundAnswer = false;
+    
+    for (let i = 1; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (!foundAnswer && !line) {
+        // Skip leading empty lines
+        continue;
+      }
+      foundAnswer = true;
+      answerLines.push(line);
+    }
+    
+    const answerText = answerLines.join('\n').trim();
+    
+    // Skip if answer is too short or empty
+    if (answerText && answerText.length > 10) {
+      faqs.push({
+        question,
+        answer: marked.parse(answerText)
+      });
+    }
+  }
+  
+  // Debug: log if FAQs were found (only in dev)
+  if (faqs.length === 0 && faqText.length > 50) {
+    console.warn(`[FAQ] No FAQs extracted from section, but FAQ text exists (${faqText.length} chars)`);
+    console.warn(`[FAQ] FAQ text preview: ${faqText.substring(0, 200)}`);
+  }
+  
+  // Remove FAQ section from pageContent (include the heading)
+  if (faqMatch[0]) {
+    pageContent = pageContent.replace(faqMatch[0], '').trim();
+  }
+}
+
+// Build breadcrumb (will be completed after isBlogPost is defined)
+const pathSegments = urlPath.split('/').filter(Boolean);
+let breadcrumbItems = [
+  { name: 'Home', href: '/' },
+];
+
+// Determine robots meta tag
+let robotsMeta = 'index, follow';
+const noindexPages = ['/richiesta-inviata/', '/studi-legali-e-avvocati-grazie/'];
+const noindexNofollowPages = ['/test/'];
+
+if (noindexPages.includes(urlPath)) {
+  robotsMeta = 'noindex, follow';
+} else if (noindexNofollowPages.includes(urlPath)) {
+  robotsMeta = 'noindex, nofollow';
+}
+
+// Hero images mapping for service pages
+const heroImages: Record<string, string> = {
+  '/investigazioni-private/': undefined, // Will use gradient
+  '/investigazioni-aziendali/': undefined, // Will use gradient
+  '/intelligence-e-servizi-speciali/': undefined, // Will use gradient
+  '/investigazioni-private/investigazioni-infedelta-coniugale-tradimento/': undefined,
+  '/investigazioni-private/investigazioni-separazione-divorzio/': undefined,
+  '/investigazioni-private/investigazioni-affidamento-minori/': undefined,
+  '/investigazioni-private/investigazioni-pre-matrimoniali/': undefined,
+  '/investigazioni-private/investigazioni-sicurezza-personale-familiare/': undefined,
+  '/investigazioni-aziendali/investigazioni-pre-assunzione/': undefined,
+  '/investigazioni-aziendali/investigazioni-licenziamento-giusta-causa/': undefined,
+  '/investigazioni-aziendali/investigazioni-concorrenza-sleale/': undefined,
+  '/investigazioni-aziendali/investigazioni-ammanchi-differenze-inventariali/': undefined,
+};
+
+const heroImage = heroImages[urlPath];
+const shouldShowHero = !noindexPages.includes(urlPath) && !noindexNofollowPages.includes(urlPath);
+
+// Determine if this is a main service page (for adding visual sections)
+const mainServicePages = [
+  '/investigazioni-private/',
+  '/investigazioni-aziendali/',
+  '/intelligence-e-servizi-speciali/',
+  '/investigazioni-private/investigazioni-infedelta-coniugale-tradimento/',
+  '/investigazioni-private/investigazioni-separazione-divorzio/',
+  '/investigazioni-aziendali/investigazioni-pre-assunzione/',
+  '/investigazioni-aziendali/investigazioni-licenziamento-giusta-causa/',
+];
+
+const isMainServicePage = mainServicePages.includes(urlPath);
+
+// Processi specifici per tipo di servizio (per SEO e conversioni)
+const processStepsMap: Record<string, any> = {
+  '/investigazioni-private/investigazioni-infedelta-coniugale-tradimento/': {
+    title: "Come Funzionano le Investigazioni per Infedeltà",
+    steps: [
+      {
+        number: "1",
+        title: "Consulenza Gratuita",
+        description: "Analisi del caso in massima riservatezza. Valutazione delle prove necessarie per procedimenti legali."
+      },
+      {
+        number: "2",
+        title: "Pianificazione Discreta",
+        description: "Strategia investigativa personalizzata con metodi esclusivamente legali e certificati."
+      },
+      {
+        number: "3",
+        title: "Indagine Professionale",
+        description: "Raccolta di prove documentali con aggiornamenti periodici. Massima discrezione garantita."
+      },
+      {
+        number: "4",
+        title: "Dossier Probatorio",
+        description: "Consegna di dossier completo con prove utilizzabili in sede giudiziaria per separazione e divorzio."
+      }
+    ]
+  },
+  '/investigazioni-private/investigazioni-separazione-divorzio/': {
+    title: "Come Funzionano le Investigazioni per Separazione",
+    steps: [
+      {
+        number: "1",
+        title: "Consulenza Iniziale",
+        description: "Valutazione del caso e definizione degli obiettivi per tutelare i tuoi diritti."
+      },
+      {
+        number: "2",
+        title: "Strategia Legale",
+        description: "Pianificazione investigativa con metodi certificati e validi in tribunale."
+      },
+      {
+        number: "3",
+        title: "Raccolta Prove",
+        description: "Indagine professionale con documentazione continua per supportare la tua causa."
+      },
+      {
+        number: "4",
+        title: "Dossier Giudiziario",
+        description: "Consegna di dossier investigativo completo con prove utilizzabili in procedimenti legali."
+      }
+    ]
+  },
+  '/investigazioni-aziendali/investigazioni-pre-assunzione/': {
+    title: "Come Funzionano le Investigazioni Pre-Assunzione",
+    steps: [
+      {
+        number: "1",
+        title: "Consulenza Aziendale",
+        description: "Analisi delle esigenze aziendali e definizione del livello di verifica necessario."
+      },
+      {
+        number: "2",
+        title: "Pianificazione Verifica",
+        description: "Strategia di background check personalizzata con metodi legali e certificati."
+      },
+      {
+        number: "3",
+        title: "Verifica Professionale",
+        description: "Controllo referenze, curriculum e background con aggiornamenti in tempo reale."
+      },
+      {
+        number: "4",
+        title: "Report Aziendale",
+        description: "Consegna di report completo con informazioni verificate per decisioni informate."
+      }
+    ]
+  },
+  '/investigazioni-aziendali/investigazioni-licenziamento-giusta-causa/': {
+    title: "Come Funzionano le Investigazioni per Licenziamento",
+    steps: [
+      {
+        number: "1",
+        title: "Consulenza Legale",
+        description: "Analisi del caso aziendale e valutazione delle prove necessarie per giusta causa."
+      },
+      {
+        number: "2",
+        title: "Strategia Investigativa",
+        description: "Pianificazione con metodi esclusivamente legali e certificati per protezione aziendale."
+      },
+      {
+        number: "3",
+        title: "Raccolta Prove",
+        description: "Indagine professionale con documentazione continua e prove utilizzabili in sede legale."
+      },
+      {
+        number: "4",
+        title: "Dossier Aziendale",
+        description: "Consegna di dossier completo con prove documentali valide per procedimenti legali."
+      }
+    ]
+  }
+};
+
+const defaultProcess = {
+  title: "Come Funziona",
+  steps: [
+    {
+      number: "1",
+      title: "Consulenza",
+      description: "Prima consulenza gratuita per analizzare il caso e definire gli obiettivi."
+    },
+    {
+      number: "2",
+      title: "Pianificazione",
+      description: "Strategia investigativa personalizzata con metodi esclusivamente legali."
+    },
+    {
+      number: "3",
+      title: "Esecuzione",
+      description: "Indagine professionale con documentazione continua e aggiornamenti periodici."
+    },
+    {
+      number: "4",
+      title: "Consegna",
+      description: "Dossier investigativo completo e valido in sede giudiziaria."
+    }
+  ]
+};
+
+const processData = processStepsMap[urlPath] || defaultProcess;
+
+// Identify blog posts
+const blogPostPattern = /^\/(assenteismo|falsa-malattia|investigatore-privato-chi-e|infedelta-coniugale|spionaggio-industriale|consulenza-bitcoin|caso-reale|il-tradimento|le-investigazioni-per-affidamento|controllo-dipendenti|indagini-su-dipendenti|antitaccheggio|come-assumere|perche-rivolgersi|i-5-metodi|agenzia-investigativa-a-(roma|milano))/;
+const isBlogPost = blogPostPattern.test(urlPath);
+
+// Extract date from content if available
+let publishDate = '';
+const dateMatch = content.match(/\*\*Date:\*\*\s*(\d{4}-\d{2}-\d{2})/);
+if (dateMatch) {
+  publishDate = dateMatch[1];
+}
+
+// Extract category from content if available
+let blogCategory = '';
+const categoryMatch = content.match(/\*\*Category:\*\*\s*(.+)/);
+if (categoryMatch) {
+  blogCategory = categoryMatch[1].trim();
+} else if (isBlogPost) {
+  // Auto-categorize based on URL
+  if (urlPath.includes('dipendenti') || urlPath.includes('spionaggio') || urlPath.includes('antitaccheggio')) {
+    blogCategory = 'Investigazioni Aziendali';
+  } else if (urlPath.includes('infedelta') || urlPath.includes('tradimento') || urlPath.includes('affidamento')) {
+    blogCategory = 'Investigazioni Private';
+  } else if (urlPath.includes('caso-reale')) {
+    blogCategory = 'Case Studies';
+  } else if (urlPath.includes('bitcoin')) {
+    blogCategory = 'Criptovalute';
+  } else {
+    blogCategory = 'Guide e Approfondimenti';
+  }
+}
+
+// Complete breadcrumb with blog info if needed
+if (isBlogPost && blogCategory) {
+  breadcrumbItems = [
+    { name: 'Home', href: '/' },
+    { name: 'Risorse', href: '/blog/' },
+    { name: blogCategory, href: `/blog/#${blogCategory.toLowerCase().replace(/\s+/g, '-')}` }
+  ];
+}
+
+// Generate Article structured data for blog posts
+const articleSchema = isBlogPost ? {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": seo.title,
+  "description": seo.meta_description,
+  "author": {
+    "@type": "Organization",
+    "name": "EUROPOL® Intelligence & Investigations"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "EUROPOL®",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.europolinvestigazioni.it/media/brand/logo-original.png"
+    }
+  },
+  "datePublished": publishDate || "2018-01-01",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": seo.canonical
+  },
+  ...(blogCategory ? { "articleSection": blogCategory } : {})
+} : null;
+---
+
+<BaseLayout title={seo.title} description={seo.meta_description} canonical={seo.canonical} robots={robotsMeta}>
+  {articleSchema && (
+    <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  )}
+  {/* Hero Section for service pages */}
+  {shouldShowHero && h1Title && (
+    <PageHero 
+      title={h1Title}
+      subtitle={pageSubtitle}
+      backgroundImage={heroImage}
+      ctaText="Richiedi Consulenza Gratuita"
+      ctaLink="/contatti/"
+      showPhone={false}
+    />
+  )}
+
+  <article class={shouldShowHero && h1Title ? "py-16 md:py-20" : "py-16 md:py-20"}>
+    <div class="container mx-auto px-4 max-w-4xl">
+      {/* Breadcrumb - only show if no hero */}
+      {(!shouldShowHero || !h1Title) && <Breadcrumb items={breadcrumbItems} />}
+
+      {/* H1 Title - only show if no hero */}
+      {(!shouldShowHero || !h1Title) && h1Title && (
+        <div>
+          <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2 mt-6" style="color: var(--color-black); font-family: 'Playfair Display', serif; line-height: 1.2;">
+            {h1Title}
+          </h1>
+          
+          {/* Blog post metadata */}
+          {isBlogPost && (
+            <div class="flex flex-wrap items-center gap-4 mb-4 text-sm" style="color: var(--color-text-light);">
+              {publishDate && (
+                <span class="flex items-center gap-1">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
+                  {new Date(publishDate).toLocaleDateString('it-IT', { year: 'numeric', month: 'long', day: 'numeric' })}
+                </span>
+              )}
+              {blogCategory && (
+                <span class="px-3 py-1 rounded-full text-xs font-semibold" style="background: rgba(184, 134, 11, 0.1); color: var(--color-accent);">
+                  {blogCategory}
+                </span>
+              )}
+              {pageContent && (
+                <span class="flex items-center gap-1">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  {calculateReadingTime(pageContent)} min di lettura
+                </span>
+              )}
+            </div>
+          )}
+          
+          <p class="text-lg mb-8" style="color: var(--color-text-light);">
+            {pageSubtitle}
+          </p>
+          
+          {/* Share buttons for blog posts */}
+          {isBlogPost && (
+            <ShareButtons url={seo.canonical} title={seo.title} description={seo.meta_description} />
+          )}
+        </div>
+      )}
+
+      {/* Service Sub-pages Links (for hub pages) */}
+      {urlPath === '/investigazioni-private/' && (
+        <div class="mb-16">
+          <h2 class="text-2xl md:text-3xl font-bold mb-8 mt-8 text-center" style="color: var(--color-black); font-family: 'Playfair Display', serif;">
+            Tipi di Investigazioni Private
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <a href="/investigazioni-private/investigazioni-pre-matrimoniali/" class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
+              <div class="w-12 h-12 rounded-lg mb-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
+                <span class="text-2xl">💍</span>
+              </div>
+              <h3 class="font-semibold mb-2 text-lg" style="color: var(--color-black); font-family: 'Playfair Display', serif;">Pre-Matrimoniali</h3>
+              <p class="text-sm mb-3" style="color: var(--color-text-light); line-height: 1.6;">Informazioni sul partner prima del matrimonio</p>
+              <span class="inline-flex items-center gap-2 text-sm font-semibold group-hover:gap-3 transition-all" style="color: var(--color-accent);">
+                Scopri di più
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </span>
+            </a>
+            <a href="/investigazioni-private/investigazioni-infedelta-coniugale-tradimento/" class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
+              <div class="w-12 h-12 rounded-lg mb-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
+                <span class="text-2xl">🔍</span>
+              </div>
+              <h3 class="font-semibold mb-2 text-lg" style="color: var(--color-black); font-family: 'Playfair Display', serif;">Infedeltà Coniugale</h3>
+              <p class="text-sm mb-3" style="color: var(--color-text-light); line-height: 1.6;">Indagini su tradimento e infedeltà</p>
+              <span class="inline-flex items-center gap-2 text-sm font-semibold group-hover:gap-3 transition-all" style="color: var(--color-accent);">
+                Scopri di più
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </span>
+            </a>
+            <a href="/investigazioni-private/investigazioni-separazione-divorzio/" class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
+              <div class="w-12 h-12 rounded-lg mb-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
+                <span class="text-2xl">⚖️</span>
+              </div>
+              <h3 class="font-semibold mb-2 text-lg" style="color: var(--color-black); font-family: 'Playfair Display', serif;">Separazione e Divorzio</h3>
+              <p class="text-sm mb-3" style="color: var(--color-text-light); line-height: 1.6;">Prove per separazione e divorzio</p>
+              <span class="inline-flex items-center gap-2 text-sm font-semibold group-hover:gap-3 transition-all" style="color: var(--color-accent);">
+                Scopri di più
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </span>
+            </a>
+            <a href="/investigazioni-private/investigazioni-affidamento-minori/" class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
+              <div class="w-12 h-12 rounded-lg mb-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
+                <span class="text-2xl">👶</span>
+              </div>
+              <h3 class="font-semibold mb-2 text-lg" style="color: var(--color-black); font-family: 'Playfair Display', serif;">Affidamento Minori</h3>
+              <p class="text-sm mb-3" style="color: var(--color-text-light); line-height: 1.6;">Tutela e controllo dei minori</p>
+              <span class="inline-flex items-center gap-2 text-sm font-semibold group-hover:gap-3 transition-all" style="color: var(--color-accent);">
+                Scopri di più
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </span>
+            </a>
+            <a href="/investigazioni-private/investigazioni-sicurezza-personale-familiare/" class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
+              <div class="w-12 h-12 rounded-lg mb-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
+                <span class="text-2xl">🛡️</span>
+              </div>
+              <h3 class="font-semibold mb-2 text-lg" style="color: var(--color-black); font-family: 'Playfair Display', serif;">Sicurezza Personale</h3>
+              <p class="text-sm mb-3" style="color: var(--color-text-light); line-height: 1.6;">Sicurezza personale e familiare</p>
+              <span class="inline-flex items-center gap-2 text-sm font-semibold group-hover:gap-3 transition-all" style="color: var(--color-accent);">
+                Scopri di più
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </span>
+            </a>
+          </div>
+        </div>
+      )}
+
+      {urlPath === '/investigazioni-aziendali/' && (
+        <div class="mb-16">
+          <h2 class="text-2xl md:text-3xl font-bold mb-8 mt-8 text-center" style="color: var(--color-black); font-family: 'Playfair Display', serif;">
+            Tipi di Investigazioni Aziendali
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <a href="/investigazioni-aziendali/investigazioni-pre-assunzione/" class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
+              <div class="w-12 h-12 rounded-lg mb-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
+                <span class="text-2xl">👔</span>
+              </div>
+              <h3 class="font-semibold mb-2 text-lg" style="color: var(--color-black); font-family: 'Playfair Display', serif;">Pre-Assunzione</h3>
+              <p class="text-sm mb-3" style="color: var(--color-text-light); line-height: 1.6;">Verifica referenze e informazioni</p>
+              <span class="inline-flex items-center gap-2 text-sm font-semibold group-hover:gap-3 transition-all" style="color: var(--color-accent);">
+                Scopri di più
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </span>
+            </a>
+            <a href="/investigazioni-aziendali/investigazioni-licenziamento-giusta-causa/" class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
+              <div class="w-12 h-12 rounded-lg mb-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
+                <span class="text-2xl">📋</span>
+              </div>
+              <h3 class="font-semibold mb-2 text-lg" style="color: var(--color-black); font-family: 'Playfair Display', serif;">Licenziamento Giusta Causa</h3>
+              <p class="text-sm mb-3" style="color: var(--color-text-light); line-height: 1.6;">Prove per licenziamento</p>
+              <span class="inline-flex items-center gap-2 text-sm font-semibold group-hover:gap-3 transition-all" style="color: var(--color-accent);">
+                Scopri di più
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </span>
+            </a>
+            <a href="/investigazioni-aziendali/investigazioni-concorrenza-sleale/" class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
+              <div class="w-12 h-12 rounded-lg mb-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
+                <span class="text-2xl">⚔️</span>
+              </div>
+              <h3 class="font-semibold mb-2 text-lg" style="color: var(--color-black); font-family: 'Playfair Display', serif;">Concorrenza Sleale</h3>
+              <p class="text-sm mb-3" style="color: var(--color-text-light); line-height: 1.6;">Indagini su concorrenza illegale</p>
+              <span class="inline-flex items-center gap-2 text-sm font-semibold group-hover:gap-3 transition-all" style="color: var(--color-accent);">
+                Scopri di più
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </span>
+            </a>
+            <a href="/investigazioni-aziendali/investigazioni-ammanchi-differenze-inventariali/" class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
+              <div class="w-12 h-12 rounded-lg mb-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
+                <span class="text-2xl">💰</span>
+              </div>
+              <h3 class="font-semibold mb-2 text-lg" style="color: var(--color-black); font-family: 'Playfair Display', serif;">Ammanchi e Differenze</h3>
+              <p class="text-sm mb-3" style="color: var(--color-text-light); line-height: 1.6;">Indagini su sottrazioni</p>
+              <span class="inline-flex items-center gap-2 text-sm font-semibold group-hover:gap-3 transition-all" style="color: var(--color-accent);">
+                Scopri di più
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </span>
+            </a>
+          </div>
+        </div>
+      )}
+
+      {urlPath === '/intelligence-e-servizi-speciali/' && (
+        <div class="mb-16">
+          <h2 class="text-2xl md:text-3xl font-bold mb-8 mt-8 text-center" style="color: var(--color-black); font-family: 'Playfair Display', serif;">
+            Servizi di Intelligence & Specializzati
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <a href="/intelligence-e-servizi-speciali/business-intelligence/" class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
+              <div class="w-12 h-12 rounded-lg mb-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
+                <span class="text-2xl">📊</span>
+              </div>
+              <h3 class="font-semibold mb-2 text-lg" style="color: var(--color-black); font-family: 'Playfair Display', serif;">Business Intelligence</h3>
+              <p class="text-sm mb-3" style="color: var(--color-text-light); line-height: 1.6;">Intelligence strategica per decisioni aziendali informate</p>
+              <span class="inline-flex items-center gap-2 text-sm font-semibold group-hover:gap-3 transition-all" style="color: var(--color-accent);">
+                Scopri di più
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </span>
+            </a>
+            <a href="/intelligence-e-servizi-speciali/tracciamento-fondi-blockchain-crypto-truffe/" class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
+              <div class="w-12 h-12 rounded-lg mb-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
+                <span class="text-2xl">₿</span>
+              </div>
+              <h3 class="font-semibold mb-2 text-lg" style="color: var(--color-black); font-family: 'Playfair Display', serif;">Tracciamento Crypto & Blockchain</h3>
+              <p class="text-sm mb-3" style="color: var(--color-text-light); line-height: 1.6;">Investigazioni su truffe crypto e tracciamento blockchain</p>
+              <span class="inline-flex items-center gap-2 text-sm font-semibold group-hover:gap-3 transition-all" style="color: var(--color-accent);">
+                Scopri di più
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </span>
+            </a>
+            <a href="/intelligence-e-servizi-speciali/due-diligence-background-check/" class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
+              <div class="w-12 h-12 rounded-lg mb-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
+                <span class="text-2xl">🔍</span>
+              </div>
+              <h3 class="font-semibold mb-2 text-lg" style="color: var(--color-black); font-family: 'Playfair Display', serif;">Due Diligence & Background Check</h3>
+              <p class="text-sm mb-3" style="color: var(--color-text-light); line-height: 1.6;">Verifiche approfondite su partner e investitori</p>
+              <span class="inline-flex items-center gap-2 text-sm font-semibold group-hover:gap-3 transition-all" style="color: var(--color-accent);">
+                Scopri di più
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </span>
+            </a>
+            <a href="/intelligence-e-servizi-speciali/antispionaggio-industriale/" class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
+              <div class="w-12 h-12 rounded-lg mb-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
+                <span class="text-2xl">🛡️</span>
+              </div>
+              <h3 class="font-semibold mb-2 text-lg" style="color: var(--color-black); font-family: 'Playfair Display', serif;">Antispionaggio Industriale</h3>
+              <p class="text-sm mb-3" style="color: var(--color-text-light); line-height: 1.6;">Protezione segreti industriali e sicurezza aziendale</p>
+              <span class="inline-flex items-center gap-2 text-sm font-semibold group-hover:gap-3 transition-all" style="color: var(--color-accent);">
+                Scopri di più
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </span>
+            </a>
+            <a href="/intelligence-e-servizi-speciali/digital-forensics-investigazioni-digitali/" class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
+              <div class="w-12 h-12 rounded-lg mb-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
+                <span class="text-2xl">💻</span>
+              </div>
+              <h3 class="font-semibold mb-2 text-lg" style="color: var(--color-black); font-family: 'Playfair Display', serif;">Digital Forensics</h3>
+              <p class="text-sm mb-3" style="color: var(--color-text-light); line-height: 1.6;">Analisi forense di dispositivi digitali e prove digitali</p>
+              <span class="inline-flex items-center gap-2 text-sm font-semibold group-hover:gap-3 transition-all" style="color: var(--color-accent);">
+                Scopri di più
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </span>
+            </a>
+            <a href="/intelligence-e-servizi-speciali/asset-tracing-tracciamento-patrimoniale/" class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
+              <div class="w-12 h-12 rounded-lg mb-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
+                <span class="text-2xl">💰</span>
+              </div>
+              <h3 class="font-semibold mb-2 text-lg" style="color: var(--color-black); font-family: 'Playfair Display', serif;">Asset Tracing</h3>
+              <p class="text-sm mb-3" style="color: var(--color-text-light); line-height: 1.6;">Tracciamento patrimoniale e recupero crediti</p>
+              <span class="inline-flex items-center gap-2 text-sm font-semibold group-hover:gap-3 transition-all" style="color: var(--color-accent);">
+                Scopri di più
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </span>
+            </a>
+          </div>
+        </div>
+      )}
+
+      {/* Image + Text Section for main service pages */}
+      {isMainServicePage && urlPath === '/investigazioni-private/' && (
+        <ImageTextSection 
+          image="/media/uploads/2014/04/agenzia-investigativa1-300x180.jpg"
+          imageAlt="Investigazioni Private Professionali"
+          title="Investigazioni Private: Discrezione e Professionalità"
+          content="Le investigazioni private richiedono massima discrezione e competenza. Il nostro team di investigatori qualificati opera con metodi esclusivamente legali, garantendo che ogni prova raccolta sia utilizzabile in sede giudiziaria. La Garanzia Legalis™ certifica la validità legale di ogni indagine."
+          imagePosition="left"
+        />
+      )}
+
+      {isMainServicePage && urlPath === '/investigazioni-aziendali/' && (
+        <ImageTextSection 
+          image="/media/uploads/2014/04/men-1979261_640-300x200.jpg"
+          imageAlt="Investigazioni Aziendali Professionali"
+          title="Investigazioni Aziendali: Tutela del Patrimonio"
+          content="Proteggiamo il patrimonio aziendale attraverso indagini strategiche e documentate. Ogni caso viene analizzato con attenzione per fornire informazioni cruciali per decisioni aziendali informate e protezione legale."
+          imagePosition="right"
+        />
+      )}
+
+      {isMainServicePage && urlPath === '/intelligence-e-servizi-speciali/' && (
+        <ImageTextSection 
+          image="/media/uploads/2023/07/Alvaro-Silvij-EUROPOL-Intelligence-Investigazioni.png"
+          imageAlt="EUROPOL Intelligence & Servizi Specializzati"
+          title="Intelligence & Servizi Specializzati: Competenza Tecnica Avanzata"
+          content="I servizi specializzati di EUROPOL® richiedono competenze tecniche avanzate e metodologie innovative. Il nostro team possiede esperienza pluriennale in analisi blockchain, digital forensics, intelligence competitiva e antispionaggio. Tutti i servizi vengono erogati con metodi esclusivamente legali, certificati dalla GARANZIA LEGALIS™."
+          imagePosition="left"
+        />
+      )}
+
+      {/* Main Content */}
+      {pageContent ? (
+        <>
+          <EnhancedMarkdownContent content={pageContent} variant="service" />
+          
+          {/* CTA Intermedio - Dopo contenuto principale, prima del processo */}
+          {isMainServicePage && (
+            <InlineCTA 
+              title="Pronto a iniziare?"
+              text="Contattaci per una consulenza gratuita e scopri come possiamo aiutarti."
+              ctaText="Richiedi Consulenza Gratuita"
+              ctaLink="/contatti/"
+            />
+          )}
+        </>
+      ) : (
+        <div class="text-center py-16">
+          <h1 class="text-3xl font-bold mb-4" style="color: var(--color-black); font-family: 'Playfair Display', serif;">
+            Pagina non trovata
+          </h1>
+          <p class="mb-8" style="color: var(--color-text-light);">
+            Il contenuto per questa pagina non è disponibile.
+          </p>
+          <a 
+            href="/" 
+            class="inline-block px-6 py-3 rounded font-semibold transition-colors duration-200 border hover:bg-black hover:text-white"
+            style="border-color: var(--color-black); color: var(--color-black); background-color: transparent;"
+          >
+            Torna alla homepage
+          </a>
+        </div>
+      )}
+
+      {/* Process Section - Extracted from markdown with premium design */}
+      {processSteps.length > 0 && (
+        <div class="scroll-reveal">
+          <ProcessSection 
+            title="Come Funziona: Il Processo Investigativo"
+            intro="Il nostro approccio è strutturato in fasi chiare e trasparenti:"
+            steps={processSteps}
+          />
+        </div>
+      )}
+
+      {/* Process Steps - Fallback for main service pages if no process section found */}
+      {isMainServicePage && pageContent && processSteps.length === 0 && (
+        <ProcessSteps 
+          title={processData.title}
+          steps={processData.steps}
+        />
+      )}
+
+      {/* FAQ Section - Before Service CTA */}
+      {faqs.length > 0 && (
+        <div class="scroll-reveal">
+          <FAQSection 
+            title="Domande Frequenti"
+            faqs={faqs}
+          />
+        </div>
+      )}
+
+      {/* Blog CTA for blog posts, Service CTA for others */}
+      {pageContent && (isBlogPost ? <BlogCTA /> : <ServiceCTA />)}
+
+      {/* Related Content Section */}
+      {pageContent && <RelatedContent currentPath={urlPath} />}
+    </div>
+  </article>
+</BaseLayout>

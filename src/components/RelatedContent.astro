@@ -1,0 +1,131 @@
+---
+import { getRelatedContent } from '../utils/relatedContent';
+
+interface Props {
+  currentPath: string;
+}
+
+const { currentPath } = Astro.props;
+
+// Exclude thank-you and test pages from showing related content
+const excludedPaths = ['/richiesta-inviata/', '/studi-legali-e-avvocati-grazie/', '/test/'];
+const shouldShow = !excludedPaths.includes(currentPath);
+
+const relatedPages = shouldShow ? getRelatedContent(currentPath) : [];
+
+// Limit to 4-5 items for optimal UX
+const displayPages = relatedPages.slice(0, 5);
+
+// Map page types to icons
+const getPageIcon = (href: string): string => {
+  if (href.includes('investigazioni-private')) return '🔍';
+  if (href.includes('investigazioni-aziendali')) return '🏢';
+  if (href.includes('sistema-prova')) return '✅';
+  if (href.includes('studi-legali')) return '⚖️';
+  if (href.includes('agenzia-investigativa')) return '📍';
+  return '📄';
+};
+---
+
+{displayPages.length > 0 && (
+  <section class="related-content-premium py-20 md:py-28 relative overflow-hidden scroll-reveal">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 related-pattern opacity-[0.03]"></div>
+    
+    <!-- Gradient Overlay -->
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-rgba(184, 134, 11, 0.02) to-transparent"></div>
+    
+    <!-- Decorative Elements -->
+    <div class="absolute top-0 left-0 w-64 h-64 bg-gradient-to-br from-rgba(184, 134, 11, 0.04) to-transparent rounded-br-full blur-3xl"></div>
+    <div class="absolute bottom-0 right-0 w-64 h-64 bg-gradient-to-tl from-rgba(184, 134, 11, 0.04) to-transparent rounded-tl-full blur-3xl"></div>
+    
+    <div class="container mx-auto px-4 max-w-7xl relative z-10">
+      <!-- Header -->
+      <div class="text-center mb-16 scroll-reveal-fade">
+        <h2 class="text-4xl md:text-5xl font-bold mb-6" style="color: var(--color-black); font-family: 'Playfair Display', serif; letter-spacing: -0.02em; line-height: 1.2;">
+          Contenuti Consigliati
+        </h2>
+        <p class="text-xl text-center max-w-2xl mx-auto" style="color: var(--color-text-light);">
+          Esplora altri contenuti che potrebbero interessarti
+        </p>
+      </div>
+      
+      <!-- Cards Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 scroll-reveal-stagger">
+        {displayPages.map((page, index) => (
+          <a 
+            href={page.href}
+            class="related-card-premium group block relative overflow-hidden rounded-2xl transition-all duration-400 hover:-translate-y-2 hover:shadow-2xl"
+            style="background: white; border: 1px solid rgba(11, 11, 11, 0.08);"
+            data-index={index}
+          >
+            <!-- Decorative Background -->
+            <div class="absolute top-0 right-0 w-32 h-32 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-400" style="background: linear-gradient(135deg, transparent, transparent, rgba(184, 134, 11, 0.05));"></div>
+            
+            <!-- Icon Container -->
+            <div class="relative z-10 p-8">
+              <div class="mb-6">
+                <div class="w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-400 group-hover:scale-110 group-hover:rotate-3" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.12), rgba(184, 134, 11, 0.08)); border: 1px solid rgba(184, 134, 11, 0.15);">
+                  <span class="text-3xl">{getPageIcon(page.href)}</span>
+                </div>
+              </div>
+              
+              <!-- Content -->
+              <h3 class="text-xl md:text-2xl font-bold mb-4 relative z-10" style="color: var(--color-black); font-family: 'Playfair Display', serif; letter-spacing: -0.01em; line-height: 1.3;">
+                {page.title}
+              </h3>
+              {page.description && (
+                <p class="text-base mb-6 relative z-10 leading-relaxed" style="color: var(--color-text-light); line-height: 1.7;">
+                  {page.description}
+                </p>
+              )}
+              
+              <!-- CTA -->
+              <span class="inline-flex items-center gap-2 text-sm font-semibold group-hover:gap-4 transition-all relative z-10" style="color: var(--color-accent);">
+                Leggi di più
+                <svg class="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </span>
+            </div>
+            
+            <!-- Bottom Accent -->
+            <div class="absolute bottom-0 left-0 right-0 h-1 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-400 origin-center" style="background: linear-gradient(to right, transparent, var(--color-accent), transparent);"></div>
+          </a>
+        ))}
+      </div>
+    </div>
+    
+    <!-- Top Border Accent -->
+    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-var(--color-accent) to-transparent"></div>
+  </section>
+)}
+
+<style>
+  .related-content-premium {
+    background: linear-gradient(to bottom, #ffffff 0%, #fafafa 100%);
+    border-top: 1px solid rgba(11, 11, 11, 0.08);
+    position: relative;
+  }
+
+  .related-pattern {
+    background-image: 
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(184, 134, 11, 0.03) 10px,
+        rgba(184, 134, 11, 0.03) 20px
+      );
+  }
+
+  .related-card-premium {
+    position: relative;
+  }
+
+  @media (max-width: 768px) {
+    .related-content-premium {
+      padding: 3rem 0;
+    }
+  }
+</style>

@@ -1,0 +1,245 @@
+---
+interface Props {
+  title: string;
+  content: string;
+  features?: Array<{ title: string; description: string }>;
+}
+
+const { title, content, features = [] } = Astro.props;
+---
+
+<section class="garanzia-section py-20 md:py-28">
+  <div class="container mx-auto px-4 max-w-5xl">
+    <div class="garanzia-container">
+      <!-- Header -->
+      <div class="garanzia-header">
+        <div class="garanzia-badge">
+          <span class="badge-text">GARANZIA</span>
+          <span class="badge-tm">™</span>
+        </div>
+        <h2 class="garanzia-title">{title}</h2>
+      </div>
+
+      <!-- Main Content -->
+      <div class="garanzia-content" set:html={content} />
+
+      <!-- Features List -->
+      {features.length > 0 && (
+        <div class="garanzia-features">
+          {features.map((feature, index) => (
+            <div class="garanzia-feature-item" data-index={index}>
+              <div class="feature-icon-wrapper">
+                <svg class="feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div class="feature-content">
+                <h3 class="feature-title">{feature.title}</h3>
+                <p class="feature-description">{feature.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+</section>
+
+<style>
+  .garanzia-section {
+    background: linear-gradient(135deg, rgba(184, 134, 11, 0.05) 0%, rgba(184, 134, 11, 0.02) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .garanzia-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+  }
+
+  .garanzia-section::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(184, 134, 11, 0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    transform: translate(30%, -30%);
+    pointer-events: none;
+  }
+
+  .garanzia-container {
+    background: white;
+    border-radius: 24px;
+    padding: 3rem 2.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(184, 134, 11, 0.15);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .garanzia-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--color-accent), rgba(184, 134, 11, 0.6));
+  }
+
+  .garanzia-header {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(11, 11, 11, 0.08);
+  }
+
+  .garanzia-badge {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.25rem;
+    background: linear-gradient(135deg, rgba(184, 134, 11, 0.15), rgba(184, 134, 11, 0.08));
+    padding: 0.5rem 1.25rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(184, 134, 11, 0.2);
+  }
+
+  .badge-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--color-accent);
+    text-transform: uppercase;
+  }
+
+  .badge-tm {
+    font-size: 0.75rem;
+    color: var(--color-accent);
+    vertical-align: super;
+    line-height: 0;
+  }
+
+  .garanzia-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-black);
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .garanzia-content {
+    font-size: 1.125rem;
+    line-height: 1.9;
+    color: var(--color-text);
+    margin-bottom: 2.5rem;
+  }
+
+  .garanzia-content p {
+    margin-bottom: 1.5rem;
+  }
+
+  .garanzia-content strong {
+    color: var(--color-accent);
+    font-weight: 700;
+  }
+
+  .garanzia-content a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-weight: 600;
+    transition: color 0.2s ease;
+  }
+
+  .garanzia-content a:hover {
+    color: var(--color-black);
+  }
+
+  .garanzia-features {
+    display: grid;
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+  }
+
+  .garanzia-feature-item {
+    display: flex;
+    gap: 1.25rem;
+    padding: 1.5rem;
+    background: rgba(184, 134, 11, 0.03);
+    border-radius: 12px;
+    border-left: 3px solid var(--color-accent);
+    transition: all 0.3s ease;
+  }
+
+  .garanzia-feature-item:hover {
+    background: rgba(184, 134, 11, 0.06);
+    transform: translateX(4px);
+  }
+
+  .feature-icon-wrapper {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    background: var(--color-accent);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.25rem;
+  }
+
+  .feature-check {
+    width: 18px;
+    height: 18px;
+    color: white;
+  }
+
+  .feature-content {
+    flex: 1;
+  }
+
+  .feature-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-black);
+    margin-bottom: 0.5rem;
+  }
+
+  .feature-description {
+    color: var(--color-text-light);
+    line-height: 1.7;
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .garanzia-container {
+      padding: 2rem 1.5rem;
+      border-radius: 16px;
+    }
+
+    .garanzia-title {
+      font-size: 2rem;
+    }
+
+    .garanzia-content {
+      font-size: 1rem;
+    }
+
+    .garanzia-feature-item {
+      padding: 1.25rem;
+    }
+  }
+</style>
+

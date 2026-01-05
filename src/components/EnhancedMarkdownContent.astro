@@ -1,0 +1,976 @@
+---
+import { marked } from 'marked';
+
+interface Props {
+  content: string;
+  variant?: 'homepage' | 'service' | 'default';
+}
+
+const { content, variant = 'default' } = Astro.props;
+
+// Configure marked
+marked.setOptions({
+  breaks: true,
+  gfm: true,
+  headerIds: false,
+  mangle: false,
+});
+
+// Convert absolute URLs to relative paths
+function normalizeLinks(md: string): string {
+  let normalized = md.replace(
+    /https?:\/\/europolinvestigazioni\.it\//g,
+    '/'
+  );
+  normalized = normalized.replace(/\[\]\([^)]+\)/g, '');
+  return normalized;
+}
+
+const normalizedContent = normalizeLinks(content);
+
+// Extract first paragraph for drop cap (homepage variant)
+let firstParagraph = '';
+let remainingContent = normalizedContent;
+
+if (variant === 'homepage') {
+  // Extract first paragraph - improved: get first non-empty paragraph
+  const lines = normalizedContent.split('\n');
+  let firstParaLines: string[] = [];
+  let foundFirst = false;
+  
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    // Skip empty lines and metadata
+    if (!line || line.startsWith('**') || line.startsWith('---')) {
+      continue;
+    }
+    // Stop at H2
+    if (line.startsWith('##')) {
+      break;
+    }
+    // Collect first paragraph
+    if (line && !foundFirst) {
+      firstParaLines.push(line);
+      foundFirst = true;
+    } else if (foundFirst && line) {
+      // Continue if it's part of the same paragraph (no double newline)
+      firstParaLines.push(line);
+    } else if (foundFirst && !line) {
+      // Empty line means end of first paragraph
+      break;
+    }
+  }
+  
+  if (firstParaLines.length > 0) {
+    firstParagraph = firstParaLines.join(' ').trim();
+    // Remove first paragraph from remaining content
+    const firstParaRegex = new RegExp(`^${firstParagraph.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'm');
+    remainingContent = normalizedContent.replace(firstParaRegex, '').trim();
+  }
+}
+
+// Parse remaining content
+let htmlContent = marked.parse(remainingContent || normalizedContent, {
+  breaks: true,
+  gfm: true,
+});
+
+// Process HTML for homepage variant: wrap sections and add highlight boxes
+if (variant === 'homepage') {
+  // STEP 1: Wrap sections by H2 tags first
+  const h2Regex = /<h2[^>]*>.*?<\/h2>/g;
+  const h2Matches = [...htmlContent.matchAll(h2Regex)];
+  
+  if (h2Matches.length > 0) {
+    let processedContent = '';
+    let lastIndex = 0;
+    let sectionIndex = 0;
+    
+    // Handle content before first H2 (if any)
+    const firstH2Start = h2Matches[0].index!;
+    if (firstH2Start > 0) {
+      const beforeFirstH2 = htmlContent.substring(0, firstH2Start).trim();
+      if (beforeFirstH2) {
+        processedContent += `<section class="content-section py-12 px-6 -mx-6 rounded-xl mb-8" style="background-color: #ffffff;">${beforeFirstH2}</section>`;
+        sectionIndex++;
+      }
+    }
+    
+    // Process each H2 section
+    h2Matches.forEach((match, index) => {
+      const h2Start = match.index!;
+      const nextH2Start = index < h2Matches.length - 1 ? h2Matches[index + 1].index! : htmlContent.length;
+      
+      // Get content between this H2 and next H2
+      let sectionContent = htmlContent.substring(h2Start, nextH2Start);
+      const bgColor = sectionIndex % 2 === 0 ? '#ffffff' : '#f9fafb';
+      
+      // STEP 2: Special treatment for specific sections
+      const h2Text = match[0];
+      
+      // Transform "Cosa Offriamo" section into visual cards layout
+      if (/Cosa Offriamo|Investigazioni Private e Aziendali/i.test(h2Text)) {
+        // Extract intro paragraph
+        const introMatch = sectionContent.match(/<p>([^<]+)<\/p>/);
+        const intro = introMatch ? introMatch[1] : '';
+        
+        // Transform H3 sections into cards
+        sectionContent = sectionContent.replace(
+          /<h3>([^<]+)<\/h3>\s*<p>([^<]+(?:<a[^>]*>[\s\S]*?<\/a>[^<]*)*)<\/p>\s*<p>([^<]+)<\/p>\s*<p>([^<]+)<\/p>/gi,
+          (match, title, para1, para2, para3) => {
+            const isPrivate = /Private|privata/i.test(title);
+            const icon = isPrivate ? '🔍' : '🏢';
+            const iconBg = isPrivate 
+              ? 'linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(59, 130, 246, 0.08))'
+              : 'linear-gradient(135deg, rgba(184, 134, 11, 0.12), rgba(184, 134, 11, 0.08))';
+            const iconBorder = isPrivate 
+              ? 'rgba(59, 130, 246, 0.2)'
+              : 'rgba(184, 134, 11, 0.2)';
+            
+            // Extract links from para1 and transform them
+            let processedPara1 = para1;
+            const linkMatches = para1.matchAll(/<a[^>]*href="([^"]+)"[^>]*>([^<]+)<\/a>/g);
+            const links: string[] = [];
+            for (const linkMatch of linkMatches) {
+              links.push(`<a href="${linkMatch[1]}" class="service-link-badge">${linkMatch[2]}</a>`);
+              processedPara1 = processedPara1.replace(linkMatch[0], '');
+            }
+            
+            return `
+              <div class="service-type-card">
+                <div class="service-type-header">
+                  <div class="service-type-icon" style="background: ${iconBg}; border-color: ${iconBorder};">
+                    <span class="icon-emoji">${icon}</span>
+                  </div>
+                  <h3 class="service-type-title">${title}</h3>
+                </div>
+                <div class="service-type-content">
+                  <p class="service-type-intro">${processedPara1.trim()}</p>
+                  ${links.length > 0 ? `<div class="service-links-container">${links.join('')}</div>` : ''}
+                  <p class="service-type-detail">${para2.trim()}</p>
+                  <div class="service-type-highlight">
+                    <p>${para3.trim()}</p>
+                  </div>
+                </div>
+              </div>
+            `;
+          }
+        );
+        
+        // Wrap in grid container
+        sectionContent = sectionContent.replace(
+          /<h2[^>]*>.*?<\/h2>/,
+          ''
+        );
+        if (intro) {
+          sectionContent = `<p class="section-intro-large">${intro}</p>${sectionContent}`;
+        }
+        sectionContent = `<div class="services-overview-grid">${sectionContent}</div>`;
+      }
+      
+      // Premium box for "Il Nostro Approccio: Garanzia Legalis™"
+      if (/Il Nostro Approccio|Garanzia Legalis|GARANZIA LEGALIS/i.test(h2Text)) {
+        sectionContent = `<div class="premium-garanzia-box" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.08) 0%, rgba(184, 134, 11, 0.03) 100%); border: 1px solid rgba(184, 134, 11, 0.2); border-left: 4px solid var(--color-accent); border-radius: 12px; padding: 2.5rem; margin: 2rem 0; box-shadow: 0 4px 20px rgba(184, 134, 11, 0.08);">${sectionContent}</div>`;
+      }
+      
+      // Modern cards design for "Perché Scegliere EUROPOL®"
+      if (/Perché Scegliere|Perche Scegliere/i.test(h2Text)) {
+        // Map of benefits to icons (flexible matching)
+        const getBenefitIcon = (title: string): string => {
+          const lowerTitle = title.toLowerCase();
+          if (lowerTitle.includes('esperienza') || lowerTitle.includes('anni')) return '📅';
+          if (lowerTitle.includes('legalità') || lowerTitle.includes('garanzia')) return '✅';
+          if (lowerTitle.includes('licenza') || lowerTitle.includes('prefettizia')) return '📜';
+          if (lowerTitle.includes('discrezione') || lowerTitle.includes('riservatezza')) return '🔒';
+          if (lowerTitle.includes('copertura') || lowerTitle.includes('nazionale') || lowerTitle.includes('internazionale')) return '🌍';
+          if (lowerTitle.includes('team') || lowerTitle.includes('professionale')) return '👥';
+          return '✨';
+        };
+        
+        // Remove intro paragraph first
+        sectionContent = sectionContent.replace(
+          /<p>Scegliere EUROPOL® significa scegliere:[\s\S]*?<\/p>/gi,
+          ''
+        );
+        
+        // Transform list items into modern cards - improved regex
+        sectionContent = sectionContent.replace(
+          /<li>[\s\S]*?<strong>([^<:]+):?<\/strong>[\s\S]*?([^<]+(?:<a[^>]*>[\s\S]*?<\/a>)?[\s\S]*?)<\/li>/gi,
+          (match, title, description) => {
+            const cleanTitle = title.trim();
+            let cleanDesc = description.trim();
+            // Remove any leading colon or whitespace
+            cleanDesc = cleanDesc.replace(/^[:：]\s*/, '').trim();
+            // Clean up any remaining HTML artifacts
+            cleanDesc = cleanDesc.replace(/<\/?p>/g, '').trim();
+            
+            const icon = getBenefitIcon(cleanTitle);
+            
+            return `
+              <div class="benefit-card">
+                <div class="benefit-icon">${icon}</div>
+                <h3 class="benefit-title">${cleanTitle}</h3>
+                <p class="benefit-description">${cleanDesc}</p>
+              </div>
+            `;
+          }
+        );
+        
+        // Wrap in modern grid container - replace ul with div
+        sectionContent = sectionContent.replace(
+          /<ul[^>]*>([\s\S]*?)<\/ul>/gi,
+          (match, content) => {
+            // Only wrap if it contains benefit-card divs
+            if (content.includes('benefit-card')) {
+              return `<div class="benefits-grid">${content}</div>`;
+            }
+            return match;
+          }
+        );
+      }
+      
+      // Add quote boxes for important sentences
+      sectionContent = sectionContent.replace(
+        /(Perché la verità, quando viene alla luce, deve essere incontestabile|La legalità non è un limite: è la base su cui costruire prove solide|Ogni caso è trattato con la massima discrezione|Ogni indagine è condotta con metodi legali certificati)/gi,
+        (match) => {
+          return `<div class="quote-box-premium"><p class="quote-text">${match}</p></div>`;
+        }
+      );
+      
+      // Transform important links into badge-style buttons (but not if already in a badge)
+      sectionContent = sectionContent.replace(
+        /<a([^>]*href="[^"]*investigazioni[^"]*"[^>]*)>([^<]+)<\/a>/gi,
+        (match, attrs, text) => {
+          // Skip if already in a badge
+          if (match.includes('service-link-badge') || match.includes('content-link-badge')) return match;
+          return `<a${attrs} class="content-link-badge">${text}</a>`;
+        }
+      );
+      
+      processedContent += `<section class="content-section py-12 px-6 -mx-6 rounded-xl mb-8" style="background-color: ${bgColor};">${sectionContent}</section>`;
+      sectionIndex++;
+    });
+    
+    htmlContent = processedContent;
+  } else {
+    // No H2 found, wrap entire content
+    htmlContent = `<section class="content-section py-12 px-6 -mx-6 rounded-xl mb-8" style="background-color: #ffffff;">${htmlContent}</section>`;
+  }
+  
+  // STEP 3: Now highlight GARANZIA LEGALIS™ text itself (in all contexts) - just color, no boxes
+  // Replace in links first
+  htmlContent = htmlContent.replace(
+    /<a([^>]*)>([^<]*?)GARANZIA LEGALIS™([^<]*?)<\/a>/gi,
+    (match, attrs, before, after) => {
+      return `<a${attrs}>${before}<strong style="color: var(--color-accent); font-size: 1.125rem;">GARANZIA LEGALIS™</strong>${after}</a>`;
+    }
+  );
+  
+  // Update existing strong tags
+  htmlContent = htmlContent.replace(
+    /<strong[^>]*>GARANZIA LEGALIS™<\/strong>/gi,
+    '<strong style="color: var(--color-accent); font-size: 1.125rem;">GARANZIA LEGALIS™</strong>'
+  );
+  
+  // Replace plain text GARANZIA LEGALIS™ (not already in tags)
+  // Simple approach: replace all remaining instances
+  htmlContent = htmlContent.replace(
+    /GARANZIA LEGALIS™/gi,
+    (match, offset, string) => {
+      // Check context: if it's already in a tag, skip
+      const before = string.substring(Math.max(0, offset - 30), offset);
+      const after = string.substring(offset + match.length, Math.min(string.length, offset + match.length + 30));
+      
+      // If already in a tag (strong, a, etc.), don't replace
+      if (before.match(/<[^>]*$/) || after.match(/^[^<]*>/)) {
+        return match;
+      }
+      
+      // If already highlighted, skip
+      if (before.includes('color: var(--color-accent)')) {
+        return match;
+      }
+      
+      return '<strong style="color: var(--color-accent); font-size: 1.125rem;">GARANZIA LEGALIS™</strong>';
+    }
+  );
+  
+}
+---
+
+<div class={`enhanced-content enhanced-content-${variant}`}>
+  {variant === 'homepage' && firstParagraph ? (
+    <>
+      <!-- Hero Text: First paragraph with drop cap -->
+      {firstParagraph && firstParagraph.length > 0 && (
+        <div class="hero-text mb-16">
+          <p class="text-xl md:text-2xl leading-relaxed max-w-3xl" style="color: var(--color-text); line-height: 1.9;" set:html={marked.parse(firstParagraph)} />
+        </div>
+      )}
+      
+      <!-- Rest of content with enhanced styling -->
+      <div class="prose prose-lg max-w-none enhanced-prose">
+        <div set:html={htmlContent} />
+      </div>
+    </>
+  ) : (
+    <div class={`prose prose-lg max-w-none ${variant === 'service' ? 'prose-service' : 'prose-default'}`}>
+      <div set:html={htmlContent} />
+    </div>
+  )}
+</div>
+
+<style>
+  /* Drop Cap for Homepage */
+  .hero-text p::first-letter {
+    float: left;
+    font-size: 5rem;
+    line-height: 0.8;
+    padding-right: 0.5rem;
+    padding-top: 0.2rem;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--color-black);
+  }
+  
+  .hero-text p strong::first-letter {
+    font-size: 5rem;
+    line-height: 0.8;
+  }
+
+  /* Hero Text Styling */
+  .hero-text {
+    border-left: 4px solid var(--color-accent);
+    padding-left: 2rem;
+    margin-left: 0;
+    position: relative;
+  }
+
+  .hero-text::before {
+    content: '';
+    position: absolute;
+    left: -4px;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(to bottom, var(--color-accent), rgba(184, 134, 11, 0.3));
+  }
+
+  /* Enhanced Prose for Homepage */
+  .enhanced-content-homepage .enhanced-prose {
+    max-width: 65ch;
+  }
+
+  /* Section styling with background alternation */
+  .enhanced-content-homepage .content-section {
+    transition: all 0.3s ease;
+    margin-bottom: 3rem;
+  }
+
+  .enhanced-content-homepage .content-section:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
+  }
+
+  .enhanced-content-homepage .content-section:first-of-type {
+    margin-top: 2rem;
+  }
+
+  .enhanced-content-homepage .enhanced-prose h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgba(11, 11, 11, 0.1);
+    position: relative;
+    font-family: 'Playfair Display', serif;
+  }
+
+  .enhanced-content-homepage .enhanced-prose h2::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 80px;
+    height: 2px;
+    background: linear-gradient(to right, var(--color-accent), transparent);
+  }
+
+  /* FAQ Section Styling - Style all H3 that look like questions */
+  .enhanced-content-homepage .enhanced-prose .content-section h3 {
+    margin-top: 2rem;
+    padding: 1rem 1.5rem;
+    background-color: rgba(11, 11, 11, 0.02);
+    border-left: 3px solid var(--color-accent);
+    border-radius: 4px;
+    font-size: 1.5rem;
+    transition: all 0.2s ease;
+  }
+
+  .enhanced-content-homepage .enhanced-prose .content-section h3:hover {
+    background-color: rgba(11, 11, 11, 0.04);
+    border-left-width: 4px;
+  }
+
+  .enhanced-content-homepage .enhanced-prose .content-section h3 + p {
+    margin-top: 1rem;
+    padding-left: 1.5rem;
+    font-size: 1.0625rem;
+    color: var(--color-text-light);
+    line-height: 1.8;
+  }
+
+  /* Premium Garanzia Box - elegant design for main section */
+  .premium-garanzia-box {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .premium-garanzia-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--color-accent), rgba(184, 134, 11, 0.3), transparent);
+  }
+
+  .premium-garanzia-box h2 {
+    margin-top: 0 !important;
+    color: var(--color-black) !important;
+  }
+
+  .premium-garanzia-box p {
+    color: var(--color-text) !important;
+  }
+
+  /* Modern Benefits Grid - Premium Design */
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 3rem 0;
+  }
+
+  .benefit-card {
+    background: white;
+    border: 1px solid rgba(11, 11, 11, 0.08);
+    border-radius: 16px;
+    padding: 2rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .benefit-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--color-accent), rgba(184, 134, 11, 0.3));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+
+  .benefit-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+    border-color: rgba(184, 134, 11, 0.2);
+  }
+
+  .benefit-card:hover::before {
+    transform: scaleX(1);
+  }
+
+  .benefit-icon {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+  }
+
+  .benefit-card:hover .benefit-icon {
+    transform: scale(1.1) rotate(5deg);
+    background: linear-gradient(135deg, rgba(184, 134, 11, 0.15), rgba(184, 134, 11, 0.25));
+  }
+
+  .benefit-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-black);
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
+  }
+
+  .benefit-description {
+    color: var(--color-text-light);
+    line-height: 1.7;
+    font-size: 1rem;
+  }
+
+  .benefit-description a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    font-weight: 600;
+    transition: color 0.2s ease;
+  }
+
+  .benefit-description a:hover {
+    color: var(--color-black);
+  }
+
+  @media (max-width: 768px) {
+    .benefits-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .benefit-card {
+      padding: 1.5rem;
+    }
+
+    .benefit-icon {
+      width: 56px;
+      height: 56px;
+      font-size: 1.75rem;
+    }
+
+    .benefit-title {
+      font-size: 1.25rem;
+    }
+  }
+
+  /* Lists with better styling */
+  .enhanced-content-homepage .enhanced-prose ul {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .enhanced-content-homepage .enhanced-prose ul li {
+    position: relative;
+    padding-left: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .enhanced-content-homepage .enhanced-prose ul li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--color-accent);
+    font-weight: bold;
+    font-size: 1.25rem;
+  }
+
+  /* Better spacing for paragraphs after lists */
+  .enhanced-content-homepage .enhanced-prose ul + p,
+  .enhanced-content-homepage .enhanced-prose ol + p {
+    margin-top: 2rem;
+  }
+
+  /* Paragraphs after H3 in sections */
+  .enhanced-content-homepage .enhanced-prose .content-section h3 + p {
+    margin-top: 1rem;
+  }
+
+  /* Better link styling in content */
+  .enhanced-content-homepage .enhanced-prose a {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Decorative elements */
+  .enhanced-content-homepage .enhanced-prose .content-section::before {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(to right, var(--color-accent), transparent);
+    margin-bottom: 2rem;
+    opacity: 0.3;
+  }
+
+  .enhanced-content-homepage .enhanced-prose .content-section:first-of-type::before {
+    display: none;
+  }
+
+  .enhanced-content-homepage .enhanced-prose h3 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--color-black);
+  }
+
+  .enhanced-content-homepage .enhanced-prose p {
+    font-size: 1.125rem;
+    line-height: 1.9;
+    margin-bottom: 1.75rem;
+    color: var(--color-text);
+  }
+
+  /* Services Overview Grid - "Cosa Offriamo" section */
+  .services-overview-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    margin: 3rem 0;
+  }
+
+  @media (min-width: 768px) {
+    .services-overview-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 3rem;
+    }
+  }
+
+  .section-intro-large {
+    font-size: 1.5rem;
+    line-height: 1.8;
+    color: var(--color-text-light);
+    margin-bottom: 3rem;
+    text-align: center;
+    max-width: 48rem;
+    margin-left: auto;
+    margin-right: auto;
+    font-weight: 400;
+  }
+
+  .service-type-card {
+    background: white;
+    border: 1px solid rgba(11, 11, 11, 0.08);
+    border-radius: 20px;
+    padding: 2.5rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .service-type-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--color-accent), rgba(184, 134, 11, 0.4));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .service-type-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12), 0 8px 16px rgba(0, 0, 0, 0.08);
+    border-color: rgba(184, 134, 11, 0.2);
+  }
+
+  .service-type-card:hover::before {
+    transform: scaleX(1);
+  }
+
+  .service-type-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .service-type-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid;
+    flex-shrink: 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .icon-emoji {
+    font-size: 2rem;
+    line-height: 1;
+  }
+
+  .service-type-card:hover .service-type-icon {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  .service-type-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-black);
+    margin: 0;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+
+  .service-type-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .service-type-intro {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .service-links-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin: 0.5rem 0;
+  }
+
+  .service-link-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.05));
+    border: 1px solid rgba(184, 134, 11, 0.2);
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .service-link-badge:hover {
+    background: linear-gradient(135deg, rgba(184, 134, 11, 0.15), rgba(184, 134, 11, 0.1));
+    border-color: rgba(184, 134, 11, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(184, 134, 11, 0.2);
+    color: var(--color-black);
+  }
+
+  .service-type-detail {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--color-text-light);
+    margin: 0;
+  }
+
+  .service-type-highlight {
+    background: linear-gradient(135deg, rgba(184, 134, 11, 0.05), rgba(184, 134, 11, 0.02));
+    border-left: 3px solid var(--color-accent);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+  }
+
+  .service-type-highlight p {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--color-text);
+    margin: 0;
+    font-style: italic;
+  }
+
+  @media (max-width: 768px) {
+    .services-overview-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .service-type-card {
+      padding: 2rem;
+    }
+
+    .service-type-icon {
+      width: 56px;
+      height: 56px;
+    }
+
+    .icon-emoji {
+      font-size: 1.75rem;
+    }
+
+    .service-type-title {
+      font-size: 1.75rem;
+    }
+  }
+
+  .enhanced-content-homepage .enhanced-prose ul,
+  .enhanced-content-homepage .enhanced-prose ol {
+    margin: 2rem 0;
+    padding-left: 2rem;
+  }
+
+  .enhanced-content-homepage .enhanced-prose li {
+    margin-bottom: 0.75rem;
+    line-height: 1.8;
+    position: relative;
+  }
+
+  .enhanced-content-homepage .enhanced-prose ul li::marker {
+    color: var(--color-accent);
+  }
+
+  /* Links styling */
+  .enhanced-content-homepage .enhanced-prose a {
+    color: var(--color-black);
+    text-decoration: underline;
+    text-decoration-color: var(--color-accent);
+    text-underline-offset: 3px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+
+  .enhanced-content-homepage .enhanced-prose a:hover {
+    text-decoration-color: var(--color-black);
+    color: var(--color-accent);
+  }
+
+  /* Content Link Badges */
+  .content-link-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.375rem 0.875rem;
+    background: linear-gradient(135deg, rgba(184, 134, 11, 0.12), rgba(184, 134, 11, 0.08));
+    border: 1px solid rgba(184, 134, 11, 0.2);
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-accent);
+    text-decoration: none !important;
+    transition: all 0.3s ease;
+    margin: 0 0.25rem;
+    vertical-align: middle;
+  }
+
+  .content-link-badge:hover {
+    background: linear-gradient(135deg, rgba(184, 134, 11, 0.18), rgba(184, 134, 11, 0.12));
+    border-color: rgba(184, 134, 11, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(184, 134, 11, 0.2);
+    color: var(--color-black);
+  }
+
+  /* Quote Box Premium */
+  .quote-box-premium {
+    background: linear-gradient(135deg, rgba(184, 134, 11, 0.08), rgba(184, 134, 11, 0.03));
+    border-left: 4px solid var(--color-accent);
+    border-radius: 12px;
+    padding: 2rem 2.5rem;
+    margin: 2.5rem 0;
+    position: relative;
+    box-shadow: 0 4px 16px rgba(184, 134, 11, 0.08);
+  }
+
+  .quote-box-premium::before {
+    content: '"';
+    position: absolute;
+    top: 1rem;
+    left: 1.5rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem;
+    color: var(--color-accent);
+    opacity: 0.3;
+    line-height: 1;
+  }
+
+  .quote-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.375rem;
+    font-weight: 600;
+    font-style: italic;
+    color: var(--color-black);
+    line-height: 1.7;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+    padding-left: 2rem;
+  }
+
+  @media (max-width: 768px) {
+    .quote-box-premium {
+      padding: 1.5rem;
+    }
+
+    .quote-text {
+      font-size: 1.125rem;
+      padding-left: 1.5rem;
+    }
+
+    .quote-box-premium::before {
+      font-size: 3rem;
+      left: 1rem;
+      top: 0.75rem;
+    }
+  }
+
+  /* Service variant - cleaner, more readable */
+  .prose-service {
+    max-width: 70ch;
+  }
+
+  .prose-service h2 {
+    font-size: 2rem;
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .prose-service h3 {
+    font-size: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .prose-service p {
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Default variant - improved base */
+  .prose-default {
+    max-width: 65ch;
+  }
+
+  .prose-default h2 {
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .prose-default h3 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .hero-text p::first-letter {
+      font-size: 4rem;
+    }
+
+    .hero-text {
+      padding-left: 1.5rem;
+      border-left-width: 3px;
+    }
+
+    .enhanced-content-homepage .enhanced-prose h2 {
+      font-size: 2rem;
+    }
+
+    .enhanced-content-homepage .enhanced-prose h3 {
+      font-size: 1.5rem;
+    }
+  }
+</style>

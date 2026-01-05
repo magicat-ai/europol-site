@@ -1,0 +1,213 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getPageContent } from '../utils/content';
+
+const pageData = getPageContent('/contatti/');
+const { seo } = pageData;
+---
+
+<BaseLayout title={seo.title} description={seo.meta_description} canonical={seo.canonical}>
+  <!-- Simple Hero Section -->
+  <section class="py-16 md:py-24 bg-gradient-to-b from-white via-gray-50/50 to-white">
+    <div class="container mx-auto px-4 max-w-4xl text-center">
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style="font-family: 'Playfair Display', serif; color: var(--color-black); line-height: 1.2;">
+        Contattaci
+      </h1>
+      <p class="text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto" style="color: var(--color-text-light);">
+        Richiedi una consulenza gratuita e senza impegno. I nostri consulenti sono a tua disposizione.
+      </p>
+    </div>
+  </section>
+
+  <div class="container mx-auto px-4 py-16 md:py-24 max-w-2xl">
+    <div class="bg-white rounded-xl p-8 mb-8 shadow-lg border scroll-reveal" style="border-color: rgba(11, 11, 11, 0.1);" id="contact-form">
+      <div class="flex items-center gap-4 mb-6">
+        <div class="w-16 h-16 rounded-full flex items-center justify-center text-3xl" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
+          📞
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold" style="color: var(--color-black); font-family: 'Playfair Display', serif;">Richiedi Consulenza Gratuita</h2>
+          <p class="text-sm" style="color: var(--color-text-light);">
+            Compila il modulo e ti contatteremo nella fascia oraria che preferisci
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <form method="POST" action="https://www.aweber.com/scripts/addlead.pl" class="space-y-6 scroll-reveal">
+      <!-- AWeber Hidden Fields -->
+      <div style="display:none;">
+        <input type="hidden" name="meta_web_form_id" value="345586561" />
+        <input type="hidden" name="meta_split_id" value="" />
+        <input type="hidden" name="listname" value="invsqz" />
+        <input type="hidden" name="redirect" value="https://europolinvestigazioni.it/richiesta-inviata/" />
+        <input type="hidden" name="meta_redirect_onlist" value="https://europolinvestigazioni.it/richiesta-inviata/" />
+        <input type="hidden" name="meta_adtracking" value="EUROPOL_Contact_Form" />
+        <input type="hidden" name="meta_message" value="1" />
+        <input type="hidden" name="meta_required" value="name,email" />
+        <input type="hidden" name="meta_tooltip" value="name||Nome,,email||Email,,custom Telefono||Numero di Telefono,,custom Provincia||Città,,custom Quando essere ricontattato||Quando Essere Ricontattato,,custom Commenti||Dettagli" />
+      </div>
+      
+      <!-- Honeypot field -->
+      <input type="text" name="website" style="display: none;" tabindex="-1" autocomplete="off" />
+      
+      <div>
+        <label for="name" class="block text-sm font-medium mb-2" style="color: var(--color-black);">
+          Nome <span class="text-red-600" aria-label="campo obbligatorio">*</span>
+        </label>
+        <input 
+          type="text" 
+          id="name" 
+          name="name" 
+          required
+          class="w-full px-4 py-2 border rounded-md transition-colors duration-200"
+          style="border-color: rgba(11, 11, 11, 0.2); color: var(--color-black);"
+          onfocus="this.style.borderColor='var(--color-black)'"
+          onblur="this.style.borderColor='rgba(11, 11, 11, 0.2)'"
+        />
+      </div>
+
+      <div>
+        <label for="email" class="block text-sm font-medium mb-2" style="color: var(--color-black);">
+          Email <span class="text-red-600" aria-label="campo obbligatorio">*</span>
+        </label>
+        <input 
+          type="email" 
+          id="email" 
+          name="email" 
+          required
+          class="w-full px-4 py-2 border rounded-md transition-colors duration-200"
+          style="border-color: rgba(11, 11, 11, 0.2); color: var(--color-black);"
+          onfocus="this.style.borderColor='var(--color-black)'"
+          onblur="this.style.borderColor='rgba(11, 11, 11, 0.2)'"
+        />
+      </div>
+
+            <div>
+              <label for="phone" class="block text-sm font-medium mb-2" style="color: var(--color-black);">
+                Telefono
+              </label>
+              <input 
+                type="tel" 
+                id="phone" 
+                name="custom Telefono"
+                class="w-full px-4 py-2 border rounded-md transition-colors duration-200"
+                style="border-color: rgba(11, 11, 11, 0.2); color: var(--color-black);"
+                onfocus="this.style.borderColor='var(--color-black)'"
+                onblur="this.style.borderColor='rgba(11, 11, 11, 0.2)'"
+              />
+            </div>
+
+            <div>
+              <label for="city" class="block text-sm font-medium mb-2" style="color: var(--color-black);">
+                Città
+              </label>
+              <input 
+                type="text" 
+                id="city" 
+                name="custom Provincia"
+                class="w-full px-4 py-2 border rounded-md transition-colors duration-200"
+                style="border-color: rgba(11, 11, 11, 0.2); color: var(--color-black);"
+                onfocus="this.style.borderColor='var(--color-black)'"
+                onblur="this.style.borderColor='rgba(11, 11, 11, 0.2)'"
+              />
+            </div>
+
+            <div>
+              <label for="message" class="block text-sm font-medium mb-2" style="color: var(--color-black);">
+                Dettagli della Richiesta
+              </label>
+              <textarea 
+                id="message" 
+                name="custom Commenti" 
+                rows="5"
+                class="w-full px-4 py-2 border rounded-md transition-colors duration-200"
+                style="border-color: rgba(11, 11, 11, 0.2); color: var(--color-black);"
+                onfocus="this.style.borderColor='var(--color-black)'"
+                onblur="this.style.borderColor='rgba(11, 11, 11, 0.2)'"
+              ></textarea>
+            </div>
+
+            <div>
+              <label for="contact_time" class="block text-sm font-medium mb-2" style="color: var(--color-black);">
+                Orario di Contatto Preferito
+              </label>
+              <input 
+                type="text" 
+                id="contact_time" 
+                name="custom Quando essere ricontattato"
+                placeholder="es. Mattina, Pomeriggio, Sera"
+                class="w-full px-4 py-2 border rounded-md transition-colors duration-200"
+                style="border-color: rgba(11, 11, 11, 0.2); color: var(--color-black);"
+                onfocus="this.style.borderColor='var(--color-black)'"
+                onblur="this.style.borderColor='rgba(11, 11, 11, 0.2)'"
+              />
+            </div>
+
+      <!-- GDPR Compliance: Consenso al trattamento dati -->
+      <div class="flex items-start gap-3 mb-6">
+        <input 
+          type="checkbox" 
+          id="privacy_consent" 
+          name="privacy_consent"
+          required
+          checked
+          class="mt-1 w-5 h-5 rounded border-gray-300"
+          style="accent-color: var(--color-accent);"
+        />
+        <label for="privacy_consent" class="text-sm leading-relaxed" style="color: var(--color-black);">
+          Inviando questa richiesta, acconsento al trattamento dei miei dati personali per rispondere alla richiesta di contatto, ai sensi del GDPR. 
+          <a href="/privacy-policy/" class="underline font-semibold" style="color: var(--color-accent);">Leggi l'informativa completa</a>.
+        </label>
+      </div>
+
+      <button 
+        type="submit" 
+        id="submit-button"
+        class="w-full px-8 py-3 rounded-md font-semibold transition-all duration-200 hover:opacity-90"
+        style="background-color: var(--color-accent); color: white;"
+      >
+        Invia Richiesta
+      </button>
+
+      <script>
+        // Auto-seleziona il consenso quando si clicca "Invia Richiesta"
+        document.getElementById('submit-button')?.addEventListener('click', function(e) {
+          const consentCheckbox = document.getElementById('privacy_consent');
+          if (consentCheckbox && !consentCheckbox.checked) {
+            consentCheckbox.checked = true;
+          }
+        });
+      </script>
+    </form>
+
+    <div class="mt-12 border-t pt-8" style="border-color: rgba(11, 11, 11, 0.1);">
+      <h2 class="text-2xl font-bold mb-6" style="color: var(--color-black); font-family: 'Playfair Display', serif;">Informazioni di Contatto</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="flex items-start gap-4 p-4 rounded-lg" style="background-color: #f8fafc;">
+          <div class="w-12 h-12 rounded-lg flex items-center justify-center text-2xl" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
+            ✉️
+          </div>
+          <div>
+            <h3 class="font-semibold mb-1" style="color: var(--color-black);">Email</h3>
+            <a href="mailto:info@europolinvestigazioni.it" class="text-sm" style="color: var(--color-accent);">
+              info@europolinvestigazioni.it
+            </a>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 p-4 rounded-lg" style="background-color: #f8fafc;">
+          <div class="w-12 h-12 rounded-lg flex items-center justify-center text-2xl" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
+            📍
+          </div>
+          <div>
+            <h3 class="font-semibold mb-1" style="color: var(--color-black);">Sede Legale</h3>
+            <p class="text-sm" style="color: var(--color-text-light);">
+              Via G. Perego 58 – Roma
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+

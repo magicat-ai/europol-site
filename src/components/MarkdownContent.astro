@@ -1,0 +1,43 @@
+---
+import { marked } from 'marked';
+
+interface Props {
+  content: string;
+}
+
+const { content } = Astro.props;
+
+// Configure marked
+marked.setOptions({
+  breaks: true,
+  gfm: true,
+  headerIds: false,
+  mangle: false,
+});
+
+// Convert absolute URLs to relative paths
+function normalizeLinks(md: string): string {
+  // Replace absolute URLs with relative paths
+  let normalized = md.replace(
+    /https?:\/\/europolinvestigazioni\.it\//g,
+    '/'
+  );
+  
+  // Remove empty links [](url)
+  normalized = normalized.replace(/\[\]\([^)]+\)/g, '');
+  
+  return normalized;
+}
+
+// Normalize content before parsing
+const normalizedContent = normalizeLinks(content);
+
+// Convert markdown to HTML (allow HTML in markdown)
+const htmlContent = marked.parse(normalizedContent, {
+  breaks: true,
+  gfm: true,
+});
+---
+
+<div class="prose prose-lg max-w-none prose-headings:font-bold prose-strong:font-semibold prose-ul:list-disc prose-ol:list-decimal" style="--tw-prose-headings: var(--color-black); --tw-prose-links: var(--color-black); --tw-prose-body: var(--color-text);" set:html={htmlContent} />
+

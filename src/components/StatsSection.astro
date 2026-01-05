@@ -1,0 +1,214 @@
+---
+interface Stat {
+  number: string;
+  label: string;
+  icon?: string;
+}
+
+interface Props {
+  stats: Stat[];
+}
+
+const { stats } = Astro.props;
+---
+
+<section class="stats-section py-20 md:py-28 relative overflow-hidden">
+  <!-- Background Pattern -->
+  <div class="absolute inset-0 stats-pattern"></div>
+  <!-- Gradient Overlay -->
+  <div class="absolute inset-0 stats-gradient"></div>
+  
+  <div class="container mx-auto px-4 max-w-7xl relative z-10">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+      {stats.map((stat, index) => (
+        <div class="stat-item" data-index={index}>
+          <div class="stat-icon-wrapper">
+            <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              {index === 0 && (
+                <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-linecap="round" stroke-linejoin="round"/>
+              )}
+              {index === 1 && (
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"/>
+              )}
+              {index === 2 && (
+                <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round"/>
+              )}
+              {index === 3 && (
+                <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"/>
+              )}
+            </svg>
+          </div>
+          <div class="stat-number" data-target={stat.number.replace(/[^0-9]/g, '')}>
+            {stat.number}
+          </div>
+          <div class="stat-label">{stat.label}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const observerOptions = {
+      threshold: 0.5,
+      rootMargin: '0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const statItem = entry.target;
+          const numberElement = statItem.querySelector('.stat-number');
+          const target = numberElement?.getAttribute('data-target');
+          
+          if (target && numberElement) {
+            const finalNumber = parseInt(target);
+            const duration = 2000;
+            const increment = finalNumber / (duration / 16);
+            let current = 0;
+            
+            const timer = setInterval(() => {
+              current += increment;
+              if (current >= finalNumber) {
+                current = finalNumber;
+                clearInterval(timer);
+              }
+              
+              const originalText = numberElement.textContent || '';
+              const suffix = originalText.replace(/[0-9]/g, '');
+              numberElement.textContent = Math.floor(current) + suffix;
+            }, 16);
+            
+            observer.unobserve(statItem);
+          }
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.stat-item').forEach(item => {
+      observer.observe(item);
+    });
+  });
+</script>
+
+<style>
+  .stats-section {
+    background: linear-gradient(135deg, #0b0b0b 0%, #1a1a1a 50%, #0b0b0b 100%);
+    position: relative;
+  }
+
+  .stats-pattern {
+    background-image: 
+      radial-gradient(circle at 2px 2px, rgba(184, 134, 11, 0.1) 1px, transparent 0),
+      radial-gradient(circle at 20px 20px, rgba(184, 134, 11, 0.05) 1px, transparent 0);
+    background-size: 40px 40px, 80px 80px;
+    opacity: 0.3;
+  }
+
+  .stats-gradient {
+    background: linear-gradient(135deg, rgba(184, 134, 11, 0.05) 0%, transparent 50%, rgba(184, 134, 11, 0.05) 100%);
+  }
+
+  .stat-item {
+    text-align: center;
+    position: relative;
+  }
+
+  .stat-icon-wrapper {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 1.5rem auto;
+    background: linear-gradient(135deg, rgba(184, 134, 11, 0.2), rgba(184, 134, 11, 0.1));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(184, 134, 11, 0.3);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .stat-icon {
+    width: 36px;
+    height: 36px;
+    color: var(--color-accent);
+    transition: transform 0.4s ease;
+  }
+
+  .stat-item:hover .stat-icon-wrapper {
+    transform: scale(1.15) rotate(5deg);
+    background: linear-gradient(135deg, rgba(184, 134, 11, 0.3), rgba(184, 134, 11, 0.2));
+    border-color: rgba(184, 134, 11, 0.5);
+    box-shadow: 0 8px 24px rgba(184, 134, 11, 0.3);
+  }
+
+  .stat-item:hover .stat-icon {
+    transform: scale(1.1);
+  }
+
+  .stat-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.75rem;
+    line-height: 1;
+    text-shadow: 0 4px 20px rgba(184, 134, 11, 0.3);
+    transition: all 0.3s ease;
+  }
+
+  .stat-item:hover .stat-number {
+    transform: scale(1.05);
+    text-shadow: 0 6px 30px rgba(184, 134, 11, 0.5);
+  }
+
+  .stat-label {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    line-height: 1.5;
+  }
+
+  /* Staggered animation on load */
+  @media (prefers-reduced-motion: no-preference) {
+    .stat-item {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+
+    .stat-item[data-index="0"] { animation-delay: 0.1s; }
+    .stat-item[data-index="1"] { animation-delay: 0.2s; }
+    .stat-item[data-index="2"] { animation-delay: 0.3s; }
+    .stat-item[data-index="3"] { animation-delay: 0.4s; }
+  }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .stat-number {
+      font-size: 2.5rem;
+    }
+
+    .stat-icon-wrapper {
+      width: 56px;
+      height: 56px;
+      margin-bottom: 1rem;
+    }
+
+    .stat-icon {
+      width: 28px;
+      height: 28px;
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+    }
+  }
+</style>
