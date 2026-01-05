@@ -54,6 +54,9 @@ pageContent = pageContent.replace(/^\*\*Flags:\*\*.*$/gm, '');
 pageContent = pageContent.replace(/^\*\*Meta Title:\*\*.*$/gm, '');
 pageContent = pageContent.replace(/^\*\*Meta Description:\*\*.*$/gm, '');
 pageContent = pageContent.replace(/^\*\*Canonical:\*\*.*$/gm, '');
+pageContent = pageContent.replace(/^\*\*Date:\*\*.*$/gm, '');
+pageContent = pageContent.replace(/^\*\*Category:\*\*.*$/gm, '');
+pageContent = pageContent.replace(/^\*\*Tags:\*\*.*$/gm, '');
 pageContent = pageContent.replace(/^---$/gm, '');
 
 // Extract H1 from markdown (first line starting with #)
@@ -551,6 +554,24 @@ const processData = processStepsMap[urlPath] || defaultProcess;
 // Identify blog posts using centralized function
 const isBlogPostValue = isBlogPost(urlPath);
 
+// Extract intermediate CTA from markdown (for blog posts)
+// Pattern: **Hai bisogno di assistenza?** followed by text and [Richiedi Consulenza Gratuita](/contatti/)
+let intermediateCTA: { title: string; text: string; ctaText: string; ctaLink: string } | null = null;
+if (isBlogPostValue) {
+  const ctaPattern = /\*\*Hai bisogno di assistenza\?\*\*\s*([^\[]+)\s*\[Richiedi Consulenza Gratuita\]\(([^)]+)\)/i;
+  const ctaMatch = pageContent.match(ctaPattern);
+  if (ctaMatch) {
+    intermediateCTA = {
+      title: "Hai bisogno di assistenza?",
+      text: ctaMatch[1].trim(),
+      ctaText: "Richiedi Consulenza Gratuita",
+      ctaLink: ctaMatch[2].trim() || "/contatti/"
+    };
+    // Remove CTA from pageContent
+    pageContent = pageContent.replace(ctaPattern, '').trim();
+  }
+}
+
 // Extract date from content if available
 let publishDate = '';
 const dateMatch = content.match(/\*\*Date:\*\*\s*(\d{4}-\d{2}-\d{2})/);
@@ -645,14 +666,6 @@ const articleSchema = isBlogPostValue ? {
           {/* Blog post metadata */}
           {isBlogPostValue && (
             <div class="flex flex-wrap items-center gap-4 mb-4 text-sm" style="color: var(--color-text-light);">
-              {publishDate && (
-                <span class="flex items-center gap-1">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                  </svg>
-                  {new Date(publishDate).toLocaleDateString('it-IT', { year: 'numeric', month: 'long', day: 'numeric' })}
-                </span>
-              )}
               {blogCategory && (
                 <span class="px-3 py-1 rounded-full text-xs font-semibold" style="background: rgba(184, 134, 11, 0.1); color: var(--color-accent);">
                   {blogCategory}
@@ -942,7 +955,17 @@ const articleSchema = isBlogPostValue ? {
         <>
           <EnhancedMarkdownContent content={pageContent} variant="service" />
           
-          {/* CTA Intermedio - Dopo contenuto principale, prima del processo */}
+          {/* CTA Intermedio - Per blog posts (extracted from markdown) */}
+          {isBlogPostValue && intermediateCTA && (
+            <InlineCTA 
+              title={intermediateCTA.title}
+              text={intermediateCTA.text}
+              ctaText={intermediateCTA.ctaText}
+              ctaLink={intermediateCTA.ctaLink}
+            />
+          )}
+          
+          {/* CTA Intermedio - Dopo contenuto principale, prima del processo (for service pages) */}
           {isMainServicePage && (
             <InlineCTA 
               title="Pronto a iniziare?"

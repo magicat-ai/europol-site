@@ -182,7 +182,7 @@ Il costo di un'indagine professionale è spesso inferiore alle conseguenze di de
 
 ### Cosa distingue EUROPOL® da altre agenzie investigative?
 
-EUROPOL® è la prima agenzia investigativa europea a garantire la legalità dei metodi utilizzati attraverso la GARANZIA LEGALIS™. Questo significa che ogni prova raccolta durante le nostre investigazioni private è valida in sede giudiziaria e non espone il cliente a rischi legali. Inoltre, abbiamo oltre 60 anni di esperienza nel settore, e il nostro team è guidato dalla Dott.ssa Klara Murnau, Capo Detective, con una comprovata esperienza in investigazioni private.
+EUROPOL® è la prima agenzia investigativa europea a garantire la legalità dei metodi utilizzati attraverso la GARANZIA LEGALIS™. Questo significa che ogni prova raccolta durante le nostre investigazioni private è valida in sede giudiziaria e non espone il cliente a rischi legali. Inoltre, abbiamo oltre 60 anni di esperienza nel settore, e il nostro team è guidato da Klara Murnau, Capo Detective, con una comprovata esperienza in investigazioni private.
 
 ### Le investigazioni private sono legali?
 

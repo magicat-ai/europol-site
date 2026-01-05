@@ -10,7 +10,7 @@ Presto un nostro Consulente Investigativo si metterà in Contatto con te, ma pri
 
 ### Klara Murnau – Capo Detective di EUROPOL®
 
-La Dott.ssa Klara Murnau – Capo Detective di EUROPOL® – entrerà in contatto con te nella fascia oraria che ci hai comunicato nelle prossime 24 – 48 ore.
+Klara Murnau – Capo Detective di EUROPOL® – entrerà in contatto con te nella fascia oraria che ci hai comunicato nelle prossime 24 – 48 ore.
 
 ## #2 Come Funziona la Consulenza Investigativa
 

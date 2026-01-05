@@ -117,6 +117,23 @@ if (base) {
   );
 }
 
+// Process lists for service variant - ensure all list items are visible
+if (variant === 'service') {
+  // Add inline styles to ensure all list items are visible
+  htmlContent = htmlContent.replace(
+    /<ul([^>]*)>/gi,
+    '<ul$1 style="margin: 1.5rem 0; padding-left: 2rem; list-style-type: disc; max-height: none !important; overflow: visible !important; height: auto !important;">'
+  );
+  htmlContent = htmlContent.replace(
+    /<ol([^>]*)>/gi,
+    '<ol$1 style="margin: 1.5rem 0; padding-left: 2rem; list-style-type: decimal; max-height: none !important; overflow: visible !important; height: auto !important;">'
+  );
+  htmlContent = htmlContent.replace(
+    /<li([^>]*)>/gi,
+    '<li$1 style="display: list-item !important; visibility: visible !important; opacity: 1 !important; max-height: none !important; overflow: visible !important; height: auto !important; margin-bottom: 0.75rem; line-height: 1.8;">'
+  );
+}
+
 // Process HTML for homepage variant: wrap sections and add highlight boxes
 if (variant === 'homepage') {
   // STEP 1: Wrap sections by H2 tags first
@@ -356,7 +373,7 @@ if (variant === 'homepage') {
       </div>
     </>
   ) : (
-    <div class={`prose prose-lg max-w-none ${variant === 'service' ? 'prose-service' : 'prose-default'}`}>
+    <div class={`prose prose-lg max-w-none prose-ul:list-disc prose-ol:list-decimal prose-li:my-2 ${variant === 'service' ? 'prose-service' : 'prose-default'}`}>
       <div set:html={htmlContent} />
     </div>
   )}
@@ -979,6 +996,67 @@ if (variant === 'homepage') {
   .prose-service p {
     line-height: 1.8;
     margin-bottom: 1.5rem;
+  }
+
+  .prose-service h4 {
+    font-size: 1.25rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  /* Lists styling for service variant - override Tailwind prose defaults */
+  .prose-service ul,
+  .prose-service ol {
+    margin: 1.5rem 0 !important;
+    padding-left: 2rem !important;
+    list-style-position: outside !important;
+    max-height: none !important;
+    overflow: visible !important;
+    height: auto !important;
+    display: block !important;
+  }
+
+  .prose-service ul {
+    list-style-type: disc !important;
+  }
+
+  .prose-service ol {
+    list-style-type: decimal !important;
+  }
+
+  .prose-service li {
+    margin-bottom: 0.75rem !important;
+    line-height: 1.8 !important;
+    display: list-item !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    height: auto !important;
+    position: relative !important;
+  }
+
+  /* Force all list items to be visible - even nested */
+  .prose-service ul li,
+  .prose-service ol li,
+  .prose-service ul > li,
+  .prose-service ol > li,
+  .prose-service li:first-child,
+  .prose-service li:nth-child(2),
+  .prose-service li:nth-child(3),
+  .prose-service li:nth-child(4),
+  .prose-service li:nth-child(n) {
+    display: list-item !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+
+  .prose-service ul li::marker,
+  .prose-service ol li::marker {
+    color: var(--color-accent);
   }
 
   /* Default variant - improved base */

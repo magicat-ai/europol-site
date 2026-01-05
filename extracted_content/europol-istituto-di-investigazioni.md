@@ -1,4 +1,4 @@
-# Istituto di Investigazioni
+# Istituto di Investigazioni EUROPOL
 
 **URL:** https://europolinvestigazioni.it/europol-istituto-di-investigazioni/
 **Content Length:** 0 characters
@@ -39,8 +39,8 @@ Il Team Investigativo dell'Istituto EUROPOL® comprende esclusivamente Investiga
 </div>
 
 <div class="text-center">
-<img src="/media/team/klara-murnau.png" alt="Dott.ssa Klara Murnau - Capo Detective EUROPOL®" class="w-full max-w-xs mx-auto mb-4 rounded-lg shadow-sm" loading="lazy" />
-<h3 class="text-xl font-bold mb-3" style="color: var(--color-black); font-family: 'Playfair Display', serif;">Dott.ssa Klara Murnau</h3>
+<img src="/media/team/klara-murnau.png" alt="Klara Murnau - Capo Detective EUROPOL®" class="w-full max-w-xs mx-auto mb-4 rounded-lg shadow-sm" loading="lazy" />
+<h3 class="text-xl font-bold mb-3" style="color: var(--color-black); font-family: 'Playfair Display', serif;">Klara Murnau</h3>
 <p class="text-sm mb-1" style="color: var(--color-text-light);">Capo Detective</p>
 <p class="text-xs" style="color: var(--color-text-light);">EUROPOL®</p>
 </div>
@@ -56,7 +56,7 @@ Il Team Investigativo dell'Istituto EUROPOL® comprende esclusivamente Investiga
 
 ### Leadership
 
-Il nostro team è guidato da professionisti con comprovata esperienza nel settore delle investigazioni. La Dott.ssa Klara Murnau, Capo Detective, porta al team una vasta esperienza in investigazioni private e aziendali, garantendo che ogni caso sia gestito con la massima professionalità e competenza.
+Il nostro team è guidato da professionisti con comprovata esperienza nel settore delle investigazioni. Klara Murnau, Capo Detective, porta al team una vasta esperienza in investigazioni private e aziendali, garantendo che ogni caso sia gestito con la massima professionalità e competenza.
 
 ### Selezione del Personale
 

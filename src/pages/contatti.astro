@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
 import { getPageContent } from '../utils/content';
 
 const pageData = getPageContent('/contatti/');
@@ -7,19 +8,16 @@ const { seo } = pageData;
 ---
 
 <BaseLayout title={seo.title} description={seo.meta_description} canonical={seo.canonical}>
-  <!-- Simple Hero Section -->
-  <section class="py-16 md:py-24 bg-gradient-to-b from-white via-gray-50/50 to-white">
-    <div class="container mx-auto px-4 max-w-4xl text-center">
-      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style="font-family: 'Playfair Display', serif; color: var(--color-black); line-height: 1.2;">
-        Contattaci
-      </h1>
-      <p class="text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto" style="color: var(--color-text-light);">
-        Richiedi una consulenza gratuita e senza impegno. I nostri consulenti sono a tua disposizione.
-      </p>
-    </div>
-  </section>
+  <!-- Hero Section -->
+  <PageHero 
+    title="Contattaci"
+    subtitle="Richiedi una consulenza gratuita e senza impegno. I nostri consulenti sono a tua disposizione."
+    showPhone={false}
+    compact={true}
+  />
 
-  <div class="container mx-auto px-4 py-16 md:py-24 max-w-2xl">
+  <article class="pt-8 pb-16 md:pt-12 md:pb-20">
+    <div class="container mx-auto px-4 max-w-4xl">
     <div class="bg-white rounded-xl p-8 mb-8 shadow-lg border scroll-reveal" style="border-color: rgba(11, 11, 11, 0.1);" id="contact-form">
       <div class="flex items-center gap-4 mb-6">
         <div class="w-16 h-16 rounded-full flex items-center justify-center text-3xl" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
@@ -208,6 +206,6 @@ const { seo } = pageData;
         </div>
       </div>
     </div>
-  </div>
+  </article>
 </BaseLayout>
 

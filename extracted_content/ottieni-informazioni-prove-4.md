@@ -36,7 +36,7 @@ Il nostro team altamente qualificato può garantire una grande varietà di servi
 
 ## Verrai Contattato dal Chief Detective di EUROPOL
 
-La **Dott.ssa Klara Murnau** è Chief Detective di EUROPOL® e ti contatterà telefonicamente nell'arco delle 24-72 ore dall'invio della richiesta, prima via messaggio (SMS o Whatsapp).
+**Klara Murnau** è Chief Detective di EUROPOL® e ti contatterà telefonicamente nell'arco delle 24-72 ore dall'invio della richiesta, prima via messaggio (SMS o Whatsapp).
 
 **Chi è Klara Murnau**
 

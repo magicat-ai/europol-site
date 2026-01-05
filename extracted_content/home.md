@@ -93,7 +93,7 @@ Scegliere EUROPOL® significa scegliere:
 - **Licenza Prefettizia**: Autorizzazione ufficiale per svolgere attività investigative
 - **Discrezione assoluta**: Massima riservatezza in ogni fase dell'indagine
 - **Copertura nazionale e internazionale**: Operiamo in tutta Italia e all'estero, con sede principale a Roma
-- **Team professionale**: Investigatori esperti e competenti, guidati dalla Dott.ssa Klara Murnau, Capo Detective. Scopri di più sul nostro [team](/europol-istituto-di-investigazioni/)
+- **Team professionale**: Investigatori esperti e competenti, guidati da Klara Murnau, Capo Detective. Scopri di più sul nostro [team](/europol-istituto-di-investigazioni/)
 
 ## Domande Frequenti
 
