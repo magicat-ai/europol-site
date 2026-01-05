@@ -306,14 +306,23 @@ const bgImage = backgroundImage && !backgroundImage.startsWith('http') && !backg
     }
 
     .badge-content {
-      flex-direction: column;
+      flex-direction: row; /* Mantieni orizzontale su mobile */
       gap: 0.5rem;
       padding: 0.5rem 1rem;
     }
 
+    .badge-text {
+      font-size: 0.875rem; /* Riduci dimensione testo */
+      letter-spacing: 0.05em;
+    }
+
+    .badge-subtext {
+      font-size: 0.75rem; /* Riduci dimensione sottotesto */
+    }
+
     .badge-line {
-      width: 40px;
-      height: 1px;
+      width: 1px; /* Linea verticale */
+      height: 16px;
     }
   }
 </style>
