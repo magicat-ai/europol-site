@@ -1,0 +1,112 @@
+---
+import { navigation } from '../utils/navigation';
+
+// Navigation items
+const base = import.meta.env.BASE_URL || '';
+const navItems = [
+  { name: 'Home', href: base || '/' },
+  { name: 'Chi Siamo', href: `${base}/europol-istituto-di-investigazioni/` },
+  { name: 'Investigazioni Private', href: `${base}/investigazioni-private/` },
+  { name: 'Investigazioni Aziendali', href: `${base}/investigazioni-aziendali/` },
+  { name: 'Intelligence', href: `${base}/intelligence-e-servizi-speciali/` },
+  { name: 'Risorse', href: `${base}/blog/` },
+];
+---
+
+<header class="bg-white border-b sticky top-0 z-50 transition-shadow duration-200" id="header" style="border-color: rgba(11, 11, 11, 0.1);">
+  <nav class="container mx-auto px-4 py-4 max-w-6xl">
+    <div class="flex items-center justify-between">
+             <!-- Logo -->
+             <a href={import.meta.env.BASE_URL || '/'} class="flex items-center">
+               <img
+                 src={`${import.meta.env.BASE_URL}/media/brand/logo-original.png`.replace('//', '/')}
+                 alt="EUROPOL® Istituto di Investigazioni"
+                 class="h-10 md:h-12 w-auto"
+                 style="max-height: 3rem;"
+               />
+               <span class="sr-only">EUROPOL®</span>
+             </a>
+
+      <!-- Desktop Navigation -->
+      <ul class="hidden lg:flex items-center space-x-8">
+        {navItems.map((item) => (
+          <li>
+            <a 
+              href={item.href} 
+              class="text-sm font-medium transition-colors duration-200 hover:opacity-70"
+              style="color: var(--color-black);"
+            >
+              {item.name}
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <!-- Consulenza CTA -->
+      <a
+        href={`${base}/contatti/`}
+        class="phone-cta hidden lg:flex items-center gap-2 px-4 py-2 rounded font-medium text-sm border"
+        style="border-color: var(--color-black); color: var(--color-black); background-color: transparent;"
+      >
+        Consulenza Gratuita
+      </a>
+
+      <!-- Mobile Menu Button -->
+      <button 
+        class="lg:hidden p-2"
+        id="mobile-menu-button"
+        aria-label="Menu"
+        onclick="document.getElementById('mobile-menu').classList.toggle('hidden')"
+      >
+        <svg class="w-6 h-6" style="color: var(--color-black);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <div id="mobile-menu" class="hidden lg:hidden mt-4 pb-4 border-t pt-4" style="border-color: rgba(11, 11, 11, 0.1);">
+      <ul class="space-y-3">
+        {navItems.map((item) => (
+          <li>
+            <a 
+              href={item.href} 
+              class="block py-2 text-sm font-medium transition-colors duration-200 hover:opacity-70"
+              style="color: var(--color-black);"
+            >
+              {item.name}
+            </a>
+          </li>
+        ))}
+        <li class="pt-2">
+          <a
+            href={`${base}/contatti/`}
+            class="phone-cta flex items-center gap-2 px-4 py-2 rounded font-medium text-sm border"
+            style="border-color: var(--color-black); color: var(--color-black); background-color: transparent;"
+          >
+            Consulenza Gratuita
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</header>
+
+<script>
+  // Sticky header shadow on scroll
+  let lastScroll = 0;
+  const header = document.getElementById('header');
+  
+  window.addEventListener('scroll', () => {
+    const currentScroll = window.pageYOffset;
+    
+    if (currentScroll > 10) {
+      header.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.1)';
+    } else {
+      header.style.boxShadow = 'none';
+    }
+    
+    lastScroll = currentScroll;
+  });
+</script>
+

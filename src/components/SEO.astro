@@ -1,0 +1,36 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  canonical: string;
+  robots?: string;
+}
+
+const { title, description, canonical, robots } = Astro.props;
+const fullTitle = title.includes('EUROPOL') ? title : `${title} | EUROPOL®`;
+const robotsContent = robots || 'index, follow';
+---
+
+<!-- Primary Meta Tags -->
+<title>{fullTitle}</title>
+<meta name="title" content={fullTitle} />
+{description && <meta name="description" content={description} />}
+
+<!-- Robots Meta -->
+<meta name="robots" content={robotsContent} />
+
+<!-- Canonical URL -->
+<link rel="canonical" href={canonical} />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content={canonical} />
+<meta property="og:title" content={fullTitle} />
+{description && <meta property="og:description" content={description} />}
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:url" content={canonical} />
+<meta property="twitter:title" content={fullTitle} />
+{description && <meta property="twitter:description" content={description} />}
+

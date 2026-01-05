@@ -1,0 +1,749 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EnhancedMarkdownContent from '../components/EnhancedMarkdownContent.astro';
+import BenefitsSection from '../components/BenefitsSection.astro';
+import GaranziaSection from '../components/GaranziaSection.astro';
+import ProcessSection from '../components/ProcessSection.astro';
+import FAQSection from '../components/FAQSection.astro';
+import OptimizedImage from '../components/OptimizedImage.astro';
+import RelatedContent from '../components/RelatedContent.astro';
+import PageHero from '../components/PageHero.astro';
+import TrustBadges from '../components/TrustBadges.astro';
+import StatsSection from '../components/StatsSection.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import PremiumServiceCard from '../components/PremiumServiceCard.astro';
+import PremiumServiceCardLarge from '../components/PremiumServiceCardLarge.astro';
+import InlineCTA from '../components/InlineCTA.astro';
+import ImageTextSection from '../components/ImageTextSection.astro';
+import { getPageContent } from '../utils/content';
+import { marked } from 'marked';
+
+// Load homepage content
+const pageData = getPageContent('/');
+const { content, seo } = pageData;
+
+// Extract content after metadata
+const contentStart = content.indexOf('---');
+let pageContent = contentStart > 0 ? content.substring(contentStart + 3).trim() : content;
+
+// Remove H1 if present (first line starting with #)
+pageContent = pageContent.replace(/^#\s+.+$/m, '').trim();
+
+// Extract structured data for dedicated components
+const garanziaMatch = pageContent.match(/## Il Nostro Approccio: Garanzia Legalis™\s*\n\n([\s\S]*?)(?=\n##|$)/);
+const processMatch = pageContent.match(/## Come Funziona: Il Processo Investigativo\s*\n\n([\s\S]*?)(?=\n## Perché Scegliere|$)/);
+const benefitsMatch = pageContent.match(/## Perché Scegliere EUROPOL®\s*\n\n([\s\S]*?)(?=\n##|$)/);
+const faqMatch = pageContent.match(/## Domande Frequenti\s*\n\n([\s\S]*?)(?=\n## Inizia Oggi|$)/);
+const cosaOffriamoMatch = pageContent.match(/## Cosa Offriamo: Investigazioni Private e Aziendali\s*\n\n([\s\S]*?)(?=\n##|$)/);
+const iniziaOggiMatch = pageContent.match(/## Inizia Oggi[^\n]*\s*\n\n([\s\S]*?)(?=\n##|$)/);
+
+// Parse Garanzia section
+let garanziaContent = '';
+let garanziaFeatures: Array<{ title: string; description: string }> = [];
+if (garanziaMatch) {
+  const garanziaText = garanziaMatch[1];
+  
+  // Extract first paragraph
+  const firstPara = garanziaText.match(/^La \[GARANZIA LEGALIS™[^\]]+\]\([^)]+\) è il nostro impegno formale:([^\n]+)/);
+  if (firstPara) {
+    garanziaContent = `<p>La <a href="/sistema-prova/">GARANZIA LEGALIS™</a> è il nostro impegno formale:${firstPara[1]}</p>`;
+  }
+  
+  // Extract "Questo significa:" part
+  const questoSignifica = garanziaText.match(/Questo significa:([\s\S]*?)(?=Dal 1962|$)/);
+  if (questoSignifica) {
+    garanziaContent += `<p>Questo significa:</p>`;
+  }
+  
+  // Extract features from list
+  const featuresMatch = garanziaText.matchAll(/- \*\*([^:]+):\*\* ([^\n]+)/g);
+  for (const match of featuresMatch) {
+    garanziaFeatures.push({
+      title: match[1].trim(),
+      description: match[2].trim()
+    });
+  }
+  
+  // Extract final paragraph
+  const finalPara = garanziaText.match(/Dal 1962[^\n]+[\s\S]*?(?=\n##|$)/);
+  if (finalPara) {
+    garanziaContent += `<p>${finalPara[0].trim()}</p>`;
+  }
+}
+
+// Parse Process section
+let processSteps: Array<{ number: string; title: string; description: string; details?: string[] }> = [];
+if (processMatch) {
+  const processText = processMatch[1];
+  
+  // Extract each step - APPROCCIO MIGLIORATO con fallback
+  const stepPattern = /###\s+(\d+)\.\s+([^\n]+)\n\n([\s\S]*?)(?=\n###\s+\d+\.\s+|$)/g;
+  const allMatches: RegExpExecArray[] = [];
+  let stepMatch;
+  
+  // Raccogli tutti i match prima di processarli
+  while ((stepMatch = stepPattern.exec(processText)) !== null) {
+    allMatches.push(stepMatch);
+  }
+  
+  // Se non trova match con regex, usa approccio alternativo con split
+  if (allMatches.length === 0) {
+    // Approccio alternativo: split per ###
+    const sections = processText.split(/\n###\s+\d+\.\s+/);
+    
+    for (let i = 1; i < sections.length; i++) {
+      const section = sections[i].trim();
+      if (!section) continue;
+      
+      const lines = section.split('\n');
+      const firstLine = lines[0];
+      const numberMatch = firstLine.match(/^(\d+)\.\s+(.+)$/);
+      
+      if (numberMatch) {
+        const number = numberMatch[1];
+        const title = numberMatch[2].trim();
+        const content = lines.slice(1).join('\n').trim();
+        
+        // Extract description (text before list)
+        const descParts: string[] = [];
+        const contentLines = content.split('\n');
+        
+        for (const line of contentLines) {
+          if (line.trim().startsWith('-')) break;
+          if (line.trim() && !line.trim().startsWith('Non c\'è') && !line.trim().startsWith('Tutto il materiale')) {
+            descParts.push(line.trim());
+          }
+        }
+        
+        const description = descParts.join(' ').trim();
+        
+        // Extract list items
+        const details: string[] = [];
+        const listMatches = content.matchAll(/- ([^\n]+)/g);
+        for (const listMatch of listMatches) {
+          details.push(listMatch[1].trim());
+        }
+        
+        // Add final sentence if exists
+        const finalSentence = content.match(/(?:Non c'è|Tutto il materiale)[^\n]+[\s\S]*?$/);
+        if (finalSentence && !description.includes(finalSentence[0].trim())) {
+          descParts.push(finalSentence[0].trim());
+        }
+        
+        processSteps.push({
+          number,
+          title,
+          description: descParts.join(' ').trim() || description,
+          details: details.length > 0 ? details : undefined
+        });
+      }
+    }
+  } else {
+    // Processa i match trovati con regex
+    for (const match of allMatches) {
+      const number = match[1];
+      const title = match[2].trim();
+      const content = match[3];
+      
+      // Extract description (text before list)
+      const descParts: string[] = [];
+      const lines = content.split('\n');
+      
+      for (const line of lines) {
+        if (line.trim().startsWith('-')) {
+          break; // Stop at list
+        }
+        if (line.trim() && !line.trim().startsWith('Non c\'è') && !line.trim().startsWith('Tutto il materiale')) {
+          descParts.push(line.trim());
+        }
+      }
+      
+      const description = descParts.join(' ').trim();
+      
+      // Extract list items
+      const details: string[] = [];
+      const listMatches = content.matchAll(/- ([^\n]+)/g);
+      for (const listMatch of listMatches) {
+        details.push(listMatch[1].trim());
+      }
+      
+      // Add final sentence if exists
+      const finalSentence = content.match(/(?:Non c'è|Tutto il materiale)[^\n]+[\s\S]*?$/);
+      if (finalSentence && !description.includes(finalSentence[0].trim())) {
+        descParts.push(finalSentence[0].trim());
+      }
+      
+      processSteps.push({
+        number,
+        title,
+        description: descParts.join(' ').trim() || description,
+        details: details.length > 0 ? details : undefined
+      });
+    }
+  }
+}
+
+// Parse Benefits section
+let benefits: Array<{ title: string; description: string; icon: string }> = [];
+if (benefitsMatch) {
+  const benefitsText = benefitsMatch[1];
+  const benefitsList = benefitsText.matchAll(/- \*\*([^:]+):\*\* ([^\n]+)/g);
+  
+  const iconMap: Record<string, string> = {
+    'Esperienza': '📅',
+    'Legalità certificata': '✅',
+    'Licenza Prefettizia': '📜',
+    'Discrezione assoluta': '🔒',
+    'Copertura nazionale e internazionale': '🌍',
+    'Team professionale': '👥'
+  };
+  
+  for (const benefitMatch of benefitsList) {
+    const title = benefitMatch[1].trim();
+    const description = benefitMatch[2].trim();
+    benefits.push({
+      title,
+      description,
+      icon: iconMap[title] || '✨'
+    });
+  }
+}
+
+// Parse FAQ section
+let faqs: Array<{ question: string; answer: string }> = [];
+if (faqMatch) {
+  const faqText = faqMatch[1];
+  
+  // Use a more robust regex to match all FAQs
+  // Match: ### Question\n\nAnswer (until next ### or end)
+  const faqRegex = /###\s+(.+?)\n\n([\s\S]*?)(?=\n###|$)/g;
+  let match;
+  
+  while ((match = faqRegex.exec(faqText)) !== null) {
+    const question = match[1].trim();
+    const answerText = match[2].trim();
+    
+    if (question && answerText) {
+      faqs.push({
+        question,
+        answer: marked.parse(answerText)
+      });
+    }
+  }
+}
+
+// Extract intro paragraphs (first 2 paragraphs - Mission, senza il terzo che è duplicato)
+// These will be shown in the drop cap section, so we need to remove them from remainingContent
+const introParagraphs = pageContent.match(/^(Quando la verità è difficile[^\n]+[\s\S]*?GARANZIA LEGALIS™[^\n]+)/m);
+let remainingContent = pageContent;
+let missionContent = '';
+
+// Extract mission paragraphs for drop cap section (solo primi 2 paragrafi)
+if (introParagraphs && introParagraphs[0]) {
+  // Prendi solo i primi 2 paragrafi (rimuovi il terzo che è duplicato)
+  const allText = introParagraphs[0];
+  const paragraphs = allText.split(/\n\n+/);
+  missionContent = paragraphs.slice(0, 2).join('\n\n').trim();
+  
+  // Remove intro paragraphs from remainingContent - they're already shown in drop cap
+  // Use a more aggressive replacement to ensure all variations are removed
+  const missionText = introParagraphs[0];
+  // Escape special regex characters in mission text
+  const escapedMissionText = missionText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  remainingContent = remainingContent.replace(new RegExp(escapedMissionText, 'g'), '').trim();
+  // Also remove any partial matches that might remain - multiple attempts
+  remainingContent = remainingContent.replace(/Quando la verità è difficile[^\n]+[\s\S]*?Questa garanzia non è solo un marchio[^\n]+/gm, '').trim();
+  remainingContent = remainingContent.replace(/Quando la verità è difficile[^\n]+[\s\S]*?GARANZIA LEGALIS™[^\n]+[\s\S]*?incontestabile[^\n]*/gm, '').trim();
+  // Remove any remaining fragments
+  remainingContent = remainingContent.replace(/^Quando la verità[^\n]+/gm, '').trim();
+  remainingContent = remainingContent.replace(/^Siamo la prima agenzia[^\n]+/gm, '').trim();
+  remainingContent = remainingContent.replace(/^Questa garanzia non è solo un marchio[^\n]+/gm, '').trim();
+  
+  // Pulizia più aggressiva per rimuovere testo duplicato su "prove raccolte" e "metodologie legali"
+  remainingContent = remainingContent.replace(/prove raccolte[^\n]+[\s\S]*?GARANZIA LEGALIS™[^\n]*/gi, '').trim();
+  remainingContent = remainingContent.replace(/EUROPOL svolge le proprie indagini esclusivamente attraverso[^\n]+/gi, '').trim();
+  remainingContent = remainingContent.replace(/metodologie legali[^\n]+certificate dalla[^\n]+GARANZIA LEGALIS™[^\n]*/gi, '').trim();
+  remainingContent = remainingContent.replace(/A differenza di altre agenzie[^\n]+[\s\S]*?GARANZIA LEGALIS™[^\n]*/gi, '').trim();
+}
+
+// Extract "Cosa Offriamo" section separately to add title and intro
+let cosaOffriamoContent = '';
+if (cosaOffriamoMatch) {
+  cosaOffriamoContent = cosaOffriamoMatch[1];
+  // Remove the intro paragraph that's already shown in the section header
+  cosaOffriamoContent = cosaOffriamoContent.replace(/^EUROPOL®[^\n]+\n\n?/i, '').trim();
+  remainingContent = remainingContent.replace(cosaOffriamoMatch[0], '');
+}
+
+// Remove ALL structured sections from remainingContent
+if (garanziaMatch) remainingContent = remainingContent.replace(garanziaMatch[0], '');
+if (processMatch) remainingContent = remainingContent.replace(processMatch[0], '');
+if (benefitsMatch) remainingContent = remainingContent.replace(benefitsMatch[0], '');
+if (faqMatch) remainingContent = remainingContent.replace(faqMatch[0], '');
+if (iniziaOggiMatch) remainingContent = remainingContent.replace(iniziaOggiMatch[0], '');
+
+// Clean up remainingContent - remove empty lines and trim
+remainingContent = remainingContent.trim();
+// Remove any remaining mission text fragments (aggressive cleanup)
+remainingContent = remainingContent.replace(/Quando la verità[^\n]+[\s\S]*?incontestabile[^\n]*/gm, '').trim();
+remainingContent = remainingContent.replace(/Siamo la prima agenzia[^\n]+[\s\S]*?GARANZIA LEGALIS™[^\n]*/gm, '').trim();
+remainingContent = remainingContent.replace(/Questa garanzia non è solo un marchio[^\n]+[\s\S]*?incontestabile[^\n]*/gm, '').trim();
+// Remove any lines that start with mission text
+remainingContent = remainingContent.split('\n').filter(line => {
+  const trimmed = line.trim();
+  return !trimmed.startsWith('Quando la verità') && 
+         !trimmed.startsWith('Siamo la prima agenzia') && 
+         !trimmed.startsWith('Questa garanzia non è solo un marchio') &&
+         !trimmed.includes('GARANZIA LEGALIS™') ||
+         trimmed.length > 200; // Keep longer lines that might be different content
+}).join('\n').trim();
+// Only keep if there's actual content (more than just whitespace/newlines and at least 100 chars)
+const hasRealContent = remainingContent.length > 100 && remainingContent.replace(/\s+/g, '').length > 50;
+---
+
+<BaseLayout title={seo.title} description={seo.meta_description} canonical={seo.canonical}>
+  <!-- Hero Section with Background -->
+  <PageHero 
+    title="Agenzia Investigativa EUROPOL®"
+    subtitle="Investigazioni ed Intelligence dal 1962"
+    ctaText="Richiedi Consulenza Gratuita"
+    ctaLink="/contatti/"
+    showPhone={false}
+  />
+
+  <!-- Trust Badges -->
+  <TrustBadges />
+
+  <!-- Stats Section -->
+  <StatsSection 
+    stats={[
+      { number: "60+", label: "Anni di Esperienza" },
+      { number: "1000+", label: "Casi Risolti" },
+      { number: "100%", label: "Metodi Legali" },
+      { number: "24/7", label: "Disponibilità" }
+    ]}
+  />
+
+  <!-- Services Overview -->
+  <section class="py-16 md:py-24 bg-white scroll-reveal">
+    <div class="container mx-auto px-4 max-w-7xl">
+      <h2 class="text-4xl md:text-5xl font-bold text-center mb-16 md:mb-20 scroll-reveal-fade" style="color: var(--color-black); font-family: 'Playfair Display', serif; letter-spacing: -0.02em;">
+        I Nostri Servizi
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 mb-20 scroll-reveal-stagger">
+        <!-- Investigazioni Private Card -->
+        <PremiumServiceCardLarge 
+          title="Investigazioni Private"
+          description="Protezione della sfera personale e familiare attraverso indagini discrete e legali. Supporto in momenti delicati con prove utilizzabili in sede giudiziaria."
+          href="/investigazioni-private/"
+          icon="UserCheck"
+        />
+
+        <!-- Investigazioni Aziendali Card -->
+        <PremiumServiceCardLarge 
+          title="Investigazioni Aziendali"
+          description="Tutela del patrimonio aziendale e dell'integrità organizzativa. Indagini strategiche per decisioni informate e protezione legale."
+          href="/investigazioni-aziendali/"
+          icon="Building2"
+        />
+
+        <!-- Intelligence & Servizi Speciali Card -->
+        <PremiumServiceCardLarge 
+          title="Intelligence & Servizi Speciali"
+          description="Servizi investigativi avanzati per casi complessi. Business Intelligence, Digital Forensics, Tracciamento Blockchain e Antispionaggio con competenze tecniche specializzate."
+          href="/intelligence-e-servizi-speciali/"
+          icon="Brain"
+        />
+      </div>
+
+      <!-- Detailed Services Grid -->
+      <div class="mt-20 scroll-reveal">
+        <h3 class="text-3xl md:text-4xl font-bold text-center mb-16 scroll-reveal-fade" style="color: var(--color-black); font-family: 'Playfair Display', serif; letter-spacing: -0.01em;">
+          Tutti i Nostri Servizi
+        </h3>
+        
+        <!-- Investigazioni Private Services -->
+        <div class="mb-16 scroll-reveal">
+          <h4 class="text-2xl md:text-3xl font-bold mb-10 scroll-reveal-left" style="color: var(--color-black); font-family: 'Playfair Display', serif;">Investigazioni Private</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 scroll-reveal-stagger">
+            <PremiumServiceCard 
+              href="/investigazioni-private/investigazioni-infedelta-coniugale-tradimento/"
+              icon="🔍"
+              title="Infedeltà Coniugale"
+              description="Verifica discreta di sospetti tradimenti con prove documentali utilizzabili in sede legale. Massima riservatezza garantita."
+            />
+            <PremiumServiceCard 
+              href="/investigazioni-private/investigazioni-separazione-divorzio/"
+              icon="⚖️"
+              title="Separazione e Divorzio"
+              description="Supporto investigativo per procedimenti di separazione e divorzio. Prove concrete per tutelare i tuoi diritti."
+            />
+            <PremiumServiceCard 
+              href="/investigazioni-private/investigazioni-affidamento-minori/"
+              icon="👶"
+              title="Affidamento Minori"
+              description="Indagini per valutare l'ambiente e le condizioni di vita del minore. Prove per decisioni nell'interesse del bambino."
+            />
+            <PremiumServiceCard 
+              href="/investigazioni-private/investigazioni-pre-matrimoniali/"
+              icon="💍"
+              title="Pre-Matrimoniali"
+              description="Verifica approfondita del passato e della situazione attuale del partner prima del matrimonio. Decisioni informate."
+            />
+            <PremiumServiceCard 
+              href="/investigazioni-private/investigazioni-sicurezza-personale-familiare/"
+              icon="🛡️"
+              title="Sicurezza Personale"
+              description="Protezione della sicurezza personale e familiare. Valutazione di minacce e monitoraggio discreto quando necessario."
+            />
+          </div>
+        </div>
+
+        <!-- Investigazioni Aziendali Services -->
+        <div class="mb-16 scroll-reveal">
+          <h4 class="text-2xl md:text-3xl font-bold mb-10 scroll-reveal-left" style="color: var(--color-black); font-family: 'Playfair Display', serif;">Investigazioni Aziendali</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 scroll-reveal-stagger">
+            <PremiumServiceCard 
+              href="/investigazioni-aziendali/investigazioni-pre-assunzione/"
+              icon="👔"
+              title="Pre-Assunzione"
+              description="Verifica approfondita di curriculum, referenze e background dei candidati. Assumi con sicurezza e trasparenza."
+            />
+            <PremiumServiceCard 
+              href="/investigazioni-aziendali/investigazioni-licenziamento-giusta-causa/"
+              icon="📋"
+              title="Licenziamento Giusta Causa"
+              description="Raccolta di prove documentali per licenziamenti per giusta causa. Protezione legale dell'azienda con metodi certificati."
+            />
+            <PremiumServiceCard 
+              href="/investigazioni-aziendali/investigazioni-concorrenza-sleale/"
+              icon="⚔️"
+              title="Concorrenza Sleale"
+              description="Indagini su pratiche commerciali illecite, appropriazione indebita di clienti e violazioni di accordi di non concorrenza."
+            />
+            <PremiumServiceCard 
+              href="/investigazioni-aziendali/investigazioni-ammanchi-differenze-inventariali/"
+              icon="💰"
+              title="Ammanchi e Differenze"
+              description="Identificazione delle cause di ammanchi e differenze inventariali. Prove per responsabilità e recupero crediti."
+            />
+          </div>
+        </div>
+
+        <!-- Intelligence & Specialized Services -->
+        <div class="scroll-reveal">
+          <h4 class="text-2xl md:text-3xl font-bold mb-10 scroll-reveal-left" style="color: var(--color-black); font-family: 'Playfair Display', serif;">Intelligence & Servizi Specializzati</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 scroll-reveal-stagger">
+            <PremiumServiceCard 
+              href="/intelligence-e-servizi-speciali/business-intelligence/"
+              icon="📊"
+              title="Business Intelligence"
+              description="Analisi strategica e raccolta di informazioni competitive per decisioni aziendali informate e vantaggio competitivo."
+            />
+            <PremiumServiceCard 
+              href="/intelligence-e-servizi-speciali/tracciamento-fondi-blockchain-crypto-truffe/"
+              icon="₿"
+              title="Tracciamento Crypto & Blockchain"
+              description="Investigazioni su truffe crypto, tracciamento transazioni blockchain e recupero fondi digitali. Metodi legali certificati."
+            />
+            <PremiumServiceCard 
+              href="/intelligence-e-servizi-speciali/due-diligence-background-check/"
+              icon="🔍"
+              title="Due Diligence & Background Check"
+              description="Verifiche approfondite su partner commerciali, acquirenti e investitori. Decisioni informate con informazioni certificate."
+            />
+            <PremiumServiceCard 
+              href="/intelligence-e-servizi-speciali/antispionaggio-industriale/"
+              icon="🛡️"
+              title="Antispionaggio Industriale"
+              description="Protezione di segreti industriali, prevenzione fughe di informazioni e sicurezza aziendale. Metodi certificati."
+            />
+            <PremiumServiceCard 
+              href="/intelligence-e-servizi-speciali/digital-forensics-investigazioni-digitali/"
+              icon="💻"
+              title="Digital Forensics"
+              description="Analisi forense di dispositivi digitali, email, social media e prove digitali. Validità legale garantita."
+            />
+            <PremiumServiceCard 
+              href="/intelligence-e-servizi-speciali/asset-tracing-tracciamento-patrimoniale/"
+              icon="💰"
+              title="Asset Tracing"
+              description="Tracciamento patrimoniale, localizzazione asset nascosti e recupero crediti. Metodi investigativi avanzati."
+            />
+            <PremiumServiceCard 
+              href="/studi-legali-e-avvocati/"
+              icon="⚖️"
+              title="Servizi per Studi Legali"
+              description="Supporto investigativo specializzato per avvocati e studi legali. Prove certificate per procedimenti giudiziari."
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- CTA Section - Tra schede e testo introduttivo -->
+  <InlineCTA 
+    title="Pronto a Scoprire la Verità?"
+    text="Hai dubbi che necessitano di risposte? Contattaci per una consulenza gratuita e senza impegno. I nostri investigatori esperti ti aiuteranno a trovare le risposte che cerchi attraverso metodi esclusivamente legali."
+    ctaText="Richiedi Consulenza Gratuita"
+    ctaLink="/contatti/"
+  />
+
+  <!-- Mission Section - Drop Cap (PRIMA della sezione Garanzia) -->
+  {missionContent && missionContent.length > 0 && (
+    <section class="py-12 md:py-16 bg-gradient-to-b from-white via-gray-50/50 to-white scroll-reveal relative overflow-hidden">
+      <!-- Decorative Background Elements -->
+      <div class="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-rgba(184, 134, 11, 0.03) to-transparent rounded-bl-full blur-3xl"></div>
+      <div class="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-rgba(184, 134, 11, 0.03) to-transparent rounded-tr-full blur-3xl"></div>
+      
+      <div class="container mx-auto px-4 max-w-4xl relative z-10">
+        <!-- Icon/Decoration -->
+        <div class="mb-6 flex justify-center scroll-reveal-fade">
+          <div class="w-16 h-16 rounded-2xl flex items-center justify-center transition-transform duration-300 hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.15), rgba(184, 134, 11, 0.08)); border: 2px solid rgba(184, 134, 11, 0.2); box-shadow: 0 4px 16px rgba(184, 134, 11, 0.15);">
+            <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--color-accent);">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+        
+        <div class="text-center mb-6 scroll-reveal-fade">
+          <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style="color: var(--color-black); font-family: 'Playfair Display', serif; letter-spacing: -0.02em;">
+            La Nostra Missione
+          </h2>
+        </div>
+        <div class="scroll-reveal-scale">
+          <EnhancedMarkdownContent content={missionContent} variant="default" />
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Storia e Fondatore Section -->
+  <section class="py-12 md:py-16 bg-white scroll-reveal">
+    <ImageTextSection
+      image="/media/uploads/2023/07/Alvaro-Silvij-EUROPOL-Intelligence-Investigazioni.png"
+      imageAlt="Gr. Ufficiale Alvaro Silvij - Fondatore EUROPOL®"
+      title="60+ Anni di Esperienza nel Settore"
+      content="EUROPOL® Intelligence & Investigations è stato fondato a Roma nel 1962 dal Gr. Ufficiale Alvaro Silvij. Da oltre 60 anni forniamo servizi di Intelligence e Investigazioni Private in Italia e nel Mondo. Nel corso della nostra storia abbiamo aiutato Privati Cittadini, Imprenditori ed Istituzioni a scoprire e dimostrare legalmente la verità: i Dossier EUROPOL sono sempre validi in Sede Legale, poiché presentano Prove reperite unicamente con Metodologie a Norma di Legge. Le indagini svolte da EUROPOL® sono conformi al Sistema P.R.O.V.A.™ - la metodologia d'indagine composta da 5 fasi: Pianificazione, Raccolta informazioni, Osservazione, Verifica ed Analisi dei Risultati."
+      imagePosition="right"
+    />
+  </section>
+
+  <!-- Cosa Offriamo Section -->
+  {cosaOffriamoContent && cosaOffriamoContent.length > 0 && (
+    <section class="py-20 md:py-32 bg-gradient-to-b from-white via-gray-50/50 to-white scroll-reveal relative overflow-hidden">
+      <!-- Decorative Background Elements -->
+      <div class="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-rgba(184, 134, 11, 0.03) to-transparent rounded-bl-full blur-3xl"></div>
+      <div class="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-rgba(184, 134, 11, 0.03) to-transparent rounded-tr-full blur-3xl"></div>
+      
+      <div class="container mx-auto px-4 max-w-5xl relative z-10">
+        <div class="text-center mb-16 scroll-reveal-fade">
+          <h2 class="text-5xl md:text-6xl lg:text-7xl font-bold mb-6" style="color: var(--color-black); font-family: 'Playfair Display', serif; letter-spacing: -0.04em; line-height: 1.1;">
+            Cosa Offriamo
+          </h2>
+          <p class="text-xl md:text-2xl max-w-3xl mx-auto" style="color: var(--color-text-light); line-height: 1.7;">
+            EUROPOL® si occupa di due aree principali di investigazione, ciascuna con le sue specificità e la sua delicatezza.
+          </p>
+        </div>
+        <div class="scroll-reveal-scale">
+          <EnhancedMarkdownContent content={cosaOffriamoContent} variant="service" />
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Garanzia Section -->
+  {garanziaContent && (
+    <div class="scroll-reveal">
+      <GaranziaSection 
+        title="Il Nostro Approccio: Garanzia Legalis™"
+        content={garanziaContent}
+        features={garanziaFeatures}
+      />
+    </div>
+  )}
+
+  <!-- Process Section -->
+  {processSteps.length > 0 && (
+    <div class="scroll-reveal">
+      <ProcessSection 
+        title="Come Funziona: Il Processo Investigativo"
+        intro="Il nostro approccio è strutturato in fasi chiare e trasparenti:"
+        steps={processSteps}
+      />
+    </div>
+  )}
+
+  <!-- Benefits Section -->
+  {benefits.length > 0 && (
+    <div class="scroll-reveal">
+      <BenefitsSection 
+        title="Perché Scegliere EUROPOL®"
+        intro="Scegliere EUROPOL® significa scegliere:"
+        benefits={benefits}
+      />
+    </div>
+  )}
+
+  <!-- Clienti Section -->
+  <section class="py-20 md:py-32 bg-gradient-to-b from-white via-gray-50/50 to-white scroll-reveal relative overflow-hidden">
+    <!-- Decorative Background Elements -->
+    <div class="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-rgba(184, 134, 11, 0.03) to-transparent rounded-bl-full blur-3xl"></div>
+    <div class="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-rgba(184, 134, 11, 0.03) to-transparent rounded-tr-full blur-3xl"></div>
+    
+    <div class="container mx-auto px-4 max-w-5xl relative z-10">
+      <div class="text-center mb-12 scroll-reveal-fade">
+        <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style="color: var(--color-black); font-family: 'Playfair Display', serif; letter-spacing: -0.02em;">
+          La Fiducia di Aziende e Istituzioni
+        </h2>
+        <p class="text-xl md:text-2xl max-w-3xl mx-auto mt-6" style="color: var(--color-text-light); line-height: 1.7;">
+          Da oltre 60 anni, privati, aziende e istituzioni si affidano a EUROPOL® per investigazioni discrete, legali e certificate. La nostra esperienza si riflette nella fiducia di migliaia di clienti in tutta Italia.
+        </p>
+      </div>
+      
+      <div class="scroll-reveal-scale max-w-4xl mx-auto">
+        <OptimizedImage
+          src="/media/uploads/2023/01/lavoratocon111.png"
+          alt="Clienti EUROPOL® - Aziende e Istituzioni che si sono affidate a EUROPOL®"
+          width={748}
+          height={224}
+          class="w-full h-auto rounded-xl shadow-lg"
+          loading="lazy"
+        />
+      </div>
+      
+      <div class="text-center mt-8 scroll-reveal-fade">
+        <p class="text-lg md:text-xl" style="color: var(--color-text-light);">
+          Oltre <strong style="color: var(--color-accent);">10.000 casi risolti</strong> con metodi esclusivamente legali e certificati
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  {faqs.length > 0 && (
+    <div class="scroll-reveal">
+      <FAQSection 
+        title="Domande Frequenti"
+        faqs={faqs}
+      />
+    </div>
+  )}
+
+  <!-- CTA Section Finale (before Related Content) -->
+  <section class="cta-finale-premium py-24 md:py-32 mt-20 scroll-reveal-scale relative overflow-hidden">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 cta-finale-pattern opacity-[0.04]"></div>
+    
+    <!-- Gradient Overlay -->
+    <div class="absolute inset-0 bg-gradient-to-br from-rgba(184, 134, 11, 0.06) via-rgba(184, 134, 11, 0.03) to-rgba(184, 134, 11, 0.02)"></div>
+    
+    <!-- Decorative Elements -->
+    <div class="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-rgba(184, 134, 11, 0.08) to-transparent rounded-br-full blur-3xl"></div>
+    <div class="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-rgba(184, 134, 11, 0.08) to-transparent rounded-tl-full blur-3xl"></div>
+    
+    <div class="container mx-auto px-4 max-w-5xl text-center relative z-10">
+      <!-- Icon/Decoration -->
+      <div class="mb-10 flex justify-center scroll-reveal-fade">
+        <div class="w-20 h-20 rounded-3xl flex items-center justify-center transition-transform duration-300 hover:scale-110 relative" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.15), rgba(184, 134, 11, 0.1)); border: 2px solid rgba(184, 134, 11, 0.2); box-shadow: 0 8px 24px rgba(184, 134, 11, 0.2);">
+          <svg class="w-10 h-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--color-accent);">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M13 8H7M17 12H7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="absolute inset-0 rounded-3xl bg-gradient-to-br from-transparent via-white/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+        </div>
+      </div>
+      
+      <h2 class="text-5xl md:text-6xl lg:text-7xl font-bold mb-10 scroll-reveal-fade" style="color: var(--color-black); font-family: 'Playfair Display', serif; letter-spacing: -0.04em; line-height: 1.1;">
+        Hai bisogno di assistenza?
+      </h2>
+      <p class="text-xl md:text-2xl lg:text-3xl mb-12 scroll-reveal-fade max-w-3xl mx-auto font-light" style="color: var(--color-text-light); line-height: 1.7;">
+        I nostri consulenti sono a tua disposizione per una consulenza gratuita e senza impegno.
+      </p>
+      <div class="scroll-reveal-scale">
+        <a 
+          href="/contatti/" 
+          class="inline-block px-12 py-6 md:px-16 md:py-7 rounded-xl font-semibold text-lg md:text-xl transition-all duration-300 hover:shadow-2xl hover:scale-105 relative overflow-hidden group"
+          style="background-color: var(--color-accent); color: white; box-shadow: 0 8px 24px rgba(184, 134, 11, 0.3);"
+        >
+          <span class="relative z-10">Richiedi Consulenza Gratuita</span>
+          <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+          <!-- Shine effect -->
+          <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        </a>
+      </div>
+      
+      <!-- Trust Elements -->
+      <div class="mt-12 flex flex-wrap justify-center gap-8 scroll-reveal-fade">
+        <div class="flex items-center gap-2 text-sm" style="color: var(--color-text-light);">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--color-accent);">
+            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Consulenza Gratuita</span>
+        </div>
+        <div class="flex items-center gap-2 text-sm" style="color: var(--color-text-light);">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--color-accent);">
+            <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Riservatezza Assoluta</span>
+        </div>
+        <div class="flex items-center gap-2 text-sm" style="color: var(--color-text-light);">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--color-accent);">
+            <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Metodi Certificati</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Top Border Accent -->
+    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-40 h-1.5 bg-gradient-to-r from-transparent via-var(--color-accent) to-transparent"></div>
+  </section>
+
+<style>
+  .cta-finale-premium {
+    background: linear-gradient(to bottom, #ffffff 0%, #fafafa 100%);
+    position: relative;
+  }
+
+  .cta-finale-pattern {
+    background-image: 
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(184, 134, 11, 0.04) 10px,
+        rgba(184, 134, 11, 0.04) 20px
+      );
+  }
+</style>
+
+  <!-- Related Content Section -->
+  <RelatedContent currentPath="/" />
+
+  <!-- Final Closing Statement -->
+  <section class="closing-statement py-16 md:py-20 relative overflow-hidden scroll-reveal">
+    <div class="container mx-auto px-4 max-w-4xl text-center relative z-10">
+      <div class="inline-block mb-6">
+        <div class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.12), rgba(184, 134, 11, 0.08)); border: 1px solid rgba(184, 134, 11, 0.2);">
+          <span class="text-3xl">⭐</span>
+        </div>
+      </div>
+      <p class="text-2xl md:text-3xl font-light leading-relaxed scroll-reveal-fade" style="color: var(--color-text-light); line-height: 1.8;">
+        <span style="color: var(--color-black); font-weight: 600; font-family: 'Playfair Display', serif;">EUROPOL® Istituto di Investigazioni</span> — Dal 1962, la verità attraverso metodi legali certificati.
+      </p>
+    </div>
+    
+    <!-- Decorative Border -->
+    <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-rgba(184, 134, 11, 0.2) to-transparent"></div>
+  </section>
+</BaseLayout>
+
+<style>
+  .closing-statement {
+    background: linear-gradient(to bottom, #fafafa 0%, #ffffff 100%);
+    position: relative;
+  }
+</style>

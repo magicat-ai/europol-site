@@ -1,0 +1,543 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ImageTextSection from '../components/ImageTextSection.astro';
+import Testimonials from '../components/Testimonials.astro';
+
+const seo = {
+  title: "Richiesta Inviata con Successo | EUROPOL®",
+  meta_description: "La tua richiesta di consulenza investigativa è stata inviata con successo. Un nostro consulente ti contatterà entro 24-48 ore.",
+  canonical: "https://www.europolinvestigazioni.it/richiesta-inviata/"
+};
+
+const testimonials = [
+  {
+    quote: "Avevo iniziato a sospettare di mio marito dopo una serie di comportamenti strani. Grazie ad EUROPOL® ho ottenuto le prove di cui avevo bisogno in soli 5 giorni. La consulenza iniziale è stata fondamentale per capire come procedere.",
+    author: "Francesca I.",
+    role: "Cliente Privato",
+    image: null
+  },
+  {
+    quote: "Dopo la separazione, la mia ex moglie è rimasta a vivere a casa MIA con nostro figlio ed il suo nuovo compagno. EUROPOL® mi ha aiutato a provare in tribunale questa sua scorrettezza. Le prove erano perfette.",
+    author: "Edoardo T. S.",
+    role: "Cliente Privato",
+    image: null
+  },
+  {
+    quote: "Grazie ad EUROPOL® siamo riusciti ad arginare il problema della fuga di informazioni. Il loro approccio professionale e la GARANZIA LEGALIS™ ci hanno dato la certezza che tutte le prove erano valide in sede giudiziaria.",
+    author: "Chris P.",
+    role: "Presidente",
+    company: "Etichetta Discografica",
+    image: null
+  }
+];
+---
+
+<BaseLayout title={seo.title} description={seo.meta_description} canonical={seo.canonical} robots="noindex, follow">
+  <!-- Success Header Section -->
+  <section class="success-header py-16 md:py-24 relative overflow-hidden" style="background: linear-gradient(135deg, #0b0b0b 0%, #1a1a1a 50%, #0b0b0b 100%);">
+    <!-- Pattern decorativo sottile -->
+    <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 2px 2px, rgba(184, 134, 11, 0.15) 1px, transparent 0); background-size: 40px 40px;"></div>
+    
+    <div class="container mx-auto px-4 max-w-6xl text-center relative z-10">
+      <!-- Success Icon animato -->
+      <div class="mb-6 animate-scale-in">
+        <div class="w-24 h-24 md:w-32 md:h-32 rounded-full mx-auto flex items-center justify-center shadow-2xl" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.2), rgba(184, 134, 11, 0.1)); border: 3px solid rgba(184, 134, 11, 0.3);">
+          <svg class="w-12 h-12 md:w-16 md:h-16" style="color: var(--color-accent);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+          </svg>
+        </div>
+      </div>
+      
+      <!-- Success Title -->
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight" style="color: white; font-family: 'Playfair Display', serif; text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);">
+        La tua Richiesta è stata ricevuta
+        <span class="block mt-2" style="color: var(--color-accent);">con Successo</span>
+      </h1>
+      
+      <!-- Urgency Box -->
+      <div class="bg-white/10 backdrop-blur-md rounded-3xl p-6 md:p-8 mb-8 max-w-3xl mx-auto border-2 shadow-2xl" style="border-color: rgba(184, 134, 11, 0.4);">
+        <div class="flex items-center justify-center gap-3 mb-4">
+          <svg class="w-6 h-6 md:w-8 md:h-8" style="color: var(--color-accent);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <p class="text-xl md:text-2xl text-white font-semibold">
+            Ti contatteremo entro 24-48 ore
+          </p>
+        </div>
+        <p class="text-lg md:text-xl text-white/90 leading-relaxed">
+          <strong class="text-white">IMPORTANTE:</strong> Un nostro Consulente Investigativo ti contatterà nella fascia oraria che hai indicato. Nel frattempo, leggi le informazioni qui sotto per sapere cosa aspettarti.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust Badges - Design Premium -->
+  <section class="py-16 md:py-20 bg-gradient-to-b from-white via-gray-50/30 to-white border-b" style="border-color: rgba(11, 11, 11, 0.1);">
+    <div class="container mx-auto px-4 max-w-6xl">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+        <div class="text-center group">
+          <div class="w-20 h-20 md:w-24 md:h-24 rounded-2xl mx-auto mb-4 flex items-center justify-center transition-all duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.15), rgba(184, 134, 11, 0.05)); border: 2px solid rgba(184, 134, 11, 0.2);">
+            <span class="text-3xl md:text-4xl">🏆</span>
+          </div>
+          <div class="text-4xl md:text-5xl font-bold mb-2" style="color: var(--color-accent); font-family: 'Playfair Display', serif;">60+</div>
+          <div class="text-sm md:text-base font-medium" style="color: var(--color-text-light);">Anni di Esperienza</div>
+        </div>
+        
+        <div class="text-center group">
+          <div class="w-20 h-20 md:w-24 md:h-24 rounded-2xl mx-auto mb-4 flex items-center justify-center transition-all duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.15), rgba(184, 134, 11, 0.05)); border: 2px solid rgba(184, 134, 11, 0.2);">
+            <span class="text-3xl md:text-4xl">✅</span>
+          </div>
+          <div class="text-4xl md:text-5xl font-bold mb-2" style="color: var(--color-accent); font-family: 'Playfair Display', serif;">10.000+</div>
+          <div class="text-sm md:text-base font-medium" style="color: var(--color-text-light);">Casi Risolti</div>
+        </div>
+        
+        <div class="text-center group">
+          <div class="w-20 h-20 md:w-24 md:h-24 rounded-2xl mx-auto mb-4 flex items-center justify-center transition-all duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.15), rgba(184, 134, 11, 0.05)); border: 2px solid rgba(184, 134, 11, 0.2);">
+            <span class="text-3xl md:text-4xl">⚖️</span>
+          </div>
+          <div class="text-4xl md:text-5xl font-bold mb-2" style="color: var(--color-accent); font-family: 'Playfair Display', serif;">100%</div>
+          <div class="text-sm md:text-base font-medium" style="color: var(--color-text-light);">Metodi Legali</div>
+        </div>
+        
+        <div class="text-center group">
+          <div class="w-20 h-20 md:w-24 md:h-24 rounded-2xl mx-auto mb-4 flex items-center justify-center transition-all duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.15), rgba(184, 134, 11, 0.05)); border: 2px solid rgba(184, 134, 11, 0.2);">
+            <span class="text-3xl md:text-4xl">⏱️</span>
+          </div>
+          <div class="text-4xl md:text-5xl font-bold mb-2" style="color: var(--color-accent); font-family: 'Playfair Display', serif;">24-48h</div>
+          <div class="text-sm md:text-base font-medium" style="color: var(--color-text-light);">Tempo Risposta</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Licenza Prefettizia - Social Proof -->
+  <section class="py-12 bg-white border-b" style="border-color: rgba(11, 11, 11, 0.1);">
+    <div class="container mx-auto px-4 max-w-4xl">
+      <div class="bg-gradient-to-br from-white to-gray-50/50 rounded-2xl p-6 md:p-8 border-2 text-center" style="border-color: rgba(184, 134, 11, 0.2);">
+        <div class="flex flex-col md:flex-row items-center justify-center gap-6">
+          <div class="w-20 h-20 md:w-24 md:h-24 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.15), rgba(184, 134, 11, 0.05)); border: 2px solid rgba(184, 134, 11, 0.2);">
+            <svg class="w-10 h-10 md:w-12 md:h-12" style="color: var(--color-accent);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-xl md:text-2xl font-bold mb-2" style="color: var(--color-black); font-family: 'Playfair Display', serif;">
+              Licenza Prefettizia Certificata
+            </h3>
+            <p class="text-base md:text-lg" style="color: var(--color-text-light);">
+              EUROPOL® opera con autorizzazione ufficiale della Prefettura, garantendo professionalità e legalità in ogni indagine
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <article class="py-16 md:py-24">
+    <div class="container mx-auto px-4 max-w-6xl">
+      
+      <!-- Section 1: Chi siamo -->
+      <section class="mb-24 md:mb-32 scroll-reveal">
+        <div class="flex items-center justify-center gap-3 mb-8">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.15), rgba(184, 134, 11, 0.05));">
+            <span class="text-xl font-bold" style="color: var(--color-accent);">1</span>
+          </div>
+          <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold" style="color: var(--color-black); font-family: 'Playfair Display', serif;">
+            Perché EUROPOL® è la scelta giusta per te
+          </h2>
+        </div>
+        
+        <div class="bg-gradient-to-br from-white to-gray-50/50 rounded-3xl p-8 md:p-12 mb-8 border-2 shadow-lg" style="border-color: rgba(184, 134, 11, 0.2);">
+          <div class="grid md:grid-cols-3 gap-6 text-center mb-8">
+            <div class="hover-lift">
+              <div class="text-4xl mb-3">🏆</div>
+              <h3 class="text-xl font-bold mb-2" style="color: var(--color-black); font-family: 'Playfair Display', serif;">Prima in Europa</h3>
+              <p class="text-sm" style="color: var(--color-text-light);">Prima agenzia investigativa europea con GARANZIA LEGALIS™</p>
+            </div>
+            <div class="hover-lift">
+              <div class="text-4xl mb-3">⚖️</div>
+              <h3 class="text-xl font-bold mb-2" style="color: var(--color-black); font-family: 'Playfair Display', serif;">Prove Valide</h3>
+              <p class="text-sm" style="color: var(--color-text-light);">Tutte le prove sono utilizzabili in sede giudiziaria</p>
+            </div>
+            <div class="hover-lift">
+              <div class="text-4xl mb-3">🔒</div>
+              <h3 class="text-xl font-bold mb-2" style="color: var(--color-black); font-family: 'Playfair Display', serif;">Massima Discrezione</h3>
+              <p class="text-sm" style="color: var(--color-text-light);">Riservatezza assoluta garantita</p>
+            </div>
+          </div>
+        </div>
+        
+        <ImageTextSection
+          image="/media/uploads/2023/07/Alvaro-Silvij-EUROPOL-Intelligence-Investigazioni.png"
+          imageAlt="Alvaro Silvij - Fondatore EUROPOL®"
+          title="EUROPOL® Intelligence & Investigations"
+          content={`EUROPOL® Intelligence & Investigations è stato fondato a Roma nel 1962 dal Gr. Ufficiale Alvaro Silvij e da oltre 60 anni forniamo servizi di Intelligence e Investigazioni Private in Italia e nel Mondo.
+
+Nel corso della nostra storia abbiamo aiutato Privati Cittadini, Imprenditori ed Istituzioni a scoprire e dimostrare legalmente la verità: i Dossier EUROPOL, infatti, sono sempre validi in Sede Legale, poiché presentano Prove reperite unicamente con Metodologie a Norma di Legge.
+
+Le indagini svolte da EUROPOL® sono conformi al Sistema P.R.O.V.A.™ - la metodologia d'indagine composta da 5 fasi: Pianificazione, Raccolta informazioni, Osservazione, Verifica ed Analisi dei Risultati.`}
+          imagePosition="right"
+        />
+      </section>
+
+      <!-- Divider decorativo -->
+      <div class="decorative-divider my-16 md:my-20"></div>
+
+      <!-- Section 2: Cosa puoi aspettarti -->
+      <section class="mb-24 md:mb-32 scroll-reveal">
+        <div class="flex items-center justify-center gap-3 mb-8">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.15), rgba(184, 134, 11, 0.05));">
+            <span class="text-xl font-bold" style="color: var(--color-accent);">2</span>
+          </div>
+          <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold" style="color: var(--color-black); font-family: 'Playfair Display', serif;">
+            Cosa riceverai nella Consulenza Investigativa (30 minuti)
+          </h2>
+        </div>
+        
+        <div class="max-w-4xl mx-auto">
+          <p class="text-lg md:text-xl mb-10 text-center font-semibold" style="color: var(--color-black);">
+            Durante la consulenza gratuita di 30 minuti, ti diremo esattamente:
+          </p>
+          
+          <div class="space-y-6 mb-10">
+            <div class="bg-white rounded-3xl p-8 md:p-10 border-2 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 hover-lift" style="border-color: rgba(184, 134, 11, 0.3);">
+              <div class="flex items-start gap-6">
+                <div class="w-20 h-20 rounded-2xl flex items-center justify-center flex-shrink-0 text-3xl font-bold shadow-lg" style="background: linear-gradient(135deg, var(--color-accent), rgba(184, 134, 11, 0.8)); color: white;">
+                  1
+                </div>
+                <div class="flex-1">
+                  <h3 class="text-2xl md:text-3xl font-bold mb-4" style="color: var(--color-black); font-family: 'Playfair Display', serif;">
+                    Se possiamo risolvere il tuo caso
+                  </h3>
+                  <p class="text-base md:text-lg leading-relaxed" style="color: var(--color-text-light); line-height: 1.8;">
+                    Ti diremo onestamente se il tuo caso è risolvibile e in quanto tempo. <strong style="color: var(--color-black);">Non accettiamo mai casi che non possiamo risolvere</strong> - la trasparenza è la nostra priorità.
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-white rounded-3xl p-8 md:p-10 border-2 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 hover-lift" style="border-color: rgba(184, 134, 11, 0.3);">
+              <div class="flex items-start gap-6">
+                <div class="w-20 h-20 rounded-2xl flex items-center justify-center flex-shrink-0 text-3xl font-bold shadow-lg" style="background: linear-gradient(135deg, var(--color-accent), rgba(184, 134, 11, 0.8)); color: white;">
+                  2
+                </div>
+                <div class="flex-1">
+                  <h3 class="text-2xl md:text-3xl font-bold mb-4" style="color: var(--color-black); font-family: 'Playfair Display', serif;">
+                    La strategia investigativa migliore per te
+                  </h3>
+                  <p class="text-base md:text-lg leading-relaxed" style="color: var(--color-text-light); line-height: 1.8;">
+                    Ti spiegheremo passo dopo passo come risolveremo il tuo caso, con quali metodi e in quanto tempo. <strong style="color: var(--color-black);">Saprai sempre cosa stiamo facendo</strong> - niente sorprese.
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-white rounded-3xl p-8 md:p-10 border-2 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 hover-lift" style="border-color: rgba(184, 134, 11, 0.3);">
+              <div class="flex items-start gap-6">
+                <div class="w-20 h-20 rounded-2xl flex items-center justify-center flex-shrink-0 text-3xl font-bold shadow-lg" style="background: linear-gradient(135deg, var(--color-accent), rgba(184, 134, 11, 0.8)); color: white;">
+                  3
+                </div>
+                <div class="flex-1">
+                  <h3 class="text-2xl md:text-3xl font-bold mb-4" style="color: var(--color-black); font-family: 'Playfair Display', serif;">
+                    Costi trasparenti e preventivo dettagliato
+                  </h3>
+                  <p class="text-base md:text-lg leading-relaxed" style="color: var(--color-text-light); line-height: 1.8;">
+                    Ti forniremo un preventivo chiaro e dettagliato. <strong style="color: var(--color-black);">Nessuna brutta sorpresa alla fine</strong> - saprai esattamente quanto costa e cosa riceverai.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Divider decorativo -->
+      <div class="decorative-divider my-16 md:my-20"></div>
+
+      <!-- Section 3: Klara Murnau -->
+      <section class="mb-24 md:mb-32 scroll-reveal">
+        <div class="flex items-center justify-center gap-3 mb-8">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.15), rgba(184, 134, 11, 0.05));">
+            <span class="text-xl font-bold" style="color: var(--color-accent);">3</span>
+          </div>
+          <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold" style="color: var(--color-black); font-family: 'Playfair Display', serif;">
+            Verrai contattato dalla Chief Detective di EUROPOL®
+          </h2>
+        </div>
+        
+        <div class="max-w-4xl mx-auto mb-10">
+          <div class="bg-gradient-to-br from-white via-gray-50/50 to-white rounded-3xl p-8 md:p-10 border-2 shadow-xl" style="border-color: rgba(184, 134, 11, 0.3);">
+            <div class="text-center">
+              <div class="w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.2), rgba(184, 134, 11, 0.1)); border: 3px solid rgba(184, 134, 11, 0.3);">
+                <svg class="w-10 h-10" style="color: var(--color-accent);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                </svg>
+              </div>
+              <p class="text-xl md:text-2xl font-semibold mb-4" style="color: var(--color-black);">
+                La <strong style="color: var(--color-accent);">Dott.ssa Klara Murnau</strong> ti contatterà personalmente
+              </p>
+              <p class="text-lg md:text-xl mb-4" style="color: var(--color-text-light);">
+                Chief Detective di EUROPOL®, ti contatterà telefonicamente <strong style="color: var(--color-black);">entro 24-72 ore</strong> dall'invio della richiesta.
+              </p>
+              <p class="text-base md:text-lg" style="color: var(--color-text-light);">
+                Riceverai prima un messaggio (SMS o WhatsApp) per confermare il momento migliore per la chiamata.
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <ImageTextSection
+          image="/media/team/klara-murnau.png"
+          imageAlt="Klara Murnau - Chief Detective EUROPOL®"
+          title="Chi è Klara Murnau"
+          content={`Klara Murnau, classe 1981, una doppia cittadinanza Australiana ereditata dal padre, militare della Marina. Studi di primo livello in Chimica, viaggia e vive in diverse nazioni fin da bambina acquisendo grazie al suo background cosmopolita specifiche peculiarità che spaziano dalla conoscenza di materie come Antropologia sociale, Prossemica e Cinesica, fino alle tecniche di Intelligence Militare.
+
+Docente di Antispionaggio per diverse aziende, Indagini sotto copertura in Italia e all'estero, Strategie d'Intelligence, Consulenze Investigative Private e Corporate, sono da diversi anni i suoi asset professionali.`}
+          imagePosition="left"
+        />
+      </section>
+
+      <!-- Divider decorativo -->
+      <div class="decorative-divider my-16 md:my-20"></div>
+
+      <!-- Section 4: Clienti -->
+      <section class="mb-24 md:mb-32 scroll-reveal">
+        <div class="flex items-center justify-center gap-3 mb-8">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.15), rgba(184, 134, 11, 0.05));">
+            <span class="text-xl font-bold" style="color: var(--color-accent);">4</span>
+          </div>
+          <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold" style="color: var(--color-black); font-family: 'Playfair Display', serif;">
+            Aziende e Istituzioni che si sono affidate a EUROPOL®
+          </h2>
+        </div>
+        
+        <div class="max-w-5xl mx-auto">
+          <p class="text-center text-lg md:text-xl max-w-2xl mx-auto mb-8" style="color: var(--color-text-light);">
+            Oltre 10.000 casi risolti per privati, aziende e istituzioni in tutta Italia
+          </p>
+          <div class="bg-white rounded-3xl p-6 md:p-8 shadow-xl border-2" style="border-color: rgba(11, 11, 11, 0.1);">
+            <img 
+              src={`${import.meta.env.BASE_URL}/media/uploads/2023/01/lavoratocon111.png`.replace("//", "/")} 
+              alt="Clienti EUROPOL®" 
+              class="w-full h-auto rounded-xl"
+              loading="lazy"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- Divider decorativo -->
+      <div class="decorative-divider my-16 md:my-20"></div>
+
+      <!-- Section 5: Testimonianze -->
+      <section class="mb-24 md:mb-32 scroll-reveal">
+        <div class="flex items-center justify-center gap-3 mb-8">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.15), rgba(184, 134, 11, 0.05));">
+            <span class="text-xl font-bold" style="color: var(--color-accent);">5</span>
+          </div>
+          <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold" style="color: var(--color-black); font-family: 'Playfair Display', serif;">
+            Cosa dicono i nostri clienti
+          </h2>
+        </div>
+        
+        <Testimonials testimonials={testimonials} />
+      </section>
+
+      <!-- Divider decorativo -->
+      <div class="decorative-divider my-16 md:my-20"></div>
+
+      <!-- Section 6: Hanno parlato di noi -->
+      <section class="mb-24 md:mb-32 scroll-reveal">
+        <div class="flex items-center justify-center gap-3 mb-8">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.15), rgba(184, 134, 11, 0.05));">
+            <span class="text-xl font-bold" style="color: var(--color-accent);">6</span>
+          </div>
+          <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold" style="color: var(--color-black); font-family: 'Playfair Display', serif;">
+            Hanno parlato di noi
+          </h2>
+        </div>
+        
+        <div class="max-w-5xl mx-auto">
+          <p class="text-center text-lg mb-8" style="color: var(--color-text-light);">
+            EUROPOL® e i nostri investigatori sono stati citati da importanti testate giornalistiche
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <a 
+              href="https://www.leggo.it/spettacoli/televisione/klara_murnau_detective_instagram_celebrity_hunted_chi_e_oggi_21_02_2023-7242862.html" 
+              target="_blank"
+              rel="noopener"
+              class="block rounded-xl overflow-hidden border-2 hover:shadow-xl transition-all duration-300 hover:scale-[1.02] hover-lift"
+              style="border-color: rgba(11, 11, 11, 0.1);"
+            >
+              <img 
+                src={`${import.meta.env.BASE_URL}/media/uploads/2023/06/Screenshot-2023-06-08-at-18.33.41.png`.replace("//", "/")} 
+                alt="Articolo Leggo su Klara Murnau" 
+                class="w-full h-auto"
+                loading="lazy"
+              />
+            </a>
+            <a 
+              href="https://www.leggo.it/spettacoli/televisione/klara_murnau_detective_instagram_celebrity_hunted_chi_e_oggi_21_02_2023-7242862.html" 
+              target="_blank"
+              rel="noopener"
+              class="block rounded-xl overflow-hidden border-2 hover:shadow-xl transition-all duration-300 hover:scale-[1.02] hover-lift"
+              style="border-color: rgba(11, 11, 11, 0.1);"
+            >
+              <img 
+                src={`${import.meta.env.BASE_URL}/media/uploads/2023/06/Screenshot-2023-06-08-at-18.25.36.png`.replace("//", "/")} 
+                alt="Articolo Leggo su Klara Murnau" 
+                class="w-full h-auto"
+                loading="lazy"
+              />
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Final Message -->
+      <section class="py-20 md:py-28 rounded-3xl border-2 relative overflow-hidden" style="border-color: rgba(184, 134, 11, 0.3); background: linear-gradient(135deg, rgba(184, 134, 11, 0.08), white, rgba(184, 134, 11, 0.03));">
+        <!-- Pattern decorativo -->
+        <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(circle at 2px 2px, rgba(184, 134, 11, 0.2) 1px, transparent 0); background-size: 60px 60px;"></div>
+        
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+          <div class="mb-10">
+            <div class="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8 shadow-xl" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.25), rgba(184, 134, 11, 0.15)); border: 4px solid rgba(184, 134, 11, 0.3);">
+              <svg class="w-12 h-12" style="color: var(--color-accent);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
+            <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style="color: var(--color-black); font-family: 'Playfair Display', serif;">
+              La tua richiesta è stata registrata
+            </h2>
+            <p class="text-xl md:text-2xl mb-4 font-semibold" style="color: var(--color-black);">
+              Ti contatteremo entro 24-48 ore
+            </p>
+            <p class="text-lg md:text-xl mb-10 max-w-2xl mx-auto" style="color: var(--color-text-light); line-height: 1.8;">
+              Nel frattempo, leggi le informazioni qui sopra per sapere cosa aspettarti dalla tua consulenza investigativa gratuita.
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </article>
+</BaseLayout>
+
+<!-- Conversion Tracking Scripts -->
+<script is:inline>
+  // Google Ads Conversion Tracking
+  var google_conversion_id = 950135042;
+  var google_custom_params = window.google_tag_params;
+  var google_remarketing_only = true;
+</script>
+<script is:inline src="//www.googleadservices.com/pagead/conversion.js"></script>
+<noscript>
+  <div style="display:inline;">
+    <img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/950135042/?value=0&guid=ON&script=0"/>
+  </div>
+</noscript>
+
+<!-- Facebook Lead Event -->
+<script is:inline>
+  if (typeof window._fbq !== 'undefined') {
+    window._fbq.push(['track', 'Lead', {}]);
+  }
+</script>
+
+<!-- Google Analytics Conversion Event -->
+<script is:inline>
+  if (typeof ga !== 'undefined') {
+    ga('send', 'event', 'Conversion', 'Form Submission', 'Richiesta Consulenza', 1);
+  }
+</script>
+
+<!-- Google Tag Manager Conversion Event -->
+<script is:inline>
+  if (typeof window.dataLayer !== 'undefined') {
+    window.dataLayer.push({
+      'event': 'conversion',
+      'eventCategory': 'Form',
+      'eventAction': 'Submit',
+      'eventLabel': 'Richiesta Consulenza'
+    });
+  }
+</script>
+
+<style>
+  /* Animazioni fade-in */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  .animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out;
+  }
+  
+  .animate-scale-in {
+    animation: scaleIn 0.6s ease-out;
+  }
+  
+  /* Hover effects migliorati */
+  .hover-lift {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Gradient animato per background */
+  .gradient-animated {
+    background: linear-gradient(-45deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.05), rgba(184, 134, 11, 0.08), rgba(184, 134, 11, 0.03));
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+  }
+  
+  @keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  
+  /* Decorative divider */
+  .decorative-divider {
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(to right, var(--color-accent), transparent);
+    margin: 2rem auto;
+    border-radius: 2px;
+  }
+  
+  /* Mobile optimizations */
+  @media (max-width: 640px) {
+    .success-header {
+      padding: 3rem 0;
+    }
+    
+    section {
+      margin-bottom: 3rem !important;
+    }
+    
+    .card-mobile {
+      padding: 1.5rem !important;
+    }
+  }
+</style>

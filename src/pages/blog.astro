@@ -1,0 +1,162 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getAllPages } from '../utils/content';
+import { getPageContent } from '../utils/content';
+import { isBlogPost } from '../utils/blogUtils';
+
+// Get BASE_URL for links
+const base = import.meta.env.BASE_URL || '';
+
+// Helper function to add BASE_URL to paths
+function getFullPath(path: string): string {
+  return `${base}${path}`;
+}
+
+// Get all blog posts
+const allPages = getAllPages();
+const blogPosts = allPages.filter(path => isBlogPost(path));
+
+// Categorize blog posts
+function getBlogCategory(urlPath: string): string {
+  if (urlPath.includes('dipendenti') || urlPath.includes('spionaggio') || urlPath.includes('antitaccheggio')) {
+    return 'Investigazioni Aziendali';
+  }
+  if (urlPath.includes('infedelta') || urlPath.includes('tradimento') || urlPath.includes('affidamento')) {
+    return 'Investigazioni Private';
+  }
+  if (urlPath.includes('caso-reale')) {
+    return 'Case Studies';
+  }
+  if (urlPath.includes('bitcoin')) {
+    return 'Criptovalute';
+  }
+  return 'Guide e Approfondimenti';
+}
+
+// Get blog post data
+const blogPostsData = blogPosts.map(path => {
+  const pageData = getPageContent(path);
+  const { content, seo } = pageData;
+  
+  // Extract H1 title
+  const h1Match = content.match(/^#\s+(.+)$/m);
+  const title = h1Match ? h1Match[1].trim() : path.split('/').filter(Boolean).pop()?.replace(/-/g, ' ') || '';
+  
+  // Extract date
+  const dateMatch = content.match(/\*\*Date:\*\*\s*(\d{4}-\d{2}-\d{2})/);
+  const date = dateMatch ? dateMatch[1] : '';
+  
+  // Extract category
+  const categoryMatch = content.match(/\*\*Category:\*\*\s*(.+)/);
+  const category = categoryMatch ? categoryMatch[1].trim() : getBlogCategory(path);
+  
+  // Calculate reading time (approx 200 words per minute)
+  const wordCount = content.split(/\s+/).length;
+  const readingTime = Math.ceil(wordCount / 200);
+  
+  return {
+    path,
+    fullPath: getFullPath(path), // Add full path with BASE_URL
+    title,
+    description: seo.meta_description,
+    date,
+    category,
+    readingTime
+  };
+});
+
+// Group by category
+const categories = {
+  'Investigazioni Aziendali': blogPostsData.filter(p => p.category === 'Investigazioni Aziendali'),
+  'Investigazioni Private': blogPostsData.filter(p => p.category === 'Investigazioni Private'),
+  'Guide e Approfondimenti': blogPostsData.filter(p => p.category === 'Guide e Approfondimenti'),
+  'Case Studies': blogPostsData.filter(p => p.category === 'Case Studies'),
+  'Criptovalute': blogPostsData.filter(p => p.category === 'Criptovalute'),
+};
+
+const seo = {
+  title: 'Risorse e Articoli | EUROPOL® Investigazioni',
+  description: 'Articoli, guide e approfondimenti su investigazioni private, aziendali e servizi specializzati. EUROPOL® dal 1962.',
+  canonical: 'https://www.europolinvestigazioni.it/blog/'
+};
+---
+
+<BaseLayout title={seo.title} description={seo.description} canonical={seo.canonical}>
+  <div class="bg-gradient-to-br from-gray-50 to-white py-20">
+    <div class="container mx-auto px-4 max-w-6xl">
+      <div class="text-center mb-16">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4" style="color: var(--color-black); font-family: 'Playfair Display', serif;">
+          Risorse e Articoli
+        </h1>
+        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+          Guide, approfondimenti e case studies su investigazioni private, aziendali e servizi specializzati
+        </p>
+      </div>
+
+      <!-- Categories -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        {Object.entries(categories).map(([categoryName, posts]) => {
+          if (posts.length === 0) return null;
+          
+          return (
+            <div class="bg-white rounded-xl p-6 border shadow-sm hover:shadow-lg transition-shadow" style="border-color: rgba(11, 11, 11, 0.1);">
+              <h2 class="text-2xl font-bold mb-4" style="color: var(--color-black); font-family: 'Playfair Display', serif;">
+                {categoryName}
+              </h2>
+              <p class="text-gray-600 mb-4">{posts.length} articoli</p>
+              <ul class="space-y-2">
+                {posts.slice(0, 3).map(post => (
+                  <li>
+                    <a 
+                      href={post.fullPath} 
+                      class="text-sm hover:underline block"
+                      style="color: var(--color-accent);"
+                    >
+                      {post.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              {posts.length > 3 && (
+                <p class="text-sm text-gray-500 mt-2">+{posts.length - 3} altri articoli</p>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      <!-- All Posts -->
+      <div class="mb-12">
+        <h2 class="text-3xl font-bold mb-8" style="color: var(--color-black); font-family: 'Playfair Display', serif;">
+          Tutti gli Articoli
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {blogPostsData.map(post => (
+            <a 
+              href={post.fullPath}
+              class="bg-white rounded-xl p-6 border block hover:shadow-lg transition-all hover:scale-[1.02]"
+              style="border-color: rgba(11, 11, 11, 0.1);"
+            >
+              <div class="mb-3">
+                <span class="text-xs font-semibold px-2 py-1 rounded" style="background: rgba(184, 134, 11, 0.1); color: var(--color-accent);">
+                  {post.category}
+                </span>
+              </div>
+              <h3 class="text-xl font-bold mb-2" style="color: var(--color-black); font-family: 'Playfair Display', serif;">
+                {post.title}
+              </h3>
+              <p class="text-sm text-gray-600 mb-4 line-clamp-2">
+                {post.description}
+              </p>
+              <div class="flex items-center justify-between text-xs text-gray-500">
+                {post.date && <span>{new Date(post.date).toLocaleDateString('it-IT', { year: 'numeric', month: 'long', day: 'numeric' })}</span>}
+                <span>{post.readingTime} min di lettura</span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+

@@ -1,0 +1,345 @@
+/* Google Fonts - must be first */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+@import "tailwindcss";
+
+/* CSS Variables - Institutional White + Black Palette */
+:root {
+  --color-black: #0b0b0b;
+  --color-black-2: #111111;
+  --color-text: #0b0b0b;
+  --color-text-light: #6b7280;
+  --color-background: #ffffff;
+  --color-accent: #b8860b;
+  --color-accent-light: rgba(184, 134, 11, 0.1);
+  --color-accent-dark: #8b6914;
+  --color-white: #ffffff;
+  /* Legacy navy for subtle borders/hovers only */
+  --color-navy: #1e3a5f;
+  
+  /* Design System - Spacing */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 3rem;
+  --spacing-2xl: 4rem;
+  --spacing-3xl: 6rem;
+  
+  /* Design System - Typography Scale */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  --font-size-5xl: 3rem;
+  --font-size-6xl: 3.75rem;
+  --font-size-7xl: 4.5rem;
+  --font-size-8xl: 6rem;
+  
+  /* Typography - Letter Spacing */
+  --letter-spacing-tighter: -0.05em;
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0em;
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.05em;
+  --letter-spacing-widest: 0.1em;
+  
+  /* Design System - Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  
+  /* Design System - Border Radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999px;
+  
+  /* Design System - Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slower: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Typography */
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: var(--color-text);
+  line-height: 1.7;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  color: var(--color-black);
+  line-height: 1.2;
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+h1 {
+  font-weight: 700;
+  letter-spacing: var(--letter-spacing-tighter);
+}
+
+h2 {
+  font-weight: 700;
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+/* Prose styling for content */
+.prose {
+  max-width: 65ch;
+  color: var(--color-text);
+}
+
+.prose p {
+  margin-bottom: 1.5em;
+  line-height: 1.8;
+}
+
+.prose h1 {
+  margin-top: 0.5em;
+  margin-bottom: 1.5em;
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-black);
+  font-family: 'Playfair Display', serif;
+}
+
+/* Ensure H1 is the first element in prose - remove any spacing before it */
+.prose > h1:first-child {
+  margin-top: 0;
+}
+
+@media (min-width: 768px) {
+  .prose h1 {
+    font-size: 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .prose h1 {
+    font-size: 3rem;
+  }
+}
+
+.prose h2 {
+  margin-top: 2em;
+  margin-bottom: 1em;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.prose h3 {
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Link styles - ensure they're clickable */
+a {
+  cursor: pointer;
+  pointer-events: auto;
+  position: relative;
+  z-index: 1;
+  transition: all 0.2s ease;
+}
+
+/* Navigation links - no underline */
+header a,
+nav a {
+  text-decoration: none;
+}
+
+/* Footer links - no underline, proper colors */
+footer a {
+  text-decoration: none;
+  color: var(--color-text-light);
+}
+
+footer a:hover {
+  color: white;
+}
+
+/* Button/CTA links - no underline */
+.phone-cta,
+button,
+[class*="cta"],
+[class*="button"] {
+  text-decoration: none !important;
+}
+
+/* Prose links in content - with underline */
+.prose a {
+  color: var(--color-black);
+  text-decoration: underline;
+  text-decoration-color: rgba(11, 11, 11, 0.4);
+  text-underline-offset: 2px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.prose a:hover {
+  text-decoration-color: var(--color-black);
+  color: var(--color-black);
+}
+
+/* Card hover effects */
+.service-card {
+  transition: box-shadow 0.2s ease;
+}
+
+.service-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.service-card a {
+  transition: color 0.2s ease;
+}
+
+.service-card:hover a {
+  color: var(--color-text-light) !important;
+}
+
+/* Phone CTA hover */
+.phone-cta {
+  transition: all 0.2s ease;
+}
+
+.phone-cta:hover {
+  background-color: var(--color-accent) !important;
+  border-color: var(--color-accent) !important;
+  color: white !important;
+}
+
+/* Link hover in service types */
+.service-link {
+  transition: color 0.2s ease;
+}
+
+.service-link:hover {
+  color: var(--color-black) !important;
+}
+
+/* Decorative divider */
+.decorative-divider {
+  width: 100px;
+  height: 4px;
+  background: linear-gradient(to right, var(--color-accent), transparent);
+  margin: 2rem auto;
+  border-radius: 2px;
+}
+
+/* Pattern background */
+.pattern-bg {
+  background-image: 
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(184, 134, 11, 0.03) 10px,
+      rgba(184, 134, 11, 0.03) 20px
+    );
+}
+
+/* Enhanced card hover effects */
+.service-card,
+[class*="service-card"] {
+  transition: all 0.3s ease;
+}
+
+.service-card:hover,
+[class*="service-card"]:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Smooth scroll reveal animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Focus states for accessibility */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Improved form inputs */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+textarea {
+  transition: all 0.2s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.1);
+}
+
+/* Loading states */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Print styles */
+@media print {
+  header,
+  footer,
+  nav,
+  .no-print {
+    display: none !important;
+  }
+  
+  body {
+    color: #000;
+    background: #fff;
+  }
+}
+
+/* Selection color */
+::selection {
+  background-color: var(--color-accent);
+  color: white;
+}
+
+::-moz-selection {
+  background-color: var(--color-accent);
+  color: white;
+}

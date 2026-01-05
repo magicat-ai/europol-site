@@ -1,0 +1,415 @@
+---
+interface ProcessStep {
+  number: string;
+  title: string;
+  description: string;
+  details?: string[];
+}
+
+interface Props {
+  title: string;
+  intro?: string;
+  steps: ProcessStep[];
+}
+
+const { title, intro, steps } = Astro.props;
+---
+
+<section class="process-section py-24 md:py-32 relative">
+  <!-- Background Pattern -->
+  <div class="absolute inset-0 process-pattern opacity-[0.03]"></div>
+  
+  <!-- Gradient Overlay -->
+  <div class="absolute inset-0 bg-gradient-to-b from-transparent via-rgba(184, 134, 11, 0.02) to-transparent"></div>
+  
+  <!-- Decorative Elements -->
+  <div class="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-rgba(184, 134, 11, 0.04) to-transparent rounded-bl-full blur-3xl"></div>
+  <div class="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-rgba(184, 134, 11, 0.04) to-transparent rounded-tr-full blur-3xl"></div>
+  
+  <div class="container mx-auto px-4 max-w-6xl relative z-10">
+    <!-- Header -->
+    <div class="text-center mb-20">
+      <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 scroll-reveal-fade" style="color: var(--color-black); font-family: 'Playfair Display', serif; line-height: 1.2; letter-spacing: -0.02em;">
+        {title}
+      </h2>
+      {intro && (
+        <p class="text-xl md:text-2xl text-center max-w-3xl mx-auto scroll-reveal-fade" style="color: var(--color-text-light); line-height: 1.6;">
+          {intro}
+        </p>
+      )}
+    </div>
+
+    <!-- Process Steps -->
+    <div class="process-timeline">
+      {steps.map((step, index) => {
+        // Map step numbers to icons
+        const stepIcons: { [key: string]: string } = {
+          '1': '💬',
+          '2': '📋',
+          '3': '🔍',
+          '4': '📊',
+          '5': '✅',
+          '6': '📄'
+        };
+        const stepIcon = stepIcons[step.number] || '✨';
+        
+        return (
+          <div class="process-step-modern" data-step={index + 1}>
+            <div class="step-connector"></div>
+            
+            <div class="step-content">
+              <!-- Number Badge with Icon -->
+              <div class="step-number-badge">
+                <div class="step-icon-wrapper">
+                  <span class="step-icon">{stepIcon}</span>
+                </div>
+                <div class="step-number-ring">
+                  <span class="step-number">{step.number}</span>
+                </div>
+              </div>
+
+              <!-- Content Card -->
+              <div class="step-card">
+                <div class="step-card-header">
+                  <h3 class="step-title">{step.title}</h3>
+                  <div class="step-accent-line"></div>
+                </div>
+                <p class="step-description">{step.description}</p>
+                
+                {step.details && step.details.length > 0 && (
+                  <div class="step-details-wrapper">
+                    <ul class="step-details">
+                      {step.details.map((detail) => (
+                        <li>
+                          <span class="detail-icon">✓</span>
+                          <span class="detail-text">{detail}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                
+                <!-- Decorative corner -->
+                <div class="step-card-corner"></div>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<style>
+  .process-section {
+    position: relative;
+    overflow: visible;
+    background: linear-gradient(to bottom, #ffffff 0%, #fafafa 100%);
+  }
+
+  .process-pattern {
+    background-image: 
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(184, 134, 11, 0.03) 10px,
+        rgba(184, 134, 11, 0.03) 20px
+      );
+  }
+
+  .process-timeline {
+    position: relative;
+    padding-left: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  @media (min-width: 768px) {
+    .process-timeline {
+      padding-left: 4rem;
+    }
+  }
+
+  .process-step-modern {
+    position: relative;
+    margin-bottom: 4rem;
+    /* Gli step sono sempre visibili - non usano scroll-reveal */
+    opacity: 1;
+    transform: none;
+    visibility: visible;
+  }
+
+  .process-step-modern:last-child {
+    margin-bottom: 0;
+  }
+
+  .process-step-modern:last-child .step-connector {
+    display: none;
+  }
+
+  .step-connector {
+    position: absolute;
+    left: 0;
+    top: 60px;
+    bottom: -4rem;
+    width: 2px;
+    background: linear-gradient(180deg, var(--color-accent), rgba(184, 134, 11, 0.3));
+  }
+
+  .step-content {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+  }
+
+  .step-number-badge {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    position: relative;
+    z-index: 2;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .step-icon-wrapper {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, rgba(184, 134, 11, 0.15), rgba(184, 134, 11, 0.08));
+    border: 2px solid rgba(184, 134, 11, 0.2);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 16px rgba(184, 134, 11, 0.15);
+  }
+
+  .step-icon {
+    font-size: 2.5rem;
+    line-height: 1;
+    filter: grayscale(0.2);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .step-number-ring {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--color-accent), rgba(184, 134, 11, 0.9));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    bottom: -8px;
+    right: -8px;
+    box-shadow: 0 4px 12px rgba(184, 134, 11, 0.4);
+    border: 3px solid white;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .step-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: white;
+    line-height: 1;
+  }
+
+  .process-step-modern:hover .step-icon-wrapper {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 8px 24px rgba(184, 134, 11, 0.25);
+    border-color: rgba(184, 134, 11, 0.3);
+    background: linear-gradient(135deg, rgba(184, 134, 11, 0.2), rgba(184, 134, 11, 0.12));
+  }
+
+  .process-step-modern:hover .step-icon {
+    transform: scale(1.15);
+    filter: grayscale(0);
+  }
+
+  .process-step-modern:hover .step-number-ring {
+    transform: scale(1.15);
+    box-shadow: 0 6px 20px rgba(184, 134, 11, 0.5);
+  }
+
+  .step-card {
+    flex: 1;
+    background: white;
+    border: 1px solid rgba(11, 11, 11, 0.08);
+    border-radius: 20px;
+    padding: 2.5rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .step-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--color-accent), rgba(184, 134, 11, 0.4));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .process-step-modern:hover .step-card {
+    transform: translateX(12px) translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(184, 134, 11, 0.1);
+    border-color: rgba(184, 134, 11, 0.25);
+  }
+
+  .process-step-modern:hover .step-card::before {
+    transform: scaleX(1);
+  }
+
+  .step-card-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .step-accent-line {
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--color-accent), rgba(184, 134, 11, 0.3));
+    border-radius: 2px;
+    margin-top: 0.75rem;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .process-step-modern:hover .step-accent-line {
+    width: 100px;
+  }
+
+  .step-card-corner {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, rgba(184, 134, 11, 0.05), transparent);
+    border-radius: 0 20px 0 60px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .process-step-modern:hover .step-card-corner {
+    opacity: 1;
+  }
+
+  .step-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-black);
+    margin-bottom: 1rem;
+    line-height: 1.3;
+  }
+
+  .step-description {
+    color: var(--color-text-light);
+    line-height: 1.8;
+    font-size: 1.0625rem;
+    margin-bottom: 1rem;
+  }
+
+  .step-details-wrapper {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(11, 11, 11, 0.08);
+  }
+
+  .step-details {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .step-details li {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    color: var(--color-text);
+    line-height: 1.7;
+    transition: all 0.3s ease;
+  }
+
+  .step-details li:hover {
+    transform: translateX(4px);
+  }
+
+  .detail-icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    background: linear-gradient(135deg, rgba(184, 134, 11, 0.15), rgba(184, 134, 11, 0.08));
+    border: 1px solid rgba(184, 134, 11, 0.2);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-accent);
+    font-weight: 700;
+    font-size: 0.875rem;
+    margin-top: 0.125rem;
+  }
+
+  .detail-text {
+    flex: 1;
+    font-size: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    .process-timeline {
+      padding-left: 1.5rem;
+      padding-bottom: 2rem;
+    }
+
+    .step-content {
+      gap: 1.5rem;
+    }
+
+    .step-number-badge {
+      width: 64px;
+      height: 64px;
+    }
+
+    .step-icon-wrapper {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+    }
+
+    .step-icon {
+      font-size: 2rem;
+    }
+
+    .step-number-ring {
+      width: 32px;
+      height: 32px;
+      bottom: -6px;
+      right: -6px;
+    }
+
+    .step-number {
+      font-size: 1.125rem;
+    }
+
+    .step-card {
+      padding: 2rem;
+    }
+
+    .step-title {
+      font-size: 1.5rem;
+    }
+  }
+</style>
+

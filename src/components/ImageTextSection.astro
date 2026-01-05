@@ -1,0 +1,55 @@
+---
+interface Props {
+  image: string;
+  imageAlt: string;
+  title: string;
+  content: string;
+  reverse?: boolean;
+  imagePosition?: 'left' | 'right';
+}
+
+const { 
+  image, 
+  imageAlt, 
+  title, 
+  content, 
+  reverse = false,
+  imagePosition = reverse ? 'right' : 'left'
+} = Astro.props;
+
+// Aggiungi BASE_URL per path locali (solo se non ce l'ha già)
+const base = import.meta.env.BASE_URL || '';
+const imageSrc = image.startsWith('http') ? image :
+                 image.startsWith(base + '/') ? image :
+                 image.startsWith('/') ? `${base}${image}` :
+                 `${base}/${image}`;
+---
+
+<section class="py-20 bg-white">
+  <div class="container mx-auto px-4 max-w-6xl">
+    <div class={`grid grid-cols-1 md:grid-cols-2 gap-12 items-center ${imagePosition === 'right' ? 'md:flex-row-reverse' : ''}`}>
+      <!-- Image side -->
+      <div class={imagePosition === 'right' ? 'order-2 md:order-1' : 'order-2 md:order-1'}>
+        <img
+          src={imageSrc}
+          alt={imageAlt}
+          class="w-full h-auto rounded-xl shadow-2xl transition-transform duration-300 hover:scale-[1.02]"
+          loading="lazy"
+        />
+      </div>
+      
+      <!-- Content side -->
+      <div class={imagePosition === 'right' ? 'order-1 md:order-2' : 'order-1 md:order-2'}>
+        <h2 class="text-3xl md:text-4xl font-bold mb-6" style="color: var(--color-black); font-family: 'Playfair Display', serif;">
+          {title}
+        </h2>
+        <div class="prose prose-lg max-w-none" style="color: var(--color-text);">
+          <p class="leading-relaxed text-lg">
+            {content}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+

@@ -1,0 +1,110 @@
+---
+const base = import.meta.env.BASE_URL || '';
+---
+
+<footer style="background-color: var(--color-black); color: white;" class="py-16 mt-20">
+  <div class="container mx-auto px-4 max-w-6xl">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+      
+      <!-- Company Info Column -->
+      <div class="lg:col-span-2">
+        <!-- Logo -->
+        <a href={import.meta.env.BASE_URL || '/'} class="inline-block mb-4">
+          <img
+            src={`${import.meta.env.BASE_URL}/media/brand/logo-original.png`.replace('//', '/')}
+            alt="EUROPOL® Istituto di Investigazioni"
+            class="h-10 md:h-12 w-auto"
+            style="max-height: 3rem; filter: brightness(0) invert(1);"
+          />
+        </a>
+        <p class="text-gray-300 leading-relaxed mb-6 max-w-md text-sm">
+          Europol Istituto di Investigazioni dal 1962. Specializzati in investigazioni private e aziendali con metodi esclusivamente legali certificati dalla GARANZIA LEGALIS™.
+        </p>
+        <div class="space-y-2 text-sm text-gray-400">
+          <p class="text-sm text-gray-400">Operatività: Italia e internazionale</p>
+        </div>
+      </div>
+
+      <!-- Services Column -->
+      <div>
+        <h4 class="font-semibold mb-4 text-white text-lg">Servizi</h4>
+        <ul class="space-y-3">
+          <li>
+            <a href={`${base}/investigazioni-private/`} class="text-gray-300 hover:text-white transition-colors duration-200 block">
+              Investigazioni Private
+            </a>
+          </li>
+          <li>
+            <a href={`${base}/investigazioni-aziendali/`} class="text-gray-300 hover:text-white transition-colors duration-200 block">
+              Investigazioni Aziendali
+            </a>
+          </li>
+          <li>
+            <a href={`${base}/intelligence-e-servizi-speciali/`} class="text-gray-300 hover:text-white transition-colors duration-200 block">
+              Intelligence & Servizi Speciali
+            </a>
+          </li>
+          <li>
+            <a href={`${base}/sistema-prova/`} class="text-gray-300 hover:text-white transition-colors duration-200 block">
+              Sistema PROVA™
+            </a>
+          </li>
+          <li>
+            <a href={`${base}/valutazioni-dei-clienti/`} class="text-gray-300 hover:text-white transition-colors duration-200 block">
+              Valutazioni Clienti
+            </a>
+          </li>
+          <li>
+            <a href={`${base}/studi-legali-e-avvocati/`} class="text-gray-300 hover:text-white transition-colors duration-200 block">
+              Studi Legali e Avvocati
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Company & Info Column -->
+      <div>
+        <h4 class="font-semibold mb-4 text-white text-lg">Azienda</h4>
+        <ul class="space-y-3">
+          <li>
+            <a href={`${base}/europol-istituto-di-investigazioni/`} class="text-gray-300 hover:text-white transition-colors duration-200 block">
+              Chi Siamo
+            </a>
+          </li>
+          <li>
+            <a href={`${base}/investigatore-privato-roma/`} class="text-gray-300 hover:text-white transition-colors duration-200 block">
+              Investigatore Privato Roma
+            </a>
+          </li>
+          <li>
+            <a href={`${base}/investigatore-privato-milano/`} class="text-gray-300 hover:text-white transition-colors duration-200 block">
+              Investigatore Privato Milano
+            </a>
+          </li>
+          <li>
+            <a href={`${base}/contatti/`} class="text-gray-300 hover:text-white transition-colors duration-200 block">
+              Contatti
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="border-t mt-12 pt-8" style="border-color: rgba(255, 255, 255, 0.1);">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-sm">
+        <p class="text-gray-400">
+          &copy; {new Date().getFullYear()} EUROPOL® Istituto di Investigazioni. Tutti i diritti riservati.
+        </p>
+        <div class="flex gap-6">
+          <a href={`${base}/privacy-policy/`} class="text-gray-400 hover:text-white transition-colors duration-200">
+            Privacy Policy
+          </a>
+          <a href={`${base}/termini-e-condizioni/`} class="text-gray-400 hover:text-white transition-colors duration-200">
+            Termini e Condizioni
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

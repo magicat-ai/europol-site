@@ -1,0 +1,311 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  backgroundImage?: string;
+  overlay?: boolean;
+  ctaText?: string;
+  ctaLink?: string;
+  showPhone?: boolean;
+}
+
+const { 
+  title, 
+  subtitle = "Investigazioni ed Intelligence dal 1962",
+  backgroundImage,
+  overlay = true,
+  ctaText = "Richiedi Consulenza Gratuita",
+  ctaLink = "/contatti/",
+  showPhone = false
+} = Astro.props;
+
+// Aggiungi BASE_URL per background image locale (solo se non ce l'ha già)
+const base = import.meta.env.BASE_URL || '';
+const bgImage = backgroundImage && !backgroundImage.startsWith('http') && !backgroundImage.startsWith(base)
+  ? `${base}${backgroundImage.startsWith('/') ? '' : '/'}${backgroundImage}`
+  : backgroundImage;
+---
+
+<section class="hero-section relative h-[70vh] min-h-[600px] flex items-center justify-center">
+  <!-- Background Image -->
+  {bgImage && (
+    <div class="absolute inset-0">
+      <img
+        src={bgImage}
+        alt=""
+        class="w-full h-full object-cover"
+        loading="eager"
+      />
+      {overlay && (
+        <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/75"></div>
+      )}
+    </div>
+  )}
+
+  {!bgImage && (
+    <div class="absolute inset-0 hero-gradient">
+      <!-- Subtle pattern overlay for depth -->
+      <div class="absolute inset-0 opacity-20 hero-pattern"></div>
+      <!-- Animated gradient overlay -->
+      <div class="absolute inset-0 hero-gradient-animated"></div>
+    </div>
+  )}
+  
+  <!-- Badge "Dal 1962" -->
+  <div class="hero-badge absolute top-8 left-1/2 transform -translate-x-1/2 z-20">
+    <div class="badge-content">
+      <span class="badge-text">Dal 1962</span>
+      <span class="badge-line"></span>
+      <span class="badge-subtext">60+ Anni di Esperienza</span>
+    </div>
+  </div>
+  
+  <!-- Content -->
+  <div class="relative z-10 text-center px-4 max-w-6xl mx-auto hero-content">
+    <h1 
+      class="hero-title text-5xl md:text-6xl lg:text-7xl font-bold mb-6"
+      style="font-family: 'Playfair Display', serif; line-height: 1.1; color: #ffffff; letter-spacing: -0.02em;"
+    >
+      {title}
+    </h1>
+    {subtitle && (
+      <p class="hero-subtitle text-xl md:text-2xl mb-12 max-w-3xl mx-auto font-light" style="color: rgba(255, 255, 255, 0.95); letter-spacing: 0.01em; line-height: 1.6;">
+        {subtitle}
+      </p>
+    )}
+    <div class="flex flex-col sm:flex-row gap-5 justify-center items-center">
+      <a
+        href={ctaLink.startsWith(base) ? ctaLink : `${base}${ctaLink}`}
+        class="hero-cta-primary px-10 py-5 rounded-lg font-semibold text-lg transition-all duration-300 hover:scale-105 shadow-2xl relative overflow-hidden group"
+        style="background-color: var(--color-accent); color: white;"
+      >
+        <span class="relative z-10">{ctaText}</span>
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+      </a>
+      {showPhone && (
+        <a 
+          href="tel:0694801806"
+          class="hero-cta-secondary px-10 py-5 rounded-lg font-semibold text-lg border-2 transition-all duration-300 hover:bg-white hover:text-black backdrop-blur-sm"
+          style="border-color: rgba(255, 255, 255, 0.8); color: white; background-color: rgba(255, 255, 255, 0.1);"
+        >
+          📞 06.948.01.806
+        </a>
+      )}
+    </div>
+  </div>
+  
+  <!-- Scroll Indicator -->
+  <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 scroll-indicator">
+    <div class="scroll-mouse">
+      <div class="scroll-wheel"></div>
+    </div>
+  </div>
+  
+  <!-- Decorative bottom wave -->
+  <div class="absolute bottom-0 left-0 right-0 z-10 hero-wave">
+    <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-24 md:h-32">
+      <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white"/>
+    </svg>
+  </div>
+</section>
+
+<style>
+  .hero-section {
+    position: relative;
+    margin-bottom: 0;
+    border-bottom: none;
+    overflow: visible; /* Permette all'onda di estendersi senza essere tagliata */
+  }
+  
+  .hero-wave {
+    display: block;
+    line-height: 0;
+    margin-bottom: -1px; /* Rimuove eventuali gap di 1px */
+  }
+  
+  .hero-wave svg {
+    display: block;
+    vertical-align: bottom;
+    width: 100%;
+    height: auto;
+  }
+
+  /* Hero Gradient Background */
+  .hero-gradient {
+    background: linear-gradient(135deg, #0b0b0b 0%, #1a1a1a 25%, #2d2d2d 50%, #1a1a1a 75%, #0b0b0b 100%);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+  }
+
+  @keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  .hero-pattern {
+    background-image: 
+      radial-gradient(circle at 2px 2px, rgba(184, 134, 11, 0.15) 1px, transparent 0),
+      radial-gradient(circle at 20px 20px, rgba(184, 134, 11, 0.08) 1px, transparent 0);
+    background-size: 40px 40px, 80px 80px;
+  }
+
+  .hero-gradient-animated {
+    background: linear-gradient(135deg, rgba(184, 134, 11, 0.1) 0%, transparent 50%, rgba(184, 134, 11, 0.05) 100%);
+    animation: pulse 8s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.6; }
+  }
+
+  /* Hero Badge */
+  .hero-badge {
+    animation: fadeInDown 1s ease-out;
+  }
+
+  .badge-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    padding: 0.75rem 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  .badge-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--color-accent);
+    letter-spacing: 0.1em;
+  }
+
+  .badge-line {
+    width: 1px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  .badge-subtext {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+  }
+
+  /* Hero Content Animations */
+  .hero-content {
+    animation: fadeInUp 1.2s ease-out 0.3s both;
+  }
+
+  .hero-title {
+    animation: fadeInUp 1s ease-out 0.5s both;
+    text-shadow: 0 4px 30px rgba(0, 0, 0, 0.7), 0 2px 15px rgba(0, 0, 0, 0.5);
+  }
+
+  .hero-subtitle {
+    animation: fadeInUp 1s ease-out 0.7s both;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.6);
+  }
+
+  .hero-cta-primary {
+    animation: fadeInUp 1s ease-out 0.9s both;
+  }
+
+  .hero-cta-secondary {
+    animation: fadeInUp 1s ease-out 1.1s both;
+  }
+
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Scroll Indicator */
+  .scroll-indicator {
+    animation: fadeIn 1.5s ease-out 1.5s both;
+  }
+
+  .scroll-mouse {
+    width: 30px;
+    height: 50px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 25px;
+    position: relative;
+  }
+
+  .scroll-wheel {
+    width: 4px;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 2px;
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: scroll 2s infinite;
+  }
+
+  @keyframes scroll {
+    0% {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translateX(-50%) translateY(20px);
+    }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .hero-section {
+      min-height: 500px;
+      height: 60vh;
+    }
+
+    .hero-title {
+      font-size: 2.5rem;
+    }
+
+    .hero-subtitle {
+      font-size: 1.125rem;
+    }
+
+    .badge-content {
+      flex-direction: column;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+    }
+
+    .badge-line {
+      width: 40px;
+      height: 1px;
+    }
+  }
+</style>
