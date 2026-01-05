@@ -5,6 +5,11 @@ import { getPageContent } from '../utils/content';
 
 const pageData = getPageContent('/contatti/');
 const { seo } = pageData;
+
+// Get BASE_URL and site URL for form redirect
+const base = import.meta.env.BASE_URL || '';
+const siteUrl = import.meta.env.SITE || 'https://magicat-ai.github.io';
+const fullRedirectUrl = `${siteUrl}${base}/richiesta-inviata/`.replace('//', '/').replace(':/', '://');
 ---
 
 <BaseLayout title={seo.title} description={seo.meta_description} canonical={seo.canonical}>
@@ -38,8 +43,8 @@ const { seo } = pageData;
         <input type="hidden" name="meta_web_form_id" value="345586561" />
         <input type="hidden" name="meta_split_id" value="" />
         <input type="hidden" name="listname" value="invsqz" />
-        <input type="hidden" name="redirect" value="https://europolinvestigazioni.it/richiesta-inviata/" />
-        <input type="hidden" name="meta_redirect_onlist" value="https://europolinvestigazioni.it/richiesta-inviata/" />
+        <input type="hidden" name="redirect" value={fullRedirectUrl} />
+        <input type="hidden" name="meta_redirect_onlist" value={fullRedirectUrl} />
         <input type="hidden" name="meta_adtracking" value="EUROPOL_Contact_Form" />
         <input type="hidden" name="meta_message" value="1" />
         <input type="hidden" name="meta_required" value="name,email" />
