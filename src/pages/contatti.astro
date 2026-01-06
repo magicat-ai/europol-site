@@ -47,8 +47,8 @@ const fullRedirectUrl = `${siteUrl}${base}/richiesta-inviata/`.replace('//', '/'
         <input type="hidden" name="meta_redirect_onlist" value={fullRedirectUrl} />
         <input type="hidden" name="meta_adtracking" value="EUROPOL_Contact_Form" />
         <input type="hidden" name="meta_message" value="1" />
-        <input type="hidden" name="meta_required" value="name,email" />
-        <input type="hidden" name="meta_tooltip" value="name||Nome,,email||Email,,custom Telefono||Numero di Telefono,,custom Provincia||Città,,custom Quando essere ricontattato||Quando Essere Ricontattato,,custom Commenti||Dettagli" />
+        <input type="hidden" name="meta_required" value="name,email,custom Telefono" />
+        <input type="hidden" name="meta_tooltip" value="name||Nome,,email||Email,,custom Telefono||Telefono,,custom Dettagli Caso||Dettagli della Richiesta" />
       </div>
       
       <!-- Honeypot field -->
@@ -88,27 +88,14 @@ const fullRedirectUrl = `${siteUrl}${base}/richiesta-inviata/`.replace('//', '/'
 
             <div>
               <label for="phone" class="block text-sm font-medium mb-2" style="color: var(--color-black);">
-                Telefono
+                Telefono <span class="text-red-600" aria-label="campo obbligatorio">*</span>
               </label>
-              <input 
-                type="tel" 
-                id="phone" 
+              <input
+                type="tel"
+                id="phone"
                 name="custom Telefono"
-                class="w-full px-4 py-2 border rounded-md transition-colors duration-200"
-                style="border-color: rgba(11, 11, 11, 0.2); color: var(--color-black);"
-                onfocus="this.style.borderColor='var(--color-black)'"
-                onblur="this.style.borderColor='rgba(11, 11, 11, 0.2)'"
-              />
-            </div>
-
-            <div>
-              <label for="city" class="block text-sm font-medium mb-2" style="color: var(--color-black);">
-                Città
-              </label>
-              <input 
-                type="text" 
-                id="city" 
-                name="custom Provincia"
+                required
+                placeholder="+39 123 456 7890"
                 class="w-full px-4 py-2 border rounded-md transition-colors duration-200"
                 style="border-color: rgba(11, 11, 11, 0.2); color: var(--color-black);"
                 onfocus="this.style.borderColor='var(--color-black)'"
@@ -118,33 +105,19 @@ const fullRedirectUrl = `${siteUrl}${base}/richiesta-inviata/`.replace('//', '/'
 
             <div>
               <label for="message" class="block text-sm font-medium mb-2" style="color: var(--color-black);">
-                Dettagli della Richiesta
+                Dettagli della Richiesta <span class="text-red-600" aria-label="campo obbligatorio">*</span>
               </label>
-              <textarea 
-                id="message" 
-                name="custom Commenti" 
+              <textarea
+                id="message"
+                name="custom Dettagli Caso"
+                required
                 rows="5"
+                placeholder="Descrivi brevemente il tuo caso..."
                 class="w-full px-4 py-2 border rounded-md transition-colors duration-200"
                 style="border-color: rgba(11, 11, 11, 0.2); color: var(--color-black);"
                 onfocus="this.style.borderColor='var(--color-black)'"
                 onblur="this.style.borderColor='rgba(11, 11, 11, 0.2)'"
               ></textarea>
-            </div>
-
-            <div>
-              <label for="contact_time" class="block text-sm font-medium mb-2" style="color: var(--color-black);">
-                Orario di Contatto Preferito
-              </label>
-              <input 
-                type="text" 
-                id="contact_time" 
-                name="custom Quando essere ricontattato"
-                placeholder="es. Mattina, Pomeriggio, Sera"
-                class="w-full px-4 py-2 border rounded-md transition-colors duration-200"
-                style="border-color: rgba(11, 11, 11, 0.2); color: var(--color-black);"
-                onfocus="this.style.borderColor='var(--color-black)'"
-                onblur="this.style.borderColor='rgba(11, 11, 11, 0.2)'"
-              />
             </div>
 
       <!-- GDPR Compliance: Consenso al trattamento dati -->
