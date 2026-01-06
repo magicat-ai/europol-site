@@ -38,7 +38,7 @@ const { stats } = Astro.props;
               )}
             </svg>
           </div>
-          <div class="stat-number" data-target={stat.number.replace(/[^0-9]/g, '')}>
+          <div class="stat-number" data-target={stat.number.replace(/[^0-9]/g, '')} data-format={stat.number}>
             {stat.number}
           </div>
           <div class="stat-label">{stat.label}</div>
@@ -61,12 +61,23 @@ const { stats } = Astro.props;
           const statItem = entry.target;
           const numberElement = statItem.querySelector('.stat-number');
           const target = numberElement?.getAttribute('data-target');
+          const format = numberElement?.getAttribute('data-format') || '';
           
           if (target && numberElement) {
+            // Se il formato contiene "-" (come "24-72h"), non animare
+            if (format.includes('-')) {
+              observer.unobserve(statItem);
+              return;
+            }
+            
             const finalNumber = parseInt(target);
             const duration = 2000;
             const increment = finalNumber / (duration / 16);
             let current = 0;
+            
+            // Estrai il formato originale (punti, virgole, simboli)
+            const hasDot = format.includes('.');
+            const suffix = format.replace(/[\d.,]+/, ''); // Tutto dopo il numero
             
             const timer = setInterval(() => {
               current += increment;
@@ -75,9 +86,13 @@ const { stats } = Astro.props;
                 clearInterval(timer);
               }
               
-              const originalText = numberElement.textContent || '';
-              const suffix = originalText.replace(/[0-9]/g, '');
-              numberElement.textContent = Math.floor(current) + suffix;
+              const displayNumber = Math.floor(current);
+              // Se il formato originale aveva il punto, usa il formato italiano
+              if (hasDot) {
+                numberElement.textContent = displayNumber.toLocaleString('it-IT') + suffix;
+              } else {
+                numberElement.textContent = displayNumber + suffix;
+              }
             }, 16);
             
             observer.unobserve(statItem);
