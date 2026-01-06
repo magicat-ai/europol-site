@@ -3,95 +3,86 @@
 ## 📋 Checklist Pre-Deploy
 
 ### ✅ Configurazione Completata
-- [x] `site` configurato in `astro.config.mjs`
-- [x] GitHub Actions workflow creato
+- [x] `site` configurato in `astro.config.mjs` → `https://europolinvestigazioni.it`
+- [x] `base` configurato a `/` per Netlify
+- [x] `netlify.toml` configurato con headers e redirect
+- [x] `public/_redirects` configurato per redirect 301
 - [x] Build testato localmente
 
 ### ⚠️ Da Fare Prima del Deploy
 
 1. **Test Locale Finale**
    ```bash
-   cd site
    npm run build
    npm run preview
    ```
-   Verifica che tutte le pagine funzionino correttamente.
+   Verifica che tutte le pagine funzionino correttamente senza il path `/europol-site`.
 
-2. **Configurazione GitHub Pages**
-   - Vai su GitHub → Settings → Pages
-   - Source: "GitHub Actions"
-   - Salva
+## 🎯 Deploy su Netlify (Configurazione Attuale)
 
-3. **Configurazione Redirect sul Server** (se non usi Netlify/Vercel)
-   - Aggiungi le regole da `redirects.json` al tuo server web
-   - Nginx: aggiungi le regole nel server block
-   - Apache: aggiungi in `.htaccess`
+### Step 1: Connetti Repository su Netlify
 
-## 🎯 Opzioni di Deploy
+1. **Crea/Accedi Account Netlify**
+   - Vai su https://app.netlify.com
+   - Accedi con GitHub
 
-### Opzione A: Deploy Manuale (Rapido)
+2. **Importa Progetto**
+   - Click "Add new site" → "Import an existing project"
+   - Connetti GitHub → seleziona `magicat-ai/europol-site`
+   - Netlify rileverà automaticamente:
+     - **Build command**: `npm run build`
+     - **Publish directory**: `dist`
 
-1. **Build Locale**
-   ```bash
-   cd site
-   npm run build
-   ```
+3. **Configurazione Build**
+   - Verifica che siano corretti:
+     - Build command: `npm run build`
+     - Publish directory: `dist`
+   - Click "Deploy site"
 
-2. **Carica su GitHub**
-   - Crea un nuovo repository (es. `europol-site`)
-   - Carica SOLO il contenuto di `site/dist/` (non la cartella dist stessa)
-   - Struttura:
-     ```
-     repository/
-       ├── index.html
-       ├── contatti/
-       ├── media/
-       ├── sitemap.xml
-       └── robots.txt
-     ```
+### Step 2: Configura Dominio Custom
 
-3. **Configura GitHub Pages**
-   - Settings → Pages → Source: "Deploy from a branch"
-   - Branch: `main` / Root: `/` (root)
-
-### Opzione B: Deploy Automatico con GitHub Actions (Consigliato)
-
-1. **Carica il Progetto Completo**
-   - Carica tutta la cartella `site/` su GitHub
-   - Include: `src/`, `public/`, `package.json`, `astro.config.mjs`, `.github/`
-
-2. **Configura GitHub Pages**
-   - Settings → Pages → Source: "GitHub Actions"
-   - Il workflow `.github/workflows/deploy.yml` farà tutto automaticamente
-
-3. **Push e Deploy**
-   ```bash
-   git add .
-   git commit -m "Initial deploy"
-   git push origin main
-   ```
-   - GitHub Actions farà il build automaticamente
-   - Il sito sarà disponibile su `https://tuousername.github.io/repository-name/`
-   - Per dominio personalizzato, configura in Settings → Pages → Custom domain
-
-## 🔧 Configurazione Dominio Personalizzato
-
-Se vuoi usare `europolinvestigazioni.it`:
-
-1. **Su GitHub Pages**
-   - Settings → Pages → Custom domain
+1. **Su Netlify**
+   - Site settings → Domain management → Add custom domain
    - Inserisci: `europolinvestigazioni.it`
-   - Abilita "Enforce HTTPS"
+   - Netlify ti fornirà i record DNS da configurare
 
-2. **Nel DNS del Dominio**
-   - Aggiungi record CNAME:
-     ```
-     www.europolinvestigazioni.it → tuousername.github.io
-     ```
-   - Oppure record A (per dominio senza www):
-     ```
-     europolinvestigazioni.it → IP di GitHub Pages
-     ```
+2. **Configura DNS su OVH**
+   
+   **Opzione A: Record CNAME (consigliato per www)**
+   ```
+   Tipo: CNAME
+   Nome: www
+   Destinazione: [nome-sito].netlify.app
+   TTL: 3600
+   ```
+   
+   **Opzione B: Record A per dominio root**
+   Netlify ti fornirà 4 indirizzi IP da configurare:
+   ```
+   Tipo: A
+   Nome: @ (o lasciare vuoto)
+   Destinazione: [IP fornito da Netlify]
+   TTL: 3600
+   ```
+   Ripeti per tutti e 4 gli IP forniti da Netlify.
+
+3. **Abilita HTTPS**
+   - Netlify lo farà automaticamente dopo la configurazione DNS
+   - Verifica che "Force HTTPS" sia attivo in Site settings → Domain management
+
+### Step 3: Deploy Automatico
+
+Ogni push su `main` triggererà automaticamente:
+- Build del sito
+- Deploy su Netlify
+- Aggiornamento del sito live
+
+## 🔧 Configurazione File
+
+### File Importanti già Configurati:
+- ✅ `astro.config.mjs` - Site URL: `https://europolinvestigazioni.it`, base: `/`
+- ✅ `netlify.toml` - Headers di sicurezza e cache configurati
+- ✅ `public/_redirects` - Redirect 301 configurati
 
 ## 📝 File Importanti
 

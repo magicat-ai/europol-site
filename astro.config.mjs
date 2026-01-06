@@ -5,8 +5,8 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://magicat-ai.github.io',
-  base: '/europol-site',
+  site: 'https://europolinvestigazioni.it',
+  base: '/',
   integrations: [mdx()],
   server: {
     port: 4322
