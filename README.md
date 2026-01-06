@@ -141,6 +141,54 @@ Contenuto della pagina...
 - Consent GDPR nel form contatti
 - Honeypot anti-spam nei form
 
+## 📋 Form AWeber
+
+Il sito utilizza form AWeber per la gestione delle richieste di contatto e lead generation.
+
+### Form Contatti (`/contatti`)
+
+**Configurazione:**
+- Form ID: `1491414836`
+- Ad Tracking: `EUROPOL_Contact_Form`
+- Tag: `contact-form`
+- Redirect: `/richiesta-inviata/`
+
+**Campi:**
+- **Obbligatori**: Nome, Email, Telefono
+- **Opzionali**: Città, Orario di contatto preferito, Dettagli della Richiesta
+
+**Campi Custom AWeber:**
+- `custom Telefono` - Telefono (obbligatorio)
+- `custom Citta` - Città (opzionale)
+- `custom Orario` - Orario di contatto preferito (opzionale)
+- `custom Dettagli Caso` - Dettagli della Richiesta (opzionale, textarea)
+
+### Form Landing Page (`/ottieni-informazioni-prove-4`)
+
+**Configurazione:**
+- Form ID: `1491414836`
+- Ad Tracking: `V2`
+- Tag: `v2`, `ty-oto`, `gen`
+- Redirect: `/richiesta-inviata/`
+
+**Campi:**
+- **Obbligatori**: Nome, Email, Telefono
+- **Opzionali**: Dettagli del Caso
+
+**Campi Custom AWeber:**
+- `custom Telefono` - Telefono (obbligatorio)
+- `custom Dettagli Caso` - Dettagli del Caso (opzionale, textarea)
+
+### Note Importanti
+
+⚠️ **Non modificare il Form ID** senza verificare la configurazione in AWeber. Cambiare il Form ID può causare problemi di iscrizione (utenti marcati come "unsubscribed").
+
+Per modificare i campi del form:
+1. Verifica la configurazione del form in AWeber
+2. Aggiorna `meta_required` e `meta_tooltip` nei campi hidden
+3. Aggiungi/rimuovi i campi HTML corrispondenti
+4. Testa l'iscrizione su AWeber dopo le modifiche
+
 ## 📞 Contatti & Support
 
 - **Email**: info@europolinvestigazioni.it
