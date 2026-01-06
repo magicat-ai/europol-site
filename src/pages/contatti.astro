@@ -48,7 +48,7 @@ const fullRedirectUrl = `${siteUrl}${base}/richiesta-inviata/`.replace('//', '/'
         <input type="hidden" name="meta_adtracking" value="EUROPOL_Contact_Form" />
         <input type="hidden" name="meta_message" value="1" />
         <input type="hidden" name="meta_required" value="name,email,custom Telefono" />
-        <input type="hidden" name="meta_tooltip" value="name||Nome,,email||Email,,custom Telefono||Telefono,,custom Dettagli Caso||Dettagli della Richiesta" />
+        <input type="hidden" name="meta_tooltip" value="name||Nome,,email||Email,,custom Telefono||Telefono,,custom Citta|| Città,,custom Orario|| Orario di contatto preferito,,custom Dettagli Caso||Dettagli della Richiesta" />
         <input type="hidden" name="tag_117572904" value="contact-form" />
       </div>
       
@@ -105,13 +105,44 @@ const fullRedirectUrl = `${siteUrl}${base}/richiesta-inviata/`.replace('//', '/'
             </div>
 
             <div>
+              <label for="citta" class="block text-sm font-medium mb-2" style="color: var(--color-black);">
+                Città
+              </label>
+              <input
+                type="text"
+                id="citta"
+                name="custom Citta"
+                placeholder="Città"
+                class="w-full px-4 py-2 border rounded-md transition-colors duration-200"
+                style="border-color: rgba(11, 11, 11, 0.2); color: var(--color-black);"
+                onfocus="this.style.borderColor='var(--color-black)'"
+                onblur="this.style.borderColor='rgba(11, 11, 11, 0.2)'"
+              />
+            </div>
+
+            <div>
+              <label for="orario" class="block text-sm font-medium mb-2" style="color: var(--color-black);">
+                Orario di contatto preferito
+              </label>
+              <input
+                type="text"
+                id="orario"
+                name="custom Orario"
+                placeholder="Orario di contatto"
+                class="w-full px-4 py-2 border rounded-md transition-colors duration-200"
+                style="border-color: rgba(11, 11, 11, 0.2); color: var(--color-black);"
+                onfocus="this.style.borderColor='var(--color-black)'"
+                onblur="this.style.borderColor='rgba(11, 11, 11, 0.2)'"
+              />
+            </div>
+
+            <div>
               <label for="message" class="block text-sm font-medium mb-2" style="color: var(--color-black);">
-                Dettagli della Richiesta <span class="text-red-600" aria-label="campo obbligatorio">*</span>
+                Dettagli della Richiesta
               </label>
               <textarea
                 id="message"
                 name="custom Dettagli Caso"
-                required
                 rows="5"
                 placeholder="Descrivi brevemente il tuo caso..."
                 class="w-full px-4 py-2 border rounded-md transition-colors duration-200"
