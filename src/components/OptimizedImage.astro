@@ -65,6 +65,7 @@ if (width && localSrc.includes('/media/uploads/')) {
   {srcset ? { srcset } : null}
   sizes={srcset ? sizes : undefined}
   decoding="async"
+  style={width && height ? `aspect-ratio: ${width} / ${height};` : undefined}
   {fallback ? { 'data-fallback': fallback } : null}
 />
 
