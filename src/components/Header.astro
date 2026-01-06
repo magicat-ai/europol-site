@@ -1,15 +1,15 @@
 ---
 import { navigation } from '../utils/navigation';
+import { getPath } from '../utils/path';
 
 // Navigation items
-const base = import.meta.env.BASE_URL || '';
 const navItems = [
-  { name: 'Home', href: base || '/' },
-  { name: 'Chi Siamo', href: `${base}/europol-istituto-di-investigazioni/` },
-  { name: 'Investigazioni Private', href: `${base}/investigazioni-private/` },
-  { name: 'Investigazioni Aziendali', href: `${base}/investigazioni-aziendali/` },
-  { name: 'Intelligence', href: `${base}/intelligence-e-servizi-speciali/` },
-  { name: 'Risorse', href: `${base}/blog/` },
+  { name: 'Home', href: getPath('') },
+  { name: 'Chi Siamo', href: getPath('europol-istituto-di-investigazioni/') },
+  { name: 'Investigazioni Private', href: getPath('investigazioni-private/') },
+  { name: 'Investigazioni Aziendali', href: getPath('investigazioni-aziendali/') },
+  { name: 'Intelligence', href: getPath('intelligence-e-servizi-speciali/') },
+  { name: 'Risorse', href: getPath('blog/') },
 ];
 ---
 
@@ -17,9 +17,9 @@ const navItems = [
   <nav class="container mx-auto px-4 py-4 max-w-6xl">
     <div class="flex items-center justify-between">
              <!-- Logo -->
-             <a href={import.meta.env.BASE_URL || '/'} class="flex items-center">
+             <a href={getPath('')} class="flex items-center">
                <img
-                 src={`${import.meta.env.BASE_URL}/media/brand/logo-original.png`.replace('//', '/')}
+                 src={getPath('media/brand/logo-original.png')}
                  alt="EUROPOL® Istituto di Investigazioni"
                  class="h-10 md:h-12 w-auto"
                  style="max-height: 3rem;"
@@ -44,7 +44,7 @@ const navItems = [
 
       <!-- Consulenza CTA -->
       <a
-        href={`${base}/contatti/`}
+        href={getPath('contatti/')}
         class="phone-cta hidden lg:flex items-center gap-2 px-4 py-2 rounded font-medium text-sm border"
         style="border-color: var(--color-black); color: var(--color-black); background-color: transparent;"
       >
@@ -80,7 +80,7 @@ const navItems = [
         ))}
         <li class="pt-2">
           <a
-            href={`${base}/contatti/`}
+            href={getPath('contatti/')}
             class="phone-cta flex items-center gap-2 px-4 py-2 rounded font-medium text-sm border"
             style="border-color: var(--color-black); color: var(--color-black); background-color: transparent;"
           >

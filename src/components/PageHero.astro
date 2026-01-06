@@ -1,4 +1,6 @@
 ---
+import { getPath } from '../utils/path';
+
 interface Props {
   title: string;
   subtitle?: string;
@@ -22,9 +24,8 @@ const {
 } = Astro.props;
 
 // Aggiungi BASE_URL per background image locale (solo se non ce l'ha già)
-const base = import.meta.env.BASE_URL || '';
-const bgImage = backgroundImage && !backgroundImage.startsWith('http') && !backgroundImage.startsWith(base)
-  ? `${base}${backgroundImage.startsWith('/') ? '' : '/'}${backgroundImage}`
+const bgImage = backgroundImage && !backgroundImage.startsWith('http')
+  ? getPath(backgroundImage.replace(/^\/+/, ''))
   : backgroundImage;
 ---
 
@@ -81,7 +82,7 @@ const bgImage = backgroundImage && !backgroundImage.startsWith('http') && !backg
       <div class="flex flex-col sm:flex-row gap-5 justify-center items-center">
         {ctaText && (
           <a
-            href={ctaLink.startsWith(base) ? ctaLink : `${base}${ctaLink}`}
+            href={ctaLink.startsWith('http') ? ctaLink : getPath(ctaLink.replace(/^\/+/, ''))}
             class="hero-cta-primary px-10 py-5 rounded-lg font-semibold text-lg transition-all duration-300 hover:scale-105 shadow-2xl relative overflow-hidden group"
             style="background-color: var(--color-accent); color: white;"
           >

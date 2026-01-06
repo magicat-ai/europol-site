@@ -15,6 +15,7 @@ import ShareButtons from '../components/ShareButtons.astro';
 import { getPageContent, getAllPages } from '../utils/content';
 import { calculateReadingTime, isBlogPost } from '../utils/blogUtils';
 import { marked } from 'marked';
+import { getPath } from '../utils/path';
 
 export async function getStaticPaths() {
   const pages = getAllPages();
@@ -38,7 +39,7 @@ export async function getStaticPaths() {
 const { slug } = Astro.params;
 const urlPath = slug ? `/${slug}/` : '/';
 
-// Get BASE_URL for links
+// Get BASE_URL for links (keep for other uses if needed)
 const base = import.meta.env.BASE_URL || '';
 
 // Load page content
@@ -700,7 +701,7 @@ const articleSchema = isBlogPostValue ? {
             Tipi di Investigazioni Private
           </h2>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <a href={`${base}/investigazioni-private/investigazioni-pre-matrimoniali/`} class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
+            <a href={getPath('investigazioni-private/investigazioni-pre-matrimoniali/')} class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
               <div class="w-12 h-12 rounded-lg mb-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
                 <span class="text-2xl">💍</span>
               </div>
@@ -713,7 +714,7 @@ const articleSchema = isBlogPostValue ? {
                 </svg>
               </span>
             </a>
-            <a href={`${base}/investigazioni-private/investigazioni-infedelta-coniugale-tradimento/`} class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
+            <a href={getPath('investigazioni-private/investigazioni-infedelta-coniugale-tradimento/')} class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
               <div class="w-12 h-12 rounded-lg mb-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
                 <span class="text-2xl">🔍</span>
               </div>
@@ -726,7 +727,7 @@ const articleSchema = isBlogPostValue ? {
                 </svg>
               </span>
             </a>
-            <a href={`${base}/investigazioni-private/investigazioni-separazione-divorzio/`} class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
+            <a href={getPath('investigazioni-private/investigazioni-separazione-divorzio/')} class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
               <div class="w-12 h-12 rounded-lg mb-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
                 <span class="text-2xl">⚖️</span>
               </div>
@@ -739,7 +740,7 @@ const articleSchema = isBlogPostValue ? {
                 </svg>
               </span>
             </a>
-            <a href={`${base}/investigazioni-private/investigazioni-affidamento-minori/`} class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
+            <a href={getPath('investigazioni-private/investigazioni-affidamento-minori/')} class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
               <div class="w-12 h-12 rounded-lg mb-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
                 <span class="text-2xl">👶</span>
               </div>
@@ -752,7 +753,7 @@ const articleSchema = isBlogPostValue ? {
                 </svg>
               </span>
             </a>
-            <a href={`${base}/investigazioni-private/investigazioni-sicurezza-personale-familiare/`} class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
+            <a href={getPath('investigazioni-private/investigazioni-sicurezza-personale-familiare/')} class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
               <div class="w-12 h-12 rounded-lg mb-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
                 <span class="text-2xl">🛡️</span>
               </div>
@@ -775,7 +776,7 @@ const articleSchema = isBlogPostValue ? {
             Tipi di Investigazioni Aziendali
           </h2>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <a href={`${base}/investigazioni-aziendali/investigazioni-pre-assunzione/`} class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
+            <a href={getPath('investigazioni-aziendali/investigazioni-pre-assunzione/')} class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
               <div class="w-12 h-12 rounded-lg mb-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
                 <span class="text-2xl">👔</span>
               </div>
@@ -788,7 +789,7 @@ const articleSchema = isBlogPostValue ? {
                 </svg>
               </span>
             </a>
-            <a href={`${base}/investigazioni-aziendali/investigazioni-licenziamento-giusta-causa/`} class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
+            <a href={getPath('investigazioni-aziendali/investigazioni-licenziamento-giusta-causa/')} class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
               <div class="w-12 h-12 rounded-lg mb-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
                 <span class="text-2xl">📋</span>
               </div>
@@ -801,7 +802,7 @@ const articleSchema = isBlogPostValue ? {
                 </svg>
               </span>
             </a>
-            <a href={`${base}/investigazioni-aziendali/investigazioni-concorrenza-sleale/`} class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
+            <a href={getPath('investigazioni-aziendali/investigazioni-concorrenza-sleale/')} class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
               <div class="w-12 h-12 rounded-lg mb-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
                 <span class="text-2xl">⚔️</span>
               </div>
@@ -814,7 +815,7 @@ const articleSchema = isBlogPostValue ? {
                 </svg>
               </span>
             </a>
-            <a href={`${base}/investigazioni-aziendali/investigazioni-ammanchi-differenze-inventariali/`} class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
+            <a href={getPath('investigazioni-aziendali/investigazioni-ammanchi-differenze-inventariali/')} class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
               <div class="w-12 h-12 rounded-lg mb-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
                 <span class="text-2xl">💰</span>
               </div>
@@ -837,7 +838,7 @@ const articleSchema = isBlogPostValue ? {
             Servizi di Intelligence & Specializzati
           </h2>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <a href={`${base}/intelligence-e-servizi-speciali/business-intelligence/`} class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
+            <a href={getPath('intelligence-e-servizi-speciali/business-intelligence/')} class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
               <div class="w-12 h-12 rounded-lg mb-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
                 <span class="text-2xl">📊</span>
               </div>
@@ -850,7 +851,7 @@ const articleSchema = isBlogPostValue ? {
                 </svg>
               </span>
             </a>
-            <a href={`${base}/intelligence-e-servizi-speciali/tracciamento-fondi-blockchain-crypto-truffe/`} class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
+            <a href={getPath('intelligence-e-servizi-speciali/tracciamento-fondi-blockchain-crypto-truffe/')} class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
               <div class="w-12 h-12 rounded-lg mb-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
                 <span class="text-2xl">₿</span>
               </div>
@@ -863,7 +864,7 @@ const articleSchema = isBlogPostValue ? {
                 </svg>
               </span>
             </a>
-            <a href={`${base}/intelligence-e-servizi-speciali/due-diligence-background-check/`} class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
+            <a href={getPath('intelligence-e-servizi-speciali/due-diligence-background-check/')} class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
               <div class="w-12 h-12 rounded-lg mb-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
                 <span class="text-2xl">🔍</span>
               </div>
@@ -876,7 +877,7 @@ const articleSchema = isBlogPostValue ? {
                 </svg>
               </span>
             </a>
-            <a href={`${base}/intelligence-e-servizi-speciali/antispionaggio-industriale/`} class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
+            <a href={getPath('intelligence-e-servizi-speciali/antispionaggio-industriale/')} class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
               <div class="w-12 h-12 rounded-lg mb-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
                 <span class="text-2xl">🛡️</span>
               </div>
@@ -889,7 +890,7 @@ const articleSchema = isBlogPostValue ? {
                 </svg>
               </span>
             </a>
-            <a href={`${base}/intelligence-e-servizi-speciali/digital-forensics-investigazioni-digitali/`} class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
+            <a href={getPath('intelligence-e-servizi-speciali/digital-forensics-investigazioni-digitali/')} class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
               <div class="w-12 h-12 rounded-lg mb-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
                 <span class="text-2xl">💻</span>
               </div>
@@ -902,7 +903,7 @@ const articleSchema = isBlogPostValue ? {
                 </svg>
               </span>
             </a>
-            <a href={`${base}/intelligence-e-servizi-speciali/asset-tracing-tracciamento-patrimoniale/`} class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
+            <a href={getPath('intelligence-e-servizi-speciali/asset-tracing-tracciamento-patrimoniale/')} class="group bg-white rounded-xl p-6 border block transition-all duration-300 hover:shadow-xl hover:scale-[1.02]" style="border-color: rgba(11, 11, 11, 0.1);">
               <div class="w-12 h-12 rounded-lg mb-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.2));">
                 <span class="text-2xl">💰</span>
               </div>

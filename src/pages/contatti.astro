@@ -2,14 +2,14 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import { getPageContent } from '../utils/content';
+import { getPath } from '../utils/path';
 
 const pageData = getPageContent('/contatti/');
 const { seo } = pageData;
 
 // Get BASE_URL and site URL for form redirect
-const base = import.meta.env.BASE_URL || '';
 const siteUrl = import.meta.env.SITE || 'https://europolinvestigazioni.it';
-const fullRedirectUrl = `${siteUrl}${base}/richiesta-inviata/`.replace('//', '/').replace(':/', '://');
+const fullRedirectUrl = `${siteUrl}${getPath('richiesta-inviata/')}`.replace(':/', '://');
 ---
 
 <BaseLayout title={seo.title} description={seo.meta_description} canonical={seo.canonical}>
@@ -165,7 +165,7 @@ const fullRedirectUrl = `${siteUrl}${base}/richiesta-inviata/`.replace('//', '/'
         />
         <label for="privacy_consent" class="text-sm leading-relaxed" style="color: var(--color-black);">
           Inviando questa richiesta, acconsento al trattamento dei miei dati personali per rispondere alla richiesta di contatto, ai sensi del GDPR. 
-          <a href="/privacy-policy/" class="underline font-semibold" style="color: var(--color-accent);">Leggi l'informativa completa</a>.
+          <a href={getPath('privacy-policy/')} class="underline font-semibold" style="color: var(--color-accent);">Leggi l'informativa completa</a>.
         </label>
       </div>
 

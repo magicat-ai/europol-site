@@ -1,4 +1,6 @@
 ---
+import { getPath } from '../utils/path';
+
 interface Props {
   src: string;
   alt: string;
@@ -21,22 +23,19 @@ const {
   fallback
 } = Astro.props;
 
-// Aggiungi BASE_URL se necessario
-const base = import.meta.env.BASE_URL || '';
-
 // Converti path WordPress a path locale
 let localSrc = src;
 if (src.includes('wp-content/uploads')) {
   const match = src.match(/wp-content\/uploads\/(.+)/);
   if (match) {
-    localSrc = `${base}/media/uploads/${match[1].split('?')[0]}`;
+    localSrc = getPath(`media/uploads/${match[1].split('?')[0]}`);
   }
 } else if (src.startsWith('http')) {
   // Se è un URL esterno, lascialo così
   localSrc = src;
-} else if (!src.startsWith(base) && (src.startsWith('/media/') || src.startsWith('media/'))) {
-  // Path locale relativo - aggiungi base solo se non ce l'ha già
-  localSrc = `${base}${src.startsWith('/') ? '' : '/'}${src}`;
+} else if (src.startsWith('/media/') || src.startsWith('media/')) {
+  // Path locale relativo - usa getPath
+  localSrc = getPath(src.replace(/^\/+/, ''));
 }
 
 // Genera srcset per responsive images (se width è specificato)

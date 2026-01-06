@@ -1,5 +1,6 @@
 ---
 import { marked } from 'marked';
+import { getPath } from '../utils/path';
 
 interface Props {
   content: string;
@@ -52,7 +53,8 @@ if (base) {
       
       // Add base URL to local paths
       if (src.startsWith('/media/') || src.startsWith('media/')) {
-        const newSrc = src.startsWith('/') ? `${base}${src}` : `${base}/${src}`;
+        const cleanSrc = src.replace(/^\/+/, '');
+        const newSrc = getPath(cleanSrc);
         return `<img${before}${newSrc}${after}>`;
       }
       
@@ -71,7 +73,8 @@ if (base) {
       
       // Add base URL to internal paths (starting with /)
       if (href.startsWith('/')) {
-        const newHref = `${base}${href}`;
+        const cleanHref = href.replace(/^\/+/, '');
+        const newHref = getPath(cleanHref);
         return `<a${before}${newHref}${after}>`;
       }
       

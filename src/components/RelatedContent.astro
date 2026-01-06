@@ -1,19 +1,12 @@
 ---
 import { getRelatedContent } from '../utils/relatedContent';
+import { getPath } from '../utils/path';
 
 interface Props {
   currentPath: string;
 }
 
 const { currentPath } = Astro.props;
-
-// Get BASE_URL for links
-const base = import.meta.env.BASE_URL || '';
-
-// Helper function to add BASE_URL to paths
-function getFullPath(path: string): string {
-  return `${base}${path}`;
-}
 
 // Exclude thank-you and test pages from showing related content
 const excludedPaths = ['/richiesta-inviata/', '/studi-legali-e-avvocati-grazie/', '/test/'];
@@ -24,7 +17,7 @@ const relatedPages = shouldShow ? getRelatedContent(currentPath) : [];
 // Limit to 4-5 items for optimal UX and add BASE_URL to hrefs
 const displayPages = relatedPages.slice(0, 5).map(page => ({
   ...page,
-  href: getFullPath(page.href) // Add BASE_URL to href
+  href: getPath(page.href.replace(/^\//, '')) // Remove leading slash and use getPath
 }));
 
 // Map page types to icons

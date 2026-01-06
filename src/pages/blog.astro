@@ -3,14 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { getAllPages } from '../utils/content';
 import { getPageContent } from '../utils/content';
 import { isBlogPost } from '../utils/blogUtils';
-
-// Get BASE_URL for links
-const base = import.meta.env.BASE_URL || '';
-
-// Helper function to add BASE_URL to paths
-function getFullPath(path: string): string {
-  return `${base}${path}`;
-}
+import { getPath } from '../utils/path';
 
 // Get all blog posts
 const allPages = getAllPages();
@@ -56,7 +49,7 @@ const blogPostsData = blogPosts.map(path => {
   
   return {
     path,
-    fullPath: getFullPath(path), // Add full path with BASE_URL
+    fullPath: getPath(path.replace(/^\/+/, '')), // Remove leading slash and use getPath
     title,
     description: seo.meta_description,
     date,
