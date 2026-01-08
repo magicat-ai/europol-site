@@ -1,6 +1,5 @@
-# Antitaccheggio Investigativo: Prevenzione e Controllo Furti
 
-**URL:** https://www.europolinvestigazioni.it/antitaccheggio-investigativo/
+
 **Meta Title:** Antitaccheggio Investigativo: Prevenzione Furti | EUROPOL®
 **Meta Description:** Antitaccheggio investigativo: prevenzione furti in negozi e aziende. EUROPOL® controlla dipendenti e clienti con metodi legali certificati. Consulenza gratuita.
 **Canonical:** https://www.europolinvestigazioni.it/antitaccheggio-investigativo/

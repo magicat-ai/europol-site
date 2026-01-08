@@ -1,6 +1,5 @@
-# Investigazioni per Affidamento, Controllo e Tutela dei Minori
 
-**URL:** https://www.europolinvestigazioni.it/le-investigazioni-per-affidamento-controllo-e-tutela-dei-minori/
+
 **Meta Title:** Investigazioni Affidamento Minori: Tutela e Protezione | EUROPOL®
 **Meta Description:** Investigazioni per affidamento minori: verifica condizioni di vita e idoneità genitoriale con metodi legali certificati. EUROPOL® tutela minori dal 1962. Consulenza gratuita.
 **Canonical:** https://www.europolinvestigazioni.it/le-investigazioni-per-affidamento-controllo-e-tutela-dei-minori/

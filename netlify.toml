@@ -62,6 +62,17 @@
   to = "/europol-istituto-di-investigazioni/"
   status = 301
 
+# Consolidation Redirects (SEO)
+[[redirects]]
+  from = "/agenzia-investigativa-a-milano/"
+  to = "/agenzia-investigativa-milano/"
+  status = 301
+
+[[redirects]]
+  from = "/agenzia-investigativa-a-roma/"
+  to = "/agenzia-investigativa-roma/"
+  status = 301
+
 # SPA fallback for 404
 [[redirects]]
   from = "/*"

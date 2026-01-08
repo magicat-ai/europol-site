@@ -1,6 +1,5 @@
-# Business Intelligence & Intelligence Competitiva
 
-**URL:** https://www.europolinvestigazioni.it/intelligence-e-servizi-speciali/business-intelligence/
+
 **Meta Title:** Business Intelligence & Intelligence Competitiva | EUROPOL® Investigazioni
 **Meta Description:** Business Intelligence e Intelligence Competitiva per decisioni strategiche. Analisi mercato, competitor e opportunità commerciali. Metodi legali certificati. Richiedi consulenza gratuita.
 **Canonical:** https://www.europolinvestigazioni.it/intelligence-e-servizi-speciali/business-intelligence/

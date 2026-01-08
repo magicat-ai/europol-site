@@ -27,16 +27,16 @@ function loadMarkdownContent(urlPath: string): string | null {
   try {
     // Convert URL path to filename
     let filename = urlPath === '/' ? 'home' : urlPath.replace(/\//g, '-').replace(/^-|-$/g, '');
-    
+
     // Handle special cases
     if (filename === '') filename = 'home';
-    
+
     const contentPath = path.join(__dirname, `../../extracted_content/${filename}.md`);
-    
+
     if (fs.existsSync(contentPath)) {
       return fs.readFileSync(contentPath, 'utf-8');
     }
-    
+
     // Fallback: try without trailing slash
     if (urlPath.endsWith('/') && urlPath !== '/') {
       const altPath = urlPath.slice(0, -1);
@@ -46,7 +46,7 @@ function loadMarkdownContent(urlPath: string): string | null {
         return fs.readFileSync(altContentPath, 'utf-8');
       }
     }
-    
+
     return null;
   } catch (e) {
     console.warn(`Could not load content for ${urlPath}:`, e);
@@ -59,12 +59,12 @@ function extractSEOFromContent(content: string | null): { title: string; meta_de
   if (!content) {
     return { title: '', meta_description: '', canonical: '' };
   }
-  
+
   const titleMatch = content.match(/\*\*Meta Title:\*\*\s*(.+)/);
   const descMatch = content.match(/\*\*Meta Description:\*\*\s*(.+)/);
   const canonicalMatch = content.match(/\*\*Canonical:\*\*\s*(.+)/);
   const urlMatch = content.match(/\*\*URL:\*\*\s*(.+)/);
-  
+
   return {
     title: titleMatch ? titleMatch[1].trim() : '',
     meta_description: descMatch ? descMatch[1].trim() : '',
@@ -74,14 +74,14 @@ function extractSEOFromContent(content: string | null): { title: string; meta_de
 
 export function getPageContent(urlPath: string) {
   const content = loadMarkdownContent(urlPath);
-  
+
   // Try multiple path variations for SEO lookup
   const pathVariations = [
     urlPath,
     urlPath.replace(/\/$/, ''), // without trailing slash
     urlPath.replace(/^\/|\/$/g, ''), // without both slashes
   ];
-  
+
   let seo = { title: '', meta_description: '', canonical: '' };
   for (const pathVar of pathVariations) {
     if (seoMetadata[pathVar]) {
@@ -89,7 +89,7 @@ export function getPageContent(urlPath: string) {
       break;
     }
   }
-  
+
   // Fallback: extract SEO from markdown content if not found in JSON
   const contentSEO = extractSEOFromContent(content);
   if (!seo.title && contentSEO.title) {
@@ -98,12 +98,12 @@ export function getPageContent(urlPath: string) {
   if (!seo.meta_description && contentSEO.meta_description) {
     seo.meta_description = contentSEO.meta_description;
   }
-  
+
   // Use canonical from content if available, otherwise construct it
-  const canonical = contentSEO.canonical || 
-                    seo.canonical || 
-                    `https://europolinvestigazioni.it${urlPath === '/' ? '' : urlPath}`;
-  
+  const canonical = contentSEO.canonical ||
+    seo.canonical ||
+    `https://europolinvestigazioni.it${urlPath === '/' ? '' : urlPath}`;
+
   return {
     content: content || '',
     seo: {
@@ -116,7 +116,7 @@ export function getPageContent(urlPath: string) {
 
 export function getAllPages(): string[] {
   const pages: string[] = ['/'];
-  
+
   // Add all pages from sitemap
   const sitemapUrls = [
     '/blog/',
@@ -188,11 +188,10 @@ export function getAllPages(): string[] {
     '/caso-reale-la-tua-ex-moglie-ti-sta-derubando/',
     '/caso-reale-il-tuo-ex-marito-mette-in-pericolo-i-tuoi-bambini/',
     '/caso-reale-lei-e-solo-una-dipendente-o-la-sua-amante/',
-    // Landing pages
-    '/agenzia-investigativa-a-roma/',
-    '/agenzia-investigativa-a-milano/',
+    // Legal Authority Hub
+    '/validita-legale-prove-investigatore-privato/',
   ];
-  
+
   return pages.concat(sitemapUrls);
 }
 

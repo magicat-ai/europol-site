@@ -1,6 +1,5 @@
-# Caso Reale: Lei è Solo una Dipendente o la Sua Amante?
 
-**URL:** https://www.europolinvestigazioni.it/caso-reale-lei-e-solo-una-dipendente-o-la-sua-amante.md/
+
 **Meta Title:** Caso Reale: Dipendente o Amante? | EUROPOL® Investigazioni
 **Meta Description:** Caso reale: sospetto relazione tra marito e dipendente. Come EUROPOL® ha raccolto prove per verificare se era solo una dipendente o un'amante.
 **Canonical:** https://www.europolinvestigazioni.it/caso-reale-lei-e-solo-una-dipendente-o-la-sua-amante/

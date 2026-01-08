@@ -1,6 +1,5 @@
-# Spionaggio Industriale: Cos'è, Norme di Tutela e Come Difendersi
 
-**URL:** https://www.europolinvestigazioni.it/spionaggio-industriale/
+
 **Meta Title:** Spionaggio Industriale: Difesa e Prevenzione | EUROPOL®
 **Meta Description:** Spionaggio industriale: il 97% delle aziende teme il furto di informazioni. EUROPOL® offre antispionaggio industriale con metodi legali certificati. Consulenza gratuita.
 **Canonical:** https://www.europolinvestigazioni.it/spionaggio-industriale/

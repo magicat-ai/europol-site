@@ -1,6 +1,5 @@
-# Due Diligence & Background Check Esteso
 
-**URL:** https://www.europolinvestigazioni.it/intelligence-e-servizi-speciali/due-diligence-background-check/
+
 **Meta Title:** Due Diligence & Background Check Esteso | EUROPOL® Investigazioni
 **Meta Description:** Servizi di Due Diligence e Background Check approfonditi per partner commerciali, acquirenti e investitori. Verifiche certificate. Consulenza gratuita.
 **Canonical:** https://www.europolinvestigazioni.it/intelligence-e-servizi-speciali/due-diligence-background-check/

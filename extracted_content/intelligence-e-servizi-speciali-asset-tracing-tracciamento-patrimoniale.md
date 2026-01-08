@@ -1,6 +1,5 @@
-# Asset Tracing & Tracciamento Patrimoniale
 
-**URL:** https://www.europolinvestigazioni.it/intelligence-e-servizi-speciali/asset-tracing-tracciamento-patrimoniale/
+
 **Meta Title:** Asset Tracing & Tracciamento Patrimoniale | EUROPOL® Investigazioni
 **Meta Description:** Servizi di Asset Tracing e tracciamento patrimoniale. Localizzazione asset nascosti e recupero crediti. Metodi investigativi avanzati. Consulenza gratuita.
 **Canonical:** https://www.europolinvestigazioni.it/intelligence-e-servizi-speciali/asset-tracing-tracciamento-patrimoniale/

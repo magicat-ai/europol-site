@@ -1,4 +1,4 @@
-# Studi legali e avocati - GRAZIE | EUROPOL®
+
 ## Complimenti!
 ## “Il tuo Studio Legale, potrà adeso usufruire di un Servizio Esclusivo di Indagine Patrimoniale a prezi vantagiosi, per ofrire ai tuoi clienti un Sistema di Recupero Crediti,
 di cui essere fiero!”

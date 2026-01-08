@@ -1,6 +1,5 @@
-# Assenteismo Dipendenti: Come Raccogliere Prove Legali
 
-**URL:** https://www.europolinvestigazioni.it/assenteismo-dipendenti/
+
 **Meta Title:** Assenteismo Dipendenti: Indagini e Prove Legali | EUROPOL®
 **Meta Description:** Assenteismo dipendenti: come raccogliere prove legali valide in tribunale. EUROPOL® verifica certificati medici e documenta assenze ingiustificate. Consulenza gratuita per aziende.
 **Canonical:** https://www.europolinvestigazioni.it/assenteismo-dipendenti/

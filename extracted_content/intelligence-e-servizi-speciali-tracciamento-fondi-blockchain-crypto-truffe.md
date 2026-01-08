@@ -1,6 +1,5 @@
-# Tracciamento Fondi Blockchain & Crypto Truffe
 
-**URL:** https://www.europolinvestigazioni.it/intelligence-e-servizi-speciali/tracciamento-fondi-blockchain-crypto-truffe/
+
 **Meta Title:** Tracciamento Fondi Blockchain e Crypto Truffe | Investigazioni Crypto | EUROPOL®
 **Meta Description:** Servizi di tracciamento fondi blockchain e investigazioni su truffe crypto. Recupero fondi digitali con metodi legali. Consulenza gratuita EUROPOL®.
 **Canonical:** https://www.europolinvestigazioni.it/intelligence-e-servizi-speciali/tracciamento-fondi-blockchain-crypto-truffe/

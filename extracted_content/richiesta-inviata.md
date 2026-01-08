@@ -1,4 +1,4 @@
-# Richiesta Inviata con Successo | EUROPOL®
+
 
 ## IMPORTANTE
 

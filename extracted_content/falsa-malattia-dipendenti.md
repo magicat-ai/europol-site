@@ -1,6 +1,5 @@
-# Falsa Malattia Dipendenti: Come Verificare e Dimostrare
 
-**URL:** https://www.europolinvestigazioni.it/falsa-malattia-dipendenti/
+
 **Meta Title:** Falsa Malattia Dipendenti: Verifica e Prove Legali | EUROPOL®
 **Meta Description:** Falsa malattia dipendenti: verifica certificati medici e prove legali valide in tribunale. EUROPOL® documenta comportamenti incompatibili con malattia dichiarata. Consulenza gratuita.
 **Canonical:** https://www.europolinvestigazioni.it/falsa-malattia-dipendenti/

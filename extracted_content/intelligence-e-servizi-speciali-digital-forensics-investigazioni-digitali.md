@@ -1,6 +1,5 @@
-# Digital Forensics & Investigazioni Digitali
 
-**URL:** https://www.europolinvestigazioni.it/intelligence-e-servizi-speciali/digital-forensics-investigazioni-digitali/
+
 **Meta Title:** Digital Forensics & Investigazioni Digitali | EUROPOL® Investigazioni
 **Meta Description:** Digital Forensics e investigazioni digitali. Analisi forense dispositivi, email, social media. Prove valide in tribunale con metodi legali certificati. Consulenza gratuita.
 **Canonical:** https://www.europolinvestigazioni.it/intelligence-e-servizi-speciali/digital-forensics-investigazioni-digitali/

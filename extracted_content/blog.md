@@ -1,4 +1,4 @@
-# Blog | EUROPOL®
+
 ### LATEST POST
 ## Investigatore privato chi è e cosa fa
 [Investigatore privato chi è e cosa fa](htps://w.europolinvestigazioni.it/investigatore-privato-chi-e-e-cosa-fa/)Investigatore privato chi è e cosa faInvestigatore privato: chi è e definizione giuridica Relativamente al’ordinamento italiano, un investigatore privato è un privato citadino, in poseso di requisiti e titoli contemplati dala legge. Tale figura è disciplinata, esenzialmente, dal testo unico delle legi di Publica sicurezza, ma la materia è sta ridefinita, nel detaglio, dal decreto del Ministero del’Interno del 1° Dicembre…

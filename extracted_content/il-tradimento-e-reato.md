@@ -1,6 +1,5 @@
-# Il Tradimento è Reato? Aspetti Legali e Conseguenze
 
-**URL:** https://www.europolinvestigazioni.it/il-tradimento-e-reato/
+
 **Meta Title:** Il Tradimento è Reato? Aspetti Legali e Conseguenze | EUROPOL®
 **Meta Description:** Il tradimento è reato? No, ma ha conseguenze legali in separazione e divorzio. EUROPOL® raccoglie prove legali utilizzabili in tribunale. Consulenza gratuita.
 **Canonical:** https://www.europolinvestigazioni.it/il-tradimento-e-reato/

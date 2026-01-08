@@ -1,6 +1,5 @@
-# Termini e Condizioni di Utilizzo
 
-**URL:** https://europolinvestigazioni.it/termini-e-condizioni/
+
 **Meta Title:** Termini e Condizioni | EUROPOL® Istituto di Investigazioni
 **Meta Description:** Termini e condizioni di utilizzo del sito web europolinvestigazioni.it. Condizioni generali per l'accesso e l'utilizzo del sito.
 **Canonical:** https://europolinvestigazioni.it/termini-e-condizioni/
