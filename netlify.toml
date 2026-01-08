@@ -61,6 +61,7 @@
   from = "/istituto-europol/"
   to = "/europol-istituto-di-investigazioni/"
   status = 301
+  force = true
 
 # Consolidation Redirects (SEO)
 [[redirects]]
